@@ -11,23 +11,46 @@ class Pesanan extends Model
 
     protected $fillable = [
         'user_id',
-        'toko_id',
-        'nama',
-        'telepon',
-        'alamat',
-        'jenis_layanan',
-        'detail_layanan',
-        'metode_pembayaran',
-        'status',
+        'walkin_customer_id',
+        'mitra_id',
+        'status_pesanan',
+        'status_konfirmasi',
+        'waktu_pesan',
+        'tanggal_jemput',
+        'tanggal_kirim',
+        'dijemput_kurir',
+        'diantar_kurir',
+        'subtotal',
+        'dp',
+        'total_harga',
+        'sisa_tagihan',
+        'status_bayar',
+        'keterangan',
+        'tanggal_jatuh_tempo'
     ];
-
-    public function toko()
-    {
-        return $this->belongsTo(Toko::class);
-    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function mitra()
+    {
+        return $this->belongsTo(Mitra::class);
+    }
+
+    public function kiloanDetails()
+    {
+        return $this->hasMany(PesananDetailKiloan::class);
+    }
+
+    public function satuanDetails()
+    {
+        return $this->hasMany(PesananDetailSatuan::class);
+    }
+
+    public function trackingStatus()
+    {
+        return $this->hasMany(TrackingStatus::class);
     }
 }

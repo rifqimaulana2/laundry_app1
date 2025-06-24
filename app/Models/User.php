@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, Notifiable;
 
     /**
-     * Atribut yang dapat diisi secara massal.
+     * Mass assignable attributes.
      *
      * @var array<int, string>
      */
@@ -21,10 +20,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
-     * Atribut yang harus disembunyikan saat serialisasi.
+     * Hidden attributes for arrays.
      *
      * @var array<int, string>
      */
@@ -34,12 +34,41 @@ class User extends Authenticatable
     ];
 
     /**
-     * Atribut yang harus di-cast secara otomatis.
+     * Cast attributes to native types.
      *
      * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
+
+    // Relasi ke profil pelanggan
+    public function pelangganProfile()
+    {
+        return $this->hasOne(PelangganProfile::class);
+    }
+
+    // Relasi ke mitra
+    public function mitra()
+    {
+        return $this->hasOne(Mitra::class);
+    }
+
+    // Relasi ke pesanan
+    public function pesanan()
+    {
+        return $this->hasMany(Pesanan::class);
+    }
+
+    // Relasi ke notifikasi
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
+
+    // Relasi ke tracking status
+    public function trackingStatus()
+    {
+        return $this->hasMany(TrackingStatus::class);
+    }
 }

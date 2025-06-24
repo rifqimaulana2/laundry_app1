@@ -40,7 +40,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // Jika kamu pakai Spatie
-        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        // Middleware Role Custom
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
+
+        // Jika kamu pakai Spatie (opsional)
+        // 'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
     ];
 }

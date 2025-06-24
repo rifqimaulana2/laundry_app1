@@ -29,7 +29,7 @@
                     <div>
                         <label for="confirmed_kg" class="block text-sm font-medium text-gray-700">Berat Real (kg)</label>
                         <input type="number" name="confirmed_kg" id="confirmed_kg" min="0" step="0.1" value="{{ old('confirmed_kg', $detail['kiloan']['estimasi_kg'] ?? 0) }}"
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 @error('confirmed_kg') border-red-500 @enderror">
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 @error('confirmed_kg') border-red-500 @enderror">
                         @error('confirmed_kg')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

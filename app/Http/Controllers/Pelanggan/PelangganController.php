@@ -9,6 +9,7 @@ use App\Models\Mitra;
 use App\Models\Toko;
 use App\Models\DataDiri;
 use App\Models\Pesanan;
+use App\Models\User;
 
 class PelangganController extends Controller
 {
@@ -110,7 +111,8 @@ class PelangganController extends Controller
 
     public function riwayatMitra()
     {
-        $user = auth()->user();
+    $user = auth()->user() ?? abort(403, 'Unauthorized');
+
 
         $transactions = Pesanan::with('toko')
             ->where('user_id', $user->id)

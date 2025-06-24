@@ -50,7 +50,6 @@ Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->name('pelang
     Route::get('/konfirmasi/{id}', [PelangganController::class, 'konfirmasiMitra'])->name('konfirmasi');
     Route::post('/konfirmasi/{id}', [PelangganController::class, 'updateKonfirmasiMitra'])->name('konfirmasi.update');
 
-    // ✅ Route profil diperbaiki
     Route::get('/profil', [PelangganController::class, 'profil'])->name('profil');
     Route::patch('/profil', [PelangganController::class, 'updateProfil'])->name('profil.update');
 
@@ -63,7 +62,7 @@ Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->name('pelang
 });
 
 // ========================
-// Default Profile Routes dari Breeze (bisa dihapus jika sudah pakai PelangganController)
+// Default Profile Routes dari Breeze
 // ========================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
