@@ -41,7 +41,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         // Middleware Role Custom
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
+'role' => \App\Http\Middleware\RoleMiddleware::class,
 
         // Jika kamu pakai Spatie (opsional)
         // 'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,

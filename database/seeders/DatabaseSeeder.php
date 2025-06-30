@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             MitraSeeder::class,
             PelangganSeeder::class,
+            LayananMitraSeeder::class,
+            JamOperasionalSeeder::class,
+
+
         ]);
     }
 }

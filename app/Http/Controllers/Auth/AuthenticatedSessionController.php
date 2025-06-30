@@ -11,44 +11,44 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
+    /**
+     * Menampilkan form login
+     */
     public function create(): View
     {
-        return view('auth.login');
+        return view('auth.login'); // ✅ Pastikan view login ada
     }
 
+    /**
+     * Proses autentikasi login
+     */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // Proses autentikasi
         $request->authenticate();
         $request->session()->regenerate();
 
-        $user = Auth::user();
+        $user = auth()->user();
 
-        // Cek apakah mitra belum disetujui
-        if ($user->hasRole('mitra') && !$user->is_approved) {
-            Auth::logout(); // Logout jika belum disetujui
-
+        // 🔒 Blokir login mitra jika belum disetujui (pakai status_approve dari tabel users)
+        if ($user->role === 'mitra' && $user->status_approve !== 1) {
+            Auth::logout();
             return redirect()->route('login')->withErrors([
                 'email' => 'Akun mitra Anda belum disetujui oleh admin.',
             ]);
         }
 
-        // Redirect sesuai role
-        if ($user->hasRole('superadmin')) {
-            return redirect()->route('superadmin.dashboard');
-        }
-
-        if ($user->hasRole('mitra')) {
-            return redirect()->route('mitra.dashboard');
-        }
-
-        if ($user->hasRole('pelanggan')) {
-            return redirect()->route('pelanggan.mitra');
-        }
-
-        return redirect('/');
+        // 🔀 Redirect sesuai role
+        return match ($user->role) {
+            'superadmin' => redirect()->route('superadmin.dashboard'),
+            'mitra'      => redirect()->route('mitra.dashboard'),
+            'pelanggan'  => redirect()->route('pelanggan.dashboard'),
+            default      => redirect('/'),
+        };
     }
 
+    /**
+     * Logout
+     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

@@ -24,6 +24,7 @@ class PesananDetailSatuan extends Model
 
     public function layanan()
     {
-        return $this->belongsTo(LayananMitraSatuan::class, 'layanan_mitra_satuan_id');
-    }
+        return $this->belongsTo(\App\Models\LayananMitraSatuan::class, 'layanan_mitra_satuan_id');
+    }   
+
 }

@@ -25,6 +25,7 @@ class PesananDetailKiloan extends Model
 
     public function layanan()
     {
-        return $this->belongsTo(LayananMitraKiloan::class, 'layanan_mitra_kiloan_id');
+        return $this->belongsTo(\App\Models\LayananMitraKiloan::class, 'layanan_mitra_kiloan_id');
     }
+
 }

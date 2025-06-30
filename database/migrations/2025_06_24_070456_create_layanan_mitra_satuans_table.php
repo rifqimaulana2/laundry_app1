@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('layanan_mitra_satuans', function (Blueprint $table) {
     $table->id();
-    $table->foreignId('layanan_satuan_id')->constrained('layanan_satuans')->onDelete('cascade');
     $table->foreignId('mitra_id')->constrained('mitras')->onDelete('cascade');
-    $table->integer('harga_per_item');
+    $table->foreignId('layanan_satuan_id')->constrained('layanan_satuans')->onDelete('cascade');
+    $table->integer('harga_satuan'); // ← INI HARUS ADA
     $table->timestamps();
 });
+
+
 
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('layanan_mitra_satuan');
+        Schema::dropIfExists('layanan_mitra_satuans');
     }
 };

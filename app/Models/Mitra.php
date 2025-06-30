@@ -23,23 +23,33 @@ class Mitra extends Model
         'tanggal_langganan_berakhir'
     ];
 
+    // Relasi ke user (pemilik akun mitra)
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // Relasi jam operasional mitra
     public function jamOperasional()
     {
         return $this->hasMany(JamOperasional::class);
     }
 
+    // Relasi ke layanan kiloan milik mitra
     public function layananKiloan()
     {
         return $this->hasMany(LayananMitraKiloan::class);
     }
 
+    // Relasi ke layanan satuan milik mitra
     public function layananSatuan()
     {
         return $this->hasMany(LayananMitraSatuan::class);
+    }
+
+    // Relasi ke langganan mitra (1:1)
+    public function langgananMitra()
+    {
+        return $this->hasOne(LanggananMitra::class);
     }
 }

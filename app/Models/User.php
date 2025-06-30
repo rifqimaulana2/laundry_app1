@@ -6,10 +6,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles; // ← Tambahkan ini
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, HasRoles; // ← Aktifkan trait HasRoles
 
     /**
      * Mass assignable attributes.
@@ -17,11 +18,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+    'nama_usaha',
+    'no_telepon',
+    'kecamatan',
+];
 
     /**
      * Hidden attributes for arrays.
@@ -50,9 +54,10 @@ class User extends Authenticatable
 
     // Relasi ke mitra
     public function mitra()
-    {
-        return $this->hasOne(Mitra::class);
-    }
+{
+    return $this->hasOne(\App\Models\Mitra::class);
+}
+
 
     // Relasi ke pesanan
     public function pesanan()
