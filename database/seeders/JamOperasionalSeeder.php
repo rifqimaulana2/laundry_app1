@@ -3,33 +3,45 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Mitra;
-use App\Models\JamOperasional;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class JamOperasionalSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        $hariDalamSeminggu = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        $data = [
+            // Mitra ID 2
+            ['mitra_id' => 2, 'hari_buka' => 'Senin',  'jam_buka' => '07:30', 'jam_tutup' => '21:00'],
+            ['mitra_id' => 2, 'hari_buka' => 'Selasa', 'jam_buka' => '07:30', 'jam_tutup' => '21:00'],
+            ['mitra_id' => 2, 'hari_buka' => 'Rabu',   'jam_buka' => '07:30', 'jam_tutup' => '21:00'],
+            ['mitra_id' => 2, 'hari_buka' => 'Kamis',  'jam_buka' => '07:30', 'jam_tutup' => '21:00'],
+            ['mitra_id' => 2, 'hari_buka' => 'Jumat',  'jam_buka' => '07:30', 'jam_tutup' => '21:00'],
+            ['mitra_id' => 2, 'hari_buka' => 'Sabtu',  'jam_buka' => '08:00', 'jam_tutup' => '20:00'],
 
-        $jamBukaList = ['07:00', '08:00', '09:00'];
-        $jamTutupList = ['17:00', '18:00', '19:00', '20:00'];
+            // Mitra ID 3
+            ['mitra_id' => 3, 'hari_buka' => 'Senin',  'jam_buka' => '08:00', 'jam_tutup' => '19:00'],
+            ['mitra_id' => 3, 'hari_buka' => 'Selasa', 'jam_buka' => '08:00', 'jam_tutup' => '19:00'],
+            ['mitra_id' => 3, 'hari_buka' => 'Rabu',   'jam_buka' => '08:00', 'jam_tutup' => '19:00'],
+            ['mitra_id' => 3, 'hari_buka' => 'Kamis',  'jam_buka' => '08:00', 'jam_tutup' => '19:00'],
+            ['mitra_id' => 3, 'hari_buka' => 'Jumat',  'jam_buka' => '08:00', 'jam_tutup' => '19:00'],
 
-        $mitras = Mitra::all();
+            // Mitra ID 4
+            ['mitra_id' => 4, 'hari_buka' => 'Senin',  'jam_buka' => '09:00', 'jam_tutup' => '18:00'],
+            ['mitra_id' => 4, 'hari_buka' => 'Selasa', 'jam_buka' => '09:00', 'jam_tutup' => '18:00'],
+            ['mitra_id' => 4, 'hari_buka' => 'Rabu',   'jam_buka' => '09:00', 'jam_tutup' => '18:00'],
+            ['mitra_id' => 4, 'hari_buka' => 'Kamis',  'jam_buka' => '09:00', 'jam_tutup' => '18:00'],
+            ['mitra_id' => 4, 'hari_buka' => 'Jumat',  'jam_buka' => '09:00', 'jam_tutup' => '18:00'],
+            ['mitra_id' => 4, 'hari_buka' => 'Sabtu',  'jam_buka' => '10:00', 'jam_tutup' => '16:00'],
 
-        foreach ($mitras as $mitra) {
-            // Ambil 5 hari unik secara acak dari array hari
-            $hariBuka = collect($hariDalamSeminggu)->shuffle()->take(5);
+            // Mitra ID 5
+            ['mitra_id' => 5, 'hari_buka' => 'Senin',  'jam_buka' => '08:30', 'jam_tutup' => '20:30'],
+            ['mitra_id' => 5, 'hari_buka' => 'Selasa', 'jam_buka' => '08:30', 'jam_tutup' => '20:30'],
+            ['mitra_id' => 5, 'hari_buka' => 'Rabu',   'jam_buka' => '08:30', 'jam_tutup' => '20:30'],
+            ['mitra_id' => 5, 'hari_buka' => 'Kamis',  'jam_buka' => '08:30', 'jam_tutup' => '20:30'],
+            ['mitra_id' => 5, 'hari_buka' => 'Jumat',  'jam_buka' => '08:30', 'jam_tutup' => '20:30'],
+            ['mitra_id' => 5, 'hari_buka' => 'Sabtu',  'jam_buka' => '09:00', 'jam_tutup' => '17:00'],
+        ];
 
-            foreach ($hariBuka as $hari) {
-                JamOperasional::create([
-                    'mitra_id' => $mitra->id,
-                    'hari_buka' => $hari,
-                    'jam_buka' => collect($jamBukaList)->random(),
-                    'jam_tutup' => collect($jamTutupList)->random(),
-                ]);
-            }
-        }
+        DB::table('jam_operasional')->insert($data);
     }
 }

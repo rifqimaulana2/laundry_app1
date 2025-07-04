@@ -10,18 +10,19 @@ class Mitra extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'nama',
-        'nama_toko',
-        'alamat',
-        'no_telepon',
-        'kecamatan',
-        'longitude',
-        'latitude',
-        'status_approve',
-        'langganan_aktif',
-        'tanggal_langganan_berakhir'
-    ];
+    'user_id',
+    'nama',
+    'nama_toko',
+    'alamat',
+    'no_telepon',
+    'kecamatan',
+    'longitude',
+    'latitude',
+    'status_approve',
+    'langganan_aktif',
+    'tanggal_langganan_berakhir',
+];
+
 
     // Relasi ke user (pemilik akun mitra)
     public function user()

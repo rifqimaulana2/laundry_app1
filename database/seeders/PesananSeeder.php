@@ -3,44 +3,189 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Pesanan;
-use App\Models\User;
-use App\Models\Mitra;
-use App\Models\WalkinCostumer;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PesananSeeder extends Seeder
 {
     public function run(): void
     {
-        $pelangganIds = User::where('role', 'pelanggan')->pluck('id');
-        $walkinIds = WalkinCostumer::pluck('id');
-        $mitraIds = Mitra::pluck('id');
-
-        for ($i = 0; $i < 5; $i++) {
-            $isWalkin = rand(0, 1); // random antara user terdaftar atau walk-in
-            $harga = rand(20000, 50000);
-            $dp = rand(0, $harga);
-
-            Pesanan::create([
-                'user_id' => $isWalkin ? null : $pelangganIds->random(),
-                'walkin_customer_id' => $isWalkin ? $walkinIds->random() : null,
-                'mitra_id' => $mitraIds->random(),
+        DB::table('pesanan')->insert([
+            [
+                'user_id' => 6,
+                'walkin_customer_id' => null,
+                'mitras_id' => 5,
+                'jenis_pesanan' => 'kiloan',
                 'status_pesanan' => 'menunggu',
                 'status_konfirmasi' => 'belum',
-                'waktu_pesan' => now()->subDays(rand(1, 5)),
-                'tanggal_jemput' => now()->addDays(1),
-                'tanggal_kirim' => now()->addDays(3),
-                'dijemput_kurir' => ['ya', 'tidak'][rand(0, 1)],
-                'diantar_kurir' => ['ya', 'tidak'][rand(0, 1)],
-                'subtotal' => $harga,
-                'dp' => $dp,
-                'total_harga' => $harga,
-                'sisa_tagihan' => $harga - $dp,
-                'status_bayar' => $dp == $harga ? 'lunas' : ($dp > 0 ? 'sebagian' : 'belum'),
-                'keterangan' => Str::random(20),
-                'tanggal_jatuh_tempo' => now()->addDays(5),
-            ]);
-        }
+                'status_harga' => 'belum_final',
+                'status_bayar' => 'sebagian',
+                'dp' => 10000,
+                'total_harga' => null,
+                'sisa_tagihan' => null,
+                'waktu_pesan' => '2025-07-01 09:00:00',
+                'tanggal_jemput' => '2025-07-02',
+                'tanggal_kirim' => null,
+                'dijemput_kurir' => true,
+                'diantar_kurir' => null,
+                'pesan' => 'Jemput sore',
+                'jatuh_tempo' => '2025-07-04',
+                'created_at' => '2025-07-01 09:00:00',
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 7,
+                'walkin_customer_id' => null,
+                'mitras_id' => 4, // ← sebelumnya 6
+                'jenis_pesanan' => 'gabungan',
+                'status_pesanan' => 'dijemput',
+                'status_konfirmasi' => 'disetujui',
+                'status_harga' => 'sudah_final',
+                'status_bayar' => 'sebagian',
+                'dp' => 15000,
+                'total_harga' => 36000,
+                'sisa_tagihan' => 21000,
+                'waktu_pesan' => '2025-07-01 10:30:00',
+                'tanggal_jemput' => '2025-07-01',
+                'tanggal_kirim' => null,
+                'dijemput_kurir' => true,
+                'diantar_kurir' => null,
+                'pesan' => 'Express satuan + kilo',
+                'jatuh_tempo' => '2025-07-03',
+                'created_at' => '2025-07-01 10:30:00',
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 8,
+                'walkin_customer_id' => null,
+                'mitras_id' => 3, // ← sebelumnya 7
+                'jenis_pesanan' => 'kiloan',
+                'status_pesanan' => 'diproses',
+                'status_konfirmasi' => 'disetujui',
+                'status_harga' => 'sudah_final',
+                'status_bayar' => 'sebagian',
+                'dp' => 10000,
+                'total_harga' => 27500,
+                'sisa_tagihan' => 17500,
+                'waktu_pesan' => '2025-07-01 11:15:00',
+                'tanggal_jemput' => '2025-07-01',
+                'tanggal_kirim' => null,
+                'dijemput_kurir' => true,
+                'diantar_kurir' => null,
+                'pesan' => '-',
+                'jatuh_tempo' => '2025-07-03',
+                'created_at' => '2025-07-01 11:15:00',
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 9,
+                'walkin_customer_id' => null,
+                'mitras_id' => 5,
+                'jenis_pesanan' => 'satuan',
+                'status_pesanan' => 'selesai',
+                'status_konfirmasi' => 'disetujui',
+                'status_harga' => 'sudah_final',
+                'status_bayar' => 'lunas',
+                'dp' => 20000,
+                'total_harga' => 20000,
+                'sisa_tagihan' => 0,
+                'waktu_pesan' => '2025-06-30 15:00:00',
+                'tanggal_jemput' => '2025-06-30',
+                'tanggal_kirim' => '2025-07-01',
+                'dijemput_kurir' => false,
+                'diantar_kurir' => false,
+                'pesan' => 'Ambil langsung ke toko',
+                'jatuh_tempo' => '2025-07-02',
+                'created_at' => '2025-06-30 15:00:00',
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 10,
+                'walkin_customer_id' => null,
+                'mitras_id' => 2, // ← sebelumnya 8
+                'jenis_pesanan' => 'satuan',
+                'status_pesanan' => 'diantar',
+                'status_konfirmasi' => 'disetujui',
+                'status_harga' => 'sudah_final',
+                'status_bayar' => 'lunas',
+                'dp' => 25000,
+                'total_harga' => 25000,
+                'sisa_tagihan' => 0,
+                'waktu_pesan' => '2025-06-29 13:30:00',
+                'tanggal_jemput' => '2025-06-29',
+                'tanggal_kirim' => '2025-06-30',
+                'dijemput_kurir' => true,
+                'diantar_kurir' => true,
+                'pesan' => 'COD saat diantar',
+                'jatuh_tempo' => '2025-07-01',
+                'created_at' => '2025-06-29 13:30:00',
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => null,
+                'walkin_customer_id' => 1,
+                'mitras_id' => 5,
+                'jenis_pesanan' => 'satuan',
+                'status_pesanan' => 'diproses',
+                'status_konfirmasi' => 'disetujui',
+                'status_harga' => 'sudah_final',
+                'status_bayar' => 'lunas',
+                'dp' => 12000,
+                'total_harga' => 12000,
+                'sisa_tagihan' => 0,
+                'waktu_pesan' => '2025-07-01 08:45:00',
+                'tanggal_jemput' => null,
+                'tanggal_kirim' => null,
+                'dijemput_kurir' => false,
+                'diantar_kurir' => false,
+                'pesan' => 'Jaket masuk toko',
+                'jatuh_tempo' => '2025-07-02',
+                'created_at' => '2025-07-01 08:45:00',
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => null,
+                'walkin_customer_id' => 3,
+                'mitras_id' => 4, // ← sebelumnya 6
+                'jenis_pesanan' => 'gabungan',
+                'status_pesanan' => 'diproses',
+                'status_konfirmasi' => 'disetujui',
+                'status_harga' => 'sudah_final',
+                'status_bayar' => 'sebagian',
+                'dp' => 10000,
+                'total_harga' => 33500,
+                'sisa_tagihan' => 23500,
+                'waktu_pesan' => '2025-06-30 16:00:00',
+                'tanggal_jemput' => null,
+                'tanggal_kirim' => null,
+                'dijemput_kurir' => false,
+                'diantar_kurir' => true,
+                'pesan' => 'Sepatu + kiloan',
+                'jatuh_tempo' => '2025-07-03',
+                'created_at' => '2025-06-30 16:00:00',
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => null,
+                'walkin_customer_id' => 4,
+                'mitras_id' => 3, // ← sebelumnya 6
+                'jenis_pesanan' => 'satuan',
+                'status_pesanan' => 'selesai',
+                'status_konfirmasi' => 'disetujui',
+                'status_harga' => 'sudah_final',
+                'status_bayar' => 'lunas',
+                'dp' => 16000,
+                'total_harga' => 16000,
+                'sisa_tagihan' => 0,
+                'waktu_pesan' => '2025-06-28 14:30:00',
+                'tanggal_jemput' => null,
+                'tanggal_kirim' => '2025-06-29',
+                'dijemput_kurir' => false,
+                'diantar_kurir' => false,
+                'pesan' => 'Ambil sendiri',
+                'jatuh_tempo' => '2025-06-30',
+                'created_at' => '2025-06-28 14:30:00',
+                'updated_at' => now(),
+            ],
+        ]);
     }
 }

@@ -9,11 +9,7 @@ class LayananKiloan extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'nama_paket',
-        'harga_per_kg',
-        'durasi_hari'
-    ];
+    protected $fillable = ['id', 'nama_paket', 'durasi_hari'];
 
     public function mitras()
     {

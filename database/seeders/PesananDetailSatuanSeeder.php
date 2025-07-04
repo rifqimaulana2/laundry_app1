@@ -3,32 +3,73 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Pesanan;
-use App\Models\LayananMitraSatuan;
-use App\Models\PesananDetailSatuan;
+use Illuminate\Support\Facades\DB;
 
 class PesananDetailSatuanSeeder extends Seeder
 {
     public function run(): void
     {
-        $pesananSatuans = Pesanan::whereHas('walkinCustomer') // hanya untuk walk-in
-            ->whereHas('layananSatuan') // hanya yang satuan
-            ->get();
-
-        foreach ($pesananSatuans as $pesanan) {
-            $layanan = LayananMitraSatuan::where('mitra_id', $pesanan->mitra_id)->inRandomOrder()->first();
-            if (!$layanan) continue;
-
-            $jumlah = rand(1, 3);
-            $hargaPerItem = $layanan->harga_per_item;
-
-            PesananDetailSatuan::create([
-                'pesanan_id' => $pesanan->id,
-                'layanan_mitra_satuan_id' => $layanan->id,
-                'jumlah_item' => $jumlah,
-                'harga_per_item' => $hargaPerItem,
-                'subtotal' => $jumlah * $hargaPerItem,
-            ]);
-        }
+        DB::table('pesanan_detail_satuan')->insert([
+            [
+                'id' => 1,
+                'pesanan_id' => 2,
+                'layanan_mitra_satuan_id' => 5,
+                'jumlah_item' => 2,
+                'harga_per_item' => 10000,
+                'subtotal' => 20000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 2,
+                'pesanan_id' => 4,
+                'layanan_mitra_satuan_id' => 2,
+                'jumlah_item' => 1,
+                'harga_per_item' => 12000,
+                'subtotal' => 12000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 3,
+                'pesanan_id' => 5,
+                'layanan_mitra_satuan_id' => 11,
+                'jumlah_item' => 1,
+                'harga_per_item' => 13000,
+                'subtotal' => 13000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 4,
+                'pesanan_id' => 6,
+                'layanan_mitra_satuan_id' => 2,
+                'jumlah_item' => 1,
+                'harga_per_item' => 12000,
+                'subtotal' => 12000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 5,
+                'pesanan_id' => 7,
+                'layanan_mitra_satuan_id' => 4,
+                'jumlah_item' => 1,
+                'harga_per_item' => 14000,
+                'subtotal' => 14000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 6,
+                'pesanan_id' => 8,
+                'layanan_mitra_satuan_id' => 6,
+                'jumlah_item' => 1,
+                'harga_per_item' => 16000,
+                'subtotal' => 16000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 }
