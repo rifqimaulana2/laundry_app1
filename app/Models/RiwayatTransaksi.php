@@ -9,9 +9,12 @@ class RiwayatTransaksi extends Model
 {
     use HasFactory;
 
+    protected $table = 'riwayat_transaksi';
+    public $timestamps = false;
+
     protected $fillable = [
         'pesanan_id',
-        'status',
+        'keterangan', // bukan 'status' sesuai kolom database kamu
         'jumlah'
     ];
 

@@ -9,6 +9,9 @@ class LayananMitraKiloan extends Model
 {
     use HasFactory;
 
+    protected $table = 'layanan_mitra_kiloan';
+    public $timestamps = false;
+
     protected $fillable = [
         'mitra_id',
         'layanan_kiloan_id',

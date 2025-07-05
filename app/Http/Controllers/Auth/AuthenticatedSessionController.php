@@ -16,7 +16,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login'); // ✅ Pastikan view login ada
+        return view('auth.login');
     }
 
     /**
@@ -29,12 +29,14 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
-        // 🔒 Blokir login mitra jika belum disetujui (pakai status_approve dari tabel users)
-        if ($user->role === 'mitra' && $user->status_approve !== 1) {
-            Auth::logout();
-            return redirect()->route('login')->withErrors([
-                'email' => 'Akun mitra Anda belum disetujui oleh admin.',
-            ]);
+        // 🔒 Blokir login mitra jika belum disetujui (belum punya data di tabel `mitras`)
+        if ($user->role === 'mitra') {
+            if (!$user->mitra) {
+                Auth::logout();
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Akun mitra Anda belum disetujui oleh admin.',
+                ]);
+            }
         }
 
         // 🔀 Redirect sesuai role

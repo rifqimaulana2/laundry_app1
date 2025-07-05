@@ -9,5 +9,8 @@ class StatusMaster extends Model
 {
     use HasFactory;
 
+    protected $table = 'status_master';
+    public $timestamps = false;
+
     protected $fillable = ['nama_status', 'urutan'];
 }

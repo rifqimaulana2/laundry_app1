@@ -3,67 +3,55 @@
 namespace App\Http\Controllers\Mitra;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\LayananKiloan;
 use App\Models\LayananSatuan;
+use App\Models\LayananMitraKiloan;
+use App\Models\LayananMitraSatuan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LayananMitraController extends Controller
 {
     public function index()
     {
-        $kiloan = LayananKiloan::where('mitra_id', Auth::id())->get();
-        $satuan = LayananSatuan::where('mitra_id', Auth::id())->get();
+        $mitra = Auth::user()->mitra;
+        $layananKiloan = $mitra->layananMitraKiloan()->with('layanan')->get();
+        $layananSatuan = $mitra->layananMitraSatuan()->with('layanan')->get();
 
-        $layanan = $kiloan->merge($satuan);
-
-        return view('mitra.layanan.index', compact('layanan'));
+        return view('mitra.layanan.index', compact('layananKiloan', 'layananSatuan'));
     }
 
     public function create()
     {
-        return view('mitra.layanan.form');
+        $paketKiloan = LayananKiloan::all();
+        $paketSatuan = LayananSatuan::all();
+        return view('mitra.layanan.create', compact('paketKiloan', 'paketSatuan'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nama' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'tipe' => 'required|in:kiloan,satuan',
+        $request->validate([
+            'type' => 'required|in:kiloan,satuan',
+            'layanan_id' => 'required|integer',
+            'harga' => 'required|numeric|min:0',
         ]);
 
-        $data['mitra_id'] = Auth::id();
+        $mitra = Auth::user()->mitra;
 
-        if ($data['tipe'] === 'kiloan') {
-            LayananKiloan::create($data);
+        if ($request->type === 'kiloan') {
+            LayananMitraKiloan::create([
+                'mitras_id' => $mitra->id,
+                'layanan_kiloan_id' => $request->layanan_id,
+                'harga_per_kg' => $request->harga,
+            ]);
         } else {
-            LayananSatuan::create($data);
+            LayananMitraSatuan::create([
+                'mitras_id' => $mitra->id,
+                'layanan_satuan_id' => $request->layanan_id,
+                'harga_per_item' => $request->harga,
+            ]);
         }
 
-        return redirect()->route('mitra.layanan.index')->with('success', 'Layanan berhasil ditambahkan.');
-    }
-
-    public function edit($id)
-    {
-        $layanan = LayananKiloan::find($id) ?? LayananSatuan::findOrFail($id);
-        return view('mitra.layanan.form', compact('layanan'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $data = $request->validate([
-            'nama' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'tipe' => 'required|in:kiloan,satuan',
-        ]);
-
-        $layanan = ($data['tipe'] === 'kiloan')
-            ? LayananKiloan::where('mitra_id', Auth::id())->findOrFail($id)
-            : LayananSatuan::where('mitra_id', Auth::id())->findOrFail($id);
-
-        $layanan->update($data);
-
-        return redirect()->route('mitra.layanan.index')->with('success', 'Layanan berhasil diperbarui.');
+        return redirect()->route('mitra.layanan.index')->with('success', 'Layanan ditambahkan.');
     }
 }

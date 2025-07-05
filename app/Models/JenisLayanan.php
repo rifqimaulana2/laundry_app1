@@ -9,5 +9,8 @@ class JenisLayanan extends Model
 {
     use HasFactory;
 
+    protected $table = 'jenis_layanan';
+    public $timestamps = false;
+
     protected $fillable = ['nama_layanan'];
 }

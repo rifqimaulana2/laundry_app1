@@ -6,29 +6,29 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles; // ← Tambahkan ini
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, HasRoles; // ← Aktifkan trait HasRoles
+    use HasApiTokens, Notifiable, HasRoles;
 
     /**
-     * Mass assignable attributes.
+     * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',
-    'nama_usaha',
-    'no_telepon',
-    'kecamatan',
-];
+        'name',
+        'email',
+        'password',
+        'role',
+        'nama_usaha',
+        'no_telepon',
+        'kecamatan',
+    ];
 
     /**
-     * Hidden attributes for arrays.
+     * The attributes that should be hidden for arrays.
      *
      * @var array<int, string>
      */
@@ -38,7 +38,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Cast attributes to native types.
+     * The attributes that should be cast.
      *
      * @var array<string, string>
      */
@@ -46,32 +46,41 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // Relasi ke profil pelanggan
+    /**
+     * Relasi ke tabel pelanggan_profiles
+     */
     public function pelangganProfile()
     {
         return $this->hasOne(PelangganProfile::class);
     }
 
-    // Relasi ke mitra
+    /**
+     * Relasi ke tabel mitras
+     */
     public function mitra()
-{
-    return $this->hasOne(\App\Models\Mitra::class);
-}
+    {
+        return $this->hasOne(Mitra::class);
+    }
 
-
-    // Relasi ke pesanan
+    /**
+     * Relasi ke pesanan
+     */
     public function pesanan()
     {
         return $this->hasMany(Pesanan::class);
     }
 
-    // Relasi ke notifikasi
+    /**
+     * Relasi ke notifikasi
+     */
     public function notifikasi()
     {
         return $this->hasMany(Notifikasi::class);
     }
 
-    // Relasi ke tracking status
+    /**
+     * Relasi ke tracking status
+     */
     public function trackingStatus()
     {
         return $this->hasMany(TrackingStatus::class);

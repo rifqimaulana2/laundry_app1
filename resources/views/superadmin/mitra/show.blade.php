@@ -3,20 +3,29 @@
 @section('title', 'Detail Mitra')
 
 @section('content')
-<div class="max-w-3xl mx-auto py-6">
-    <h1 class="text-2xl font-bold text-blue-900 mb-4">Detail Mitra</h1>
+<div class="container">
+    <h1 class="mb-4">Detail Mitra</h1>
 
-    <div class="bg-white shadow p-6 rounded-lg space-y-4">
-        <div><strong>Nama Toko:</strong> {{ $mitra->nama_toko }}</div>
-        <div><strong>Alamat:</strong> {{ $mitra->alamat }}</div>
-        <div><strong>No Telepon:</strong> {{ $mitra->no_telepon }}</div>
-        <div><strong>Kecamatan:</strong> {{ $mitra->kecamatan }}</div>
-        <div><strong>Status Approve:</strong> {{ $mitra->status_approve ? 'Disetujui' : 'Menunggu Verifikasi' }}</div>
-        <div><strong>Status Langganan:</strong> {{ optional($mitra->langgananMitra)->status ?? 'Tidak Ada' }}</div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ $mitra->nama_toko }}</h5>
+            <p class="card-text"><strong>Nama Pemilik:</strong> {{ $mitra->nama }}</p>
+            <p class="card-text"><strong>No. Telepon:</strong> {{ $mitra->no_telepon ?? '-' }}</p>
+            <p class="card-text"><strong>Alamat:</strong> {{ $mitra->alamat }}</p>
+            <p class="card-text"><strong>Kecamatan:</strong> {{ $mitra->kecamatan }}</p>
+            <p class="card-text"><strong>Longitude:</strong> {{ $mitra->longitude }}</p>
+            <p class="card-text"><strong>Latitude:</strong> {{ $mitra->latitude }}</p>
+            <p class="card-text">
+                <strong>Status Approve:</strong>
+                {!! $mitra->status_approve ? '<span class="badge badge-success">Disetujui</span>' : '<span class="badge badge-warning">Pending</span>' !!}
+            </p>
+            <p class="card-text">
+                <strong>Langganan Aktif:</strong>
+                {!! $mitra->langganan_aktif ? '<span class="badge badge-info">Aktif</span>' : '<span class="badge badge-secondary">Nonaktif</span>' !!}
+            </p>
+        </div>
     </div>
 
-    <div class="mt-4">
-        <a href="{{ route('superadmin.mitra.index') }}" class="text-blue-600 hover:underline">&larr; Kembali</a>
-    </div>
+    <a href="{{ route('superadmin.mitra.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection

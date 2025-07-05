@@ -9,6 +9,9 @@ class LanggananMitra extends Model
 {
     use HasFactory;
 
+    protected $table = 'langganan_mitra';
+    public $timestamps = false;
+
     protected $fillable = [
         'mitra_id',
         'status',

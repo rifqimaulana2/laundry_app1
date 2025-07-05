@@ -3,44 +3,50 @@
 @section('title', 'Edit Mitra')
 
 @section('content')
-<div class="max-w-3xl mx-auto py-6">
-    <h1 class="text-2xl font-bold text-blue-900 mb-4">Edit Data Mitra</h1>
+<div class="container">
+    <h1 class="mb-4">Edit Data Mitra</h1>
 
-    <form action="{{ route('superadmin.mitra.update', $mitra->id) }}" method="POST"
-          class="bg-white shadow p-6 rounded-lg space-y-4">
+    <form action="{{ route('superadmin.mitra.update', $mitra->id) }}" method="POST">
         @csrf
-        @method('PATCH')
+        @method('PUT')
 
-        <div>
-            <label class="block font-medium">Nama Toko</label>
-            <input type="text" name="nama_toko" value="{{ old('nama_toko', $mitra->nama_toko) }}"
-                   class="w-full border-gray-300 rounded mt-1" required>
+        <div class="form-group">
+            <label for="nama">Nama Pemilik</label>
+            <input type="text" name="nama" class="form-control" value="{{ old('nama', $mitra->nama) }}" required>
         </div>
 
-        <div>
-            <label class="block font-medium">Alamat</label>
-            <textarea name="alamat" class="w-full border-gray-300 rounded mt-1" required>{{ old('alamat', $mitra->alamat) }}</textarea>
+        <div class="form-group">
+            <label for="nama_toko">Nama Toko</label>
+            <input type="text" name="nama_toko" class="form-control" value="{{ old('nama_toko', $mitra->nama_toko) }}" required>
         </div>
 
-        <div>
-            <label class="block font-medium">No Telepon</label>
-            <input type="text" name="no_telepon" value="{{ old('no_telepon', $mitra->no_telepon) }}"
-                   class="w-full border-gray-300 rounded mt-1">
+        <div class="form-group">
+            <label for="alamat">Alamat Lengkap</label>
+            <textarea name="alamat" class="form-control" rows="3" required>{{ old('alamat', $mitra->alamat) }}</textarea>
         </div>
 
-        <div>
-            <label class="block font-medium">Kecamatan</label>
-            <input type="text" name="kecamatan" value="{{ old('kecamatan', $mitra->kecamatan) }}"
-                   class="w-full border-gray-300 rounded mt-1">
+        <div class="form-group">
+            <label for="no_telepon">No. Telepon</label>
+            <input type="text" name="no_telepon" class="form-control" value="{{ old('no_telepon', $mitra->no_telepon) }}">
         </div>
 
-        <div class="flex justify-between items-center">
-            <button type="submit"
-                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Simpan Perubahan
-            </button>
-            <a href="{{ route('superadmin.mitra.index') }}" class="text-gray-600 hover:underline">Batal</a>
+        <div class="form-group">
+            <label for="kecamatan">Kecamatan</label>
+            <input type="text" name="kecamatan" class="form-control" value="{{ old('kecamatan', $mitra->kecamatan) }}">
         </div>
+
+        <div class="form-group">
+            <label for="longitude">Longitude</label>
+            <input type="text" name="longitude" class="form-control" value="{{ old('longitude', $mitra->longitude) }}">
+        </div>
+
+        <div class="form-group">
+            <label for="latitude">Latitude</label>
+            <input type="text" name="latitude" class="form-control" value="{{ old('latitude', $mitra->latitude) }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        <a href="{{ route('superadmin.mitra.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
 @endsection

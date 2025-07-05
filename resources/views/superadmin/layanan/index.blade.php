@@ -1,67 +1,131 @@
 @extends('layouts.admin')
 
-@section('title', 'Layanan Global')
+@section('title', 'Kelola Layanan')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6">
-    <h1 class="text-2xl font-bold text-blue-900 mb-4">Layanan Global</h1>
+<div class="container">
+    <h1 class="mb-4">Kelola Layanan</h1>
 
-    {{-- Layanan Kiloan --}}
-    <div class="bg-white shadow rounded-lg mb-6 p-6">
-        <h2 class="text-lg font-semibold text-blue-700 mb-3">Layanan Kiloan</h2>
-        <table class="w-full text-sm text-left border-collapse">
-            <thead class="bg-blue-700 text-white">
-                <tr>
-                    <th class="px-4 py-2">Nama Layanan</th>
-                    <th class="px-4 py-2">Harga/kg</th>
-                    <th class="px-4 py-2">Deskripsi</th>
-                    <th class="px-4 py-2">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($layananKiloans as $layanan)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2">{{ $layanan->nama_layanan }}</td>
-                    <td class="px-4 py-2">Rp {{ number_format($layanan->harga, 0, ',', '.') }}</td>
-                    <td class="px-4 py-2">{{ $layanan->deskripsi }}</td>
-                    <td class="px-4 py-2">
-                        <a href="#" class="text-yellow-600 hover:underline">Edit</a>
-                        <a href="#" class="text-red-600 hover:underline"
-                           onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-    {{-- Layanan Satuan --}}
-    <div class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold text-blue-700 mb-3">Layanan Satuan</h2>
-        <table class="w-full text-sm text-left border-collapse">
-            <thead class="bg-blue-700 text-white">
-                <tr>
-                    <th class="px-4 py-2">Nama Barang</th>
-                    <th class="px-4 py-2">Harga</th>
-                    <th class="px-4 py-2">Deskripsi</th>
-                    <th class="px-4 py-2">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($layananSatuans as $layanan)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2">{{ $layanan->nama_barang }}</td>
-                    <td class="px-4 py-2">Rp {{ number_format($layanan->harga, 0, ',', '.') }}</td>
-                    <td class="px-4 py-2">{{ $layanan->deskripsi }}</td>
-                    <td class="px-4 py-2">
-                        <a href="#" class="text-yellow-600 hover:underline">Edit</a>
-                        <a href="#" class="text-red-600 hover:underline"
-                           onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <ul class="nav nav-tabs" id="layananTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="jenis-tab" data-toggle="tab" href="#jenis" role="tab">Jenis Layanan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="kiloan-tab" data-toggle="tab" href="#kiloan" role="tab">Kiloan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="satuan-tab" data-toggle="tab" href="#satuan" role="tab">Satuan</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="layananTabContent">
+        {{-- Tab Jenis Layanan --}}
+        <div class="tab-pane fade show active" id="jenis" role="tabpanel">
+            <form action="{{ route('superadmin.layanan.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="type" value="jenis_layanan">
+                <div class="form-group">
+                    <label>Nama Jenis Layanan</label>
+                    <input type="text" name="nama_layanan" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success mb-3">Tambah</button>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr><th>Nama</th><th>Aksi</th></tr>
+                </thead>
+                <tbody>
+                    @foreach ($jenisLayanan as $jenis)
+                    <tr>
+                        <td>{{ $jenis->nama_layanan }}</td>
+                        <td>
+                            <form action="{{ route('superadmin.layanan.destroy', [$jenis->id, 'jenis_layanan']) }}" method="POST">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-danger">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Tab Kiloan --}}
+        <div class="tab-pane fade" id="kiloan" role="tabpanel">
+            <form action="{{ route('superadmin.layanan.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="type" value="kiloan">
+                <div class="form-group">
+                    <label>Nama Paket</label>
+                    <input type="text" name="nama_paket" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Durasi (Hari)</label>
+                    <input type="number" name="durasi_hari" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success mb-3">Tambah</button>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr><th>Nama Paket</th><th>Durasi</th><th>Aksi</th></tr>
+                </thead>
+                <tbody>
+                    @foreach ($layananKiloan as $kilo)
+                    <tr>
+                        <td>{{ $kilo->nama_paket }}</td>
+                        <td>{{ $kilo->durasi_hari }} hari</td>
+                        <td>
+                            <form action="{{ route('superadmin.layanan.destroy', [$kilo->id, 'kiloan']) }}" method="POST">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-danger">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Tab Satuan --}}
+        <div class="tab-pane fade" id="satuan" role="tabpanel">
+            <form action="{{ route('superadmin.layanan.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="type" value="satuan">
+                <div class="form-group">
+                    <label>Nama Layanan</label>
+                    <input type="text" name="nama_layanan" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success mb-3">Tambah</button>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr><th>Nama</th><th>Aksi</th></tr>
+                </thead>
+                <tbody>
+                    @foreach ($layananSatuan as $satuan)
+                    <tr>
+                        <td>{{ $satuan->nama_layanan }}</td>
+                        <td>
+                            <form action="{{ route('superadmin.layanan.destroy', [$satuan->id, 'satuan']) }}" method="POST">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-danger">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

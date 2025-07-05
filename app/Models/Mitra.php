@@ -9,48 +9,61 @@ class Mitra extends Model
 {
     use HasFactory;
 
+    protected $table = 'mitras'; // Sesuai nama tabel di database
+    public $timestamps = false;
+
     protected $fillable = [
-    'user_id',
-    'nama',
-    'nama_toko',
-    'alamat',
-    'no_telepon',
-    'kecamatan',
-    'longitude',
-    'latitude',
-    'status_approve',
-    'langganan_aktif',
-    'tanggal_langganan_berakhir',
-];
+        'user_id',
+        'nama',
+        'nama_toko',
+        'alamat',
+        'no_telepon',
+        'kecamatan',
+        'longitude',
+        'latitude',
+        'status_approve',
+        'langganan_aktif',
+        'tanggal_langganan_berakhir',
+    ];
 
-
-    // Relasi ke user (pemilik akun mitra)
+    /**
+     * Relasi ke tabel users
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi jam operasional mitra
+    /**
+     * Relasi ke jam operasional mitra (foreign key: mitra_id)
+     */
     public function jamOperasional()
     {
-        return $this->hasMany(JamOperasional::class);
+        return $this->hasMany(JamOperasional::class, 'mitra_id');
     }
 
-    // Relasi ke layanan kiloan milik mitra
-    public function layananKiloan()
+    /**
+     * Relasi ke layanan kiloan mitra (foreign key: mitra_id)
+     */
+    public function layananMitraKiloan()
     {
-        return $this->hasMany(LayananMitraKiloan::class);
+        return $this->hasMany(LayananMitraKiloan::class, 'mitra_id');
     }
 
-    // Relasi ke layanan satuan milik mitra
-    public function layananSatuan()
+    /**
+     * Relasi ke layanan satuan mitra (foreign key: mitra_id)
+     */
+    public function layananMitraSatuan()
     {
-        return $this->hasMany(LayananMitraSatuan::class);
+        return $this->hasMany(LayananMitraSatuan::class, 'mitra_id');
     }
 
-    // Relasi ke langganan mitra (1:1)
-    public function langgananMitra()
+    /**
+     * Relasi ke pesanan yang dimiliki mitra (foreign key: mitras_id)
+     * Pastikan kolom ini benar-benar ada di tabel pesanan
+     */
+    public function pesanan()
     {
-        return $this->hasOne(LanggananMitra::class);
+        return $this->hasMany(Pesanan::class, 'mitras_id');
     }
 }

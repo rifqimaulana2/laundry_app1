@@ -3,28 +3,59 @@
 @section('title', 'Detail Pesanan')
 
 @section('content')
-<h2 class="text-xl font-semibold mb-4">Detail Pesanan</h2>
+<h1 class="text-xl font-semibold mb-4">Detail Pesanan</h1>
 
-<div class="bg-white p-4 rounded shadow mb-4">
-    <p><strong>Kode:</strong> {{ $pesanan->kode }}</p>
-    <p><strong>Pelanggan:</strong> {{ $pesanan->user->name }}</p>
-    <p><strong>Alamat:</strong> {{ $pesanan->alamat }}</p>
-    <p><strong>Status:</strong> {{ ucfirst($pesanan->status) }}</p>
+<div class="bg-white shadow rounded p-4 mb-4">
+    <p><strong>Pelanggan:</strong> {{ $pesanan->user->name ?? $pesanan->walkinCustomer->nama ?? '-' }}</p>
+    <p><strong>Status Pesanan:</strong> {{ ucfirst($pesanan->status_pesanan) }}</p>
+    <p><strong>Jenis:</strong> {{ ucfirst($pesanan->jenis_pesanan) }}</p>
+    <p><strong>Tanggal Pesan:</strong> {{ $pesanan->waktu_pesan }}</p>
+    <p><strong>Total Harga:</strong> Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}</p>
 </div>
 
-@if ($pesanan->jenis_layanan === 'satuan')
-    <h3 class="font-semibold mb-2">Layanan Satuan</h3>
-    <ul class="list-disc pl-5 mb-4">
-        @foreach ($pesanan->detailSatuan as $detail)
-            <li>{{ $detail->nama_layanan }} - {{ $detail->jumlah }} pcs</li>
-        @endforeach
-    </ul>
+@if ($pesanan->jenis_pesanan === 'kiloan')
+    <h2 class="text-lg font-semibold mb-2">Detail Kiloan</h2>
+    <table class="table-auto w-full mb-4 bg-white shadow rounded">
+        <thead class="bg-blue-100">
+            <tr>
+                <th class="p-2">Layanan</th>
+                <th class="p-2">Berat (kg)</th>
+                <th class="p-2">Harga/kg</th>
+                <th class="p-2">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($pesanan->pesananDetailKiloan as $detail)
+            <tr class="border-t">
+                <td class="p-2">{{ $detail->layananMitraKiloan->layanan->nama_paket ?? '-' }}</td>
+                <td class="p-2">{{ $detail->berat_real ?? '-' }}</td>
+                <td class="p-2">Rp{{ number_format($detail->harga_per_kg, 0, ',', '.') }}</td>
+                <td class="p-2">Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 @else
-    <h3 class="font-semibold mb-2">Layanan Kiloan</h3>
-    <ul class="list-disc pl-5 mb-4">
-        @foreach ($pesanan->detailKiloan as $detail)
-            <li>{{ $detail->jenis }} - {{ $detail->perkiraan_kg }} kg</li>
-        @endforeach
-    </ul>
+    <h2 class="text-lg font-semibold mb-2">Detail Satuan</h2>
+    <table class="table-auto w-full mb-4 bg-white shadow rounded">
+        <thead class="bg-blue-100">
+            <tr>
+                <th class="p-2">Layanan</th>
+                <th class="p-2">Jumlah</th>
+                <th class="p-2">Harga/item</th>
+                <th class="p-2">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($pesanan->pesananDetailSatuan as $detail)
+            <tr class="border-t">
+                <td class="p-2">{{ $detail->layananMitraSatuan->layanan->nama_layanan ?? '-' }}</td>
+                <td class="p-2">{{ $detail->jumlah_item }}</td>
+                <td class="p-2">Rp{{ number_format($detail->harga_per_item, 0, ',', '.') }}</td>
+                <td class="p-2">Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 @endif
 @endsection

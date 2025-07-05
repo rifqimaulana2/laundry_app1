@@ -9,12 +9,19 @@ class Notifikasi extends Model
 {
     use HasFactory;
 
+    protected $table = 'notifikasi';
+    public $timestamps = false;
+
     protected $fillable = [
         'pesanan_id',
         'user_id',
         'judul',
         'aktivitas',
         'status_baca'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime', // ✅ tambahkan ini
     ];
 
     public function user()

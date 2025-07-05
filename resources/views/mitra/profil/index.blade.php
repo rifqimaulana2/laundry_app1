@@ -1,27 +1,18 @@
 @extends('layouts.mitra')
-@section('title', 'Profil Toko')
+
+@section('title', 'Profil Mitra')
 
 @section('content')
-<div class="max-w-3xl mx-auto bg-white shadow p-6 rounded-lg">
-    <h2 class="text-xl font-bold mb-4">Profil Toko</h2>
+<h1 class="text-xl font-semibold mb-4">Profil Saya</h1>
 
-    @if(session('success'))
-        <div class="bg-green-100 text-green-700 p-3 mb-4 rounded">{{ session('success') }}</div>
-    @endif
+<div class="bg-white p-4 shadow rounded">
+    <p><strong>Nama:</strong> {{ $mitra->nama }}</p>
+    <p><strong>Nama Toko:</strong> {{ $mitra->nama_toko }}</p>
+    <p><strong>Alamat:</strong> {{ $mitra->alamat }}</p>
+    <p><strong>No Telepon:</strong> {{ $mitra->no_telepon }}</p>
+    <p><strong>Kecamatan:</strong> {{ $mitra->kecamatan }}</p>
+    <p><strong>Lokasi:</strong> {{ $mitra->latitude }}, {{ $mitra->longitude }}</p>
 
-    <div class="mb-4"><strong>Nama Toko:</strong> {{ $profil->nama_toko }}</div>
-    <div class="mb-4"><strong>Alamat:</strong> {{ $profil->alamat }}</div>
-    <div class="mb-4"><strong>No HP:</strong> {{ $profil->no_telepon }}</div>
-    <div class="mb-4"><strong>Latitude:</strong> {{ $profil->latitude ?? '-' }}</div>
-    <div class="mb-4"><strong>Longitude:</strong> {{ $profil->longitude ?? '-' }}</div>
-    <div class="mb-4"><strong>Status Approve:</strong>
-        @if(auth()->user()->status_approve)
-            <span class="text-green-600 font-semibold">Disetujui</span>
-        @else
-            <span class="text-yellow-600 font-semibold">Menunggu Persetujuan</span>
-        @endif
-    </div>
-
-    <a href="{{ route('mitra.profil.edit') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Edit Profil</a>
+    <a href="{{ route('mitra.profil.edit') }}" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded shadow">Edit Profil</a>
 </div>
 @endsection

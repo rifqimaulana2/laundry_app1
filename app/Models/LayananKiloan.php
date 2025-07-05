@@ -9,6 +9,9 @@ class LayananKiloan extends Model
 {
     use HasFactory;
 
+    protected $table = 'layanan_kiloan';
+    public $timestamps = false;
+
     protected $fillable = ['id', 'nama_paket', 'durasi_hari'];
 
     public function mitras()

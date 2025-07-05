@@ -9,7 +9,7 @@ class Pesanan extends Model
 {
     use HasFactory;
 
-    protected $table = 'pesanan'; // 👈 Tambahkan ini!
+    protected $table = 'pesanan';
 
     protected $fillable = [
         'user_id',
@@ -32,41 +32,43 @@ class Pesanan extends Model
         'jatuh_tempo',
     ];
 
+    // Relasi ke User (pelanggan)
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // Relasi ke data profil pelanggan
+    public function pelangganProfile()
+    {
+        return $this->belongsTo(\App\Models\PelangganProfile::class, 'user_id', 'user_id');
+    }
+
+    // Relasi ke mitra
     public function mitra()
     {
         return $this->belongsTo(Mitra::class);
     }
 
+    // Relasi ke walk-in customer
     public function walkinCustomer()
     {
-        return $this->belongsTo(WalkinCustomer::class); // periksa juga: seharusnya "WalkinCustomer", bukan "Costumer"?
+        return $this->belongsTo(WalkinCustomer::class);
     }
 
-    public function kiloanDetails()
+    // Detail pesanan kiloan (banyak)
+    public function pesananDetailKiloan()
     {
-        return $this->hasMany(PesananDetailKiloan::class);
+        return $this->hasMany(\App\Models\PesananDetailKiloan::class);
     }
 
-    public function satuanDetails()
+    // Detail pesanan satuan (banyak)
+    public function pesananDetailSatuan()
     {
-        return $this->hasMany(PesananDetailSatuan::class);
+        return $this->hasMany(\App\Models\PesananDetailSatuan::class);
     }
 
-    public function layananKiloan()
-    {
-        return $this->hasOne(PesananDetailKiloan::class);
-    }
-
-    public function layananSatuan()
-    {
-        return $this->hasOne(PesananDetailSatuan::class);
-    }
-
+    // Tracking status
     public function trackingStatus()
     {
         return $this->hasMany(TrackingStatus::class);

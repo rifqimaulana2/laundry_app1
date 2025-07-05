@@ -9,6 +9,9 @@ class PesananDetailKiloan extends Model
 {
     use HasFactory;
 
+    protected $table = 'pesanan_detail_kiloan';
+    public $timestamps = false;
+
     protected $fillable = [
         'pesanan_id',
         'layanan_mitra_kiloan_id',
@@ -23,9 +26,8 @@ class PesananDetailKiloan extends Model
         return $this->belongsTo(Pesanan::class);
     }
 
-    public function layanan()
+    public function layananMitraKiloan()
     {
         return $this->belongsTo(\App\Models\LayananMitraKiloan::class, 'layanan_mitra_kiloan_id');
     }
-
 }

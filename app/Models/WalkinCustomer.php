@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WalkinCostumer extends Model
+class WalkinCustomer extends Model
 {
     use HasFactory;
 
-    protected $table = 'walkin_costumer';
+    protected $table = 'walkin_customer';
+    public $timestamps = false;
 
     protected $fillable = [
         'nama',

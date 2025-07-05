@@ -3,24 +3,28 @@
 @section('title', 'Jam Operasional')
 
 @section('content')
-<h2 class="text-xl font-semibold mb-4">Jam Operasional</h2>
+<h1 class="text-xl font-semibold mb-4">Jam Operasional</h1>
 
-<table class="w-full text-sm bg-white rounded shadow">
-    <thead class="bg-blue-800 text-white">
+<table class="table-auto w-full bg-white shadow rounded">
+    <thead class="bg-blue-100">
         <tr>
-            <th class="p-3">Hari</th>
-            <th class="p-3">Buka</th>
-            <th class="p-3">Tutup</th>
+            <th class="p-2">Hari</th>
+            <th class="p-2">Jam Buka</th>
+            <th class="p-2">Jam Tutup</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($jam as $j)
-            <tr class="border-b hover:bg-gray-50">
-                <td class="p-3">{{ ucfirst($j->hari) }}</td>
-                <td class="p-3">{{ $j->jam_buka }}</td>
-                <td class="p-3">{{ $j->jam_tutup }}</td>
-            </tr>
-        @endforeach
+        @forelse ($jam as $item)
+        <tr class="border-t">
+            <td class="p-2">{{ $item->hari_buka }}</td>
+            <td class="p-2">{{ $item->jam_buka }}</td>
+            <td class="p-2">{{ $item->jam_tutup }}</td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="3" class="text-center p-4">Belum ada data jam operasional.</td>
+        </tr>
+        @endforelse
     </tbody>
 </table>
 @endsection

@@ -10,8 +10,8 @@ class PesananMitraController extends Controller
 {
     public function index()
     {
-        $pesanan = Pesanan::with('user')
-            ->where('mitra_id', Auth::id())
+        $pesanan = Pesanan::with(['user', 'walkinCustomer', 'pesananDetailKiloan', 'pesananDetailSatuan'])
+            ->where('mitras_id', Auth::user()->mitra->id)
             ->latest()
             ->get();
 
@@ -20,8 +20,8 @@ class PesananMitraController extends Controller
 
     public function show($id)
     {
-        $pesanan = Pesanan::with(['user', 'detailSatuan', 'detailKiloan'])
-            ->where('mitra_id', Auth::id())
+        $pesanan = Pesanan::with(['user', 'walkinCustomer', 'pesananDetailKiloan', 'pesananDetailSatuan'])
+            ->where('mitras_id', Auth::user()->mitra->id)
             ->findOrFail($id);
 
         return view('mitra.pesanan.show', compact('pesanan'));

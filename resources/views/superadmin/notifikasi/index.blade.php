@@ -1,32 +1,55 @@
 @extends('layouts.admin')
 
-@section('title', 'Notifikasi Sistem')
+@section('title', 'Notifikasi')
 
 @section('content')
-<div class="max-w-6xl mx-auto py-6">
-    <h1 class="text-2xl font-bold text-blue-900 mb-4">Notifikasi Sistem</h1>
+<div class="container">
+    <h1 class="mb-4">Daftar Notifikasi</h1>
 
-    <div class="bg-white shadow rounded-lg overflow-x-auto">
-        <table class="w-full text-sm text-left border-collapse">
-            <thead class="bg-blue-700 text-white">
-                <tr>
-                    <th class="px-4 py-3">Tipe</th>
-                    <th class="px-4 py-3">Pesan</th>
-                    <th class="px-4 py-3">Untuk</th>
-                    <th class="px-4 py-3">Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($notifikasis as $notif)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2 capitalize">{{ $notif->tipe }}</td>
-                    <td class="px-4 py-2">{{ $notif->pesan }}</td>
-                    <td class="px-4 py-2">{{ ucfirst($notif->untuk) }}</td>
-                    <td class="px-4 py-2">{{ $notif->created_at->format('d M Y H:i') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Untuk</th>
+                <th>Pesan</th>
+                <th>Status</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($notifikasis as $notif)
+            <tr>
+                <td>{{ $notif->user->name ?? '-' }}</td>
+                <td>{{ $notif->pesan }}</td>
+                <td>
+                    {!! $notif->status_baca 
+                        ? '<span class="badge badge-success">Dibaca</span>' 
+                        : '<span class="badge badge-warning">Belum Dibaca</span>' !!}
+                </td>
+                    <td>{{ $notif->created_at->format('d M Y H:i') }}</td>
+                <td>
+                    @if (!$notif->status_baca)
+                    <form action="{{ route('superadmin.notifikasi.markAsRead', $notif->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button class="btn btn-sm btn-info">Tandai Dibaca</button>
+                    </form>
+                    @endif
+                    <form action="{{ route('superadmin.notifikasi.destroy', $notif->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus notifikasi ini?')">
+                        @csrf @method('DELETE')
+                        <button class="btn btn-sm btn-danger">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="5" class="text-center">Tidak ada notifikasi.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
 @endsection

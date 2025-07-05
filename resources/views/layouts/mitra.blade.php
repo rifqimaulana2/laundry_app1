@@ -15,6 +15,7 @@
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-8 h-8 rounded-full">
             <span>Mitra</span>
         </div>
+
         <nav class="flex-1 mt-4 space-y-1 text-sm">
             <a href="{{ route('mitra.dashboard') }}" class="px-6 py-2 hover:bg-blue-800 block">Dashboard</a>
             <a href="{{ route('mitra.profil.index') }}" class="px-6 py-2 hover:bg-blue-800 block">Profil Toko</a>
@@ -23,6 +24,7 @@
             <a href="{{ route('mitra.jam-operasional.index') }}" class="px-6 py-2 hover:bg-blue-800 block">Jam Operasional</a>
             <a href="{{ route('mitra.langganan.index') }}" class="px-6 py-2 hover:bg-blue-800 block">Langganan</a>
             <a href="{{ route('mitra.notifikasi.index') }}" class="px-6 py-2 hover:bg-blue-800 block">Notifikasi</a>
+
             <form method="POST" action="{{ route('logout') }}" class="px-6 py-2">
                 @csrf
                 <button type="submit" class="text-red-300 hover:text-red-500 w-full text-left">Logout</button>
@@ -37,6 +39,19 @@
             <h1 class="text-lg font-semibold">@yield('title', 'Dashboard Mitra')</h1>
             <span class="text-sm text-gray-600">Login sebagai: {{ auth()->user()->name }}</span>
         </header>
+
+        {{-- Flash Message --}}
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 m-4 rounded relative" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 m-4 rounded relative" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
 
         {{-- Content --}}
         <main class="p-6 overflow-y-auto flex-1">

@@ -9,6 +9,9 @@ class TagihanPembayaran extends Model
 {
     use HasFactory;
 
+    protected $table = 'tagihan_pembayaran';
+    public $timestamps = false;
+
     protected $fillable = [
         'pesanan_id',
         'jumlah_tagihan',

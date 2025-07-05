@@ -9,6 +9,9 @@ class PelangganProfile extends Model
 {
     use HasFactory;
 
+    protected $table = 'pelanggan_profiles';
+    public $timestamps = false;
+
     protected $fillable = [
         'user_id',
         'nama',

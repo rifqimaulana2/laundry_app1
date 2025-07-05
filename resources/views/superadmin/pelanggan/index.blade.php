@@ -1,37 +1,54 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Pelanggan')
+@section('title', 'Daftar Pelanggan')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6">
-    <h1 class="text-2xl font-bold text-blue-900 mb-4">Daftar Pelanggan</h1>
+<div class="container">
+    <h1 class="mb-4">Daftar Pelanggan</h1>
 
-    <div class="bg-white shadow rounded-lg overflow-x-auto">
-        <table class="w-full text-sm text-left border-collapse">
-            <thead class="bg-blue-700 text-white">
-                <tr>
-                    <th class="px-4 py-3">Nama</th>
-                    <th class="px-4 py-3">Email</th>
-                    <th class="px-4 py-3">Nomor Telepon</th>
-                    <th class="px-4 py-3">Alamat</th>
-                    <th class="px-4 py-3">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($pelanggans as $pelanggan)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2">{{ $pelanggan->user->name }}</td>
-                    <td class="px-4 py-2">{{ $pelanggan->user->email }}</td>
-                    <td class="px-4 py-2">{{ $pelanggan->no_telepon ?? '-' }}</td>
-                    <td class="px-4 py-2">{{ $pelanggan->alamat ?? '-' }}</td>
-                    <td class="px-4 py-2">
-                        {{-- Opsional: Tombol hapus, detail, dll --}}
-                        <button class="text-gray-500 italic" disabled>Tidak ada aksi</button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>No. Telepon</th>
+                <th>Kecamatan</th>
+                <th>Alamat</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($pelanggans as $pelanggan)
+            <tr>
+                <td>{{ $pelanggan->user->name }}</td>
+                <td>{{ $pelanggan->user->email }}</td>
+                <td>{{ $pelanggan->no_tlp ?? '-' }}</td>
+                <td>{{ $pelanggan->kecamatan ?? '-' }}</td>
+                <td>{{ $pelanggan->alamat ?? '-' }}</td>
+                <td>
+                    <a href="{{ route('superadmin.pelanggan.edit', $pelanggan->id) }}" class="btn btn-sm btn-primary">Edit</a>
+
+                    <form action="{{ route('superadmin.pelanggan.destroy', $pelanggan->id) }}" method="POST" class="d-inline"
+                          onsubmit="return confirm('Yakin ingin menghapus pelanggan ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="6" class="text-center">Belum ada data pelanggan.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
 @endsection
