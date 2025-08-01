@@ -2,30 +2,39 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Mitra;
+use App\Models\Pesanan;
 
 class WalkinCustomer extends Model
 {
     use HasFactory;
 
-    protected $table = 'walkin_customer';
+    protected $table = 'walkin_customers';
+
     public $timestamps = false;
 
     protected $fillable = [
         'nama',
         'no_tlp',
         'alamat',
-        'mitras_id',
+        'mitra_id', // penting agar bisa mass-assigned saat create/update
     ];
 
-    public function pesanan()
-    {
-        return $this->hasMany(Pesanan::class, 'walkin_customer_id');
-    }
-
+    /**
+     * Relasi: WalkinCustomer dimiliki oleh satu Mitra
+     */
     public function mitra()
     {
-        return $this->belongsTo(Mitra::class, 'mitras_id');
+        return $this->belongsTo(Mitra::class);
+    }
+
+    /**
+     * Relasi: WalkinCustomer memiliki banyak Pesanan
+     */
+    public function pesanans()
+    {
+        return $this->hasMany(Pesanan::class, 'walkin_customer_id');
     }
 }

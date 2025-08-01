@@ -21,7 +21,8 @@ class Notifikasi extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime', // ✅ tambahkan ini
+        'created_at'   => 'datetime',
+        'status_baca'  => 'boolean', // ✅ memastikan status_baca diperlakukan sebagai boolean
     ];
 
     public function user()

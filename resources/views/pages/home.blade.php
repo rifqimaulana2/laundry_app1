@@ -3,14 +3,28 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+    body {
+        background: #E6E6FA !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    html {
+        background: #E6E6FA !important;
+    }
+    /* Modern font */
+    body, h1, h2, h3, p, a {
+        font-family: 'Poppins', sans-serif;
+    }
+    /* Optimized accordion styles */
     .accordion-content {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.4s ease-out;
     }
     .accordion-content.active {
-        max-height: 1000px; /* Nilai awal besar, akan disesuaikan oleh JS */
+        max-height: 1000px; /* Adjusted for dynamic content */
     }
     .accordion-toggle svg {
         transition: transform 0.3s ease;
@@ -18,231 +32,169 @@
     .accordion-toggle.active svg {
         transform: rotate(180deg);
     }
-    .mitra-card {
-        background: linear-gradient(135deg, #f0fdfa, #e0f2fe); /* Gradien teal ke biru muda */
-        border: 1px solid #99ebeb; /* Border teal lembut */
-        border-radius: 0.5rem;
-        padding: 0.75rem;
-        text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .card-shadow {
+        border-radius: 1.25rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        background-color: #FFFFFF; /* Bright White */
+        padding: 1.5rem;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
-    .mitra-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    .card-shadow:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
     }
-    .mitra-card img {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        border: 2px solid #2dd4bf; /* Teal-400 */
-        object-fit: cover;
+    /* Promo Pop-up */
+    .promo-popup {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #1D4ED8, #A5F3FC); /* Deep Blue to Light Aqua */
+        color: #FFFFFF;
+        padding: 1.5rem;
+        border-radius: 1.25rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: none;
+        max-width: 300px;
     }
-    .mitra-card h4 {
-        font-size: 0.875rem;
-        color: #164e63; /* Biru tua lembut */
-        margin: 0.25rem 0;
+    .promo-popup.active {
+        display: block;
     }
-    .mitra-card p {
-        font-size: 0.625rem;
-        color: #64748b;
-        margin: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 100px;
+    /* Animated CTA Button */
+    .cta-button {
+        transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 0.75rem;
+    }
+    .cta-button:hover {
+        transform: scale(1.08);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 </style>
 @endpush
 
 @section('content')
+<!-- SEO Meta Tags -->
+<meta name="description" content="LaundryKuy - Solusi laundry modern dengan antar-jemput gratis. Daftar sekarang untuk kemudahan mencuci pakaian!">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{{-- HERO SECTION --}}
-<section class="bg-gradient-to-br from-blue-50 to-blue-100 py-8 sm:py-10 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-10">
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-blue-600 via-cyan-100 to-white py-16 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col lg:flex-row items-center gap-10">
         <div class="lg:w-1/2 text-left">
-            <span class="text-xs font-semibold text-teal-600 uppercase tracking-wide block mb-2">
-                WE ARE LAUNDRYKUY
+            <span class="text-xs font-bold text-coral-500 uppercase tracking-wide block mb-2">
+                LAUNDRYKUY STARTUP
             </span>
-            <h1 class="text-4xl font-extrabold text-blue-800 leading-tight mb-5">
-                Solusi Laundry Modern<br>
-                Cepat, Bersih, & Antar-Jemput
+            <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400 leading-tight mb-5">
+                Laundry Praktis dengan LaundryKuy
             </h1>
-            <p class="text-gray-700 text-base sm:text-lg leading-relaxed mb-6">
-                Nikmati kemudahan laundry dari rumah. Pilih layanan kiloan atau satuan, kurir kami siap menjemput pesanan Anda!
+            <p class="text-gray-800 text-lg leading-relaxed mb-6">
+                Atur laundry Anda dengan mudah melalui aplikasi kami. <br>
+                <span class="font-semibold text-blue-600">Daftar sekarang untuk layanan antar-jemput gratis!</span>
             </p>
-            <a href="/login"
-                class="inline-flex items-center bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300">
-                Pesan Sekarang
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-            </a>
+            <div class="flex gap-4 mb-4">
+                <a href="/register" class="inline-flex items-center bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg cta-button hover:bg-blue-700">
+                    Daftar Pelanggan
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="/jadimitra" class="inline-flex items-center bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg cta-button hover:bg-blue-700">
+                    Daftar Mitra
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+            <div class="mt-2 text-sm text-gray-600">Sudah punya akun? <a href="/login" class="text-blue-600 font-semibold hover:underline">Login di sini</a></div>
         </div>
         <div class="lg:w-1/2 flex justify-center">
-            <img src="{{ asset('images/laundry1.jpg') }}" alt="Ilustrasi layanan laundry modern"
-                class="max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl h-auto rounded-xl shadow-lg object-contain max-h-full">
+            <img src="{{ asset('images/laundry1.jpg') }}" alt="Ilustrasi pakaian bersih dengan layanan LaundryKuy"
+                class="max-w-xl h-auto rounded-xl shadow-2xl object-contain border-4 border-cyan-200">
         </div>
     </div>
 </section>
 
-{{-- LAYANAN KAMI --}}
-<section class="py-8 bg-gradient-to-br from-teal-50 to-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center text-teal-600 mb-6">Layanan Kami</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <!-- Laundry Satuan -->
-            <div class="bg-white rounded-xl shadow-sm p-5 flex flex-col justify-between">
-                <div class="flex flex-col items-center text-center">
-                    <img src="{{ asset('images/laundry_satuan.png') }}" alt="Laundry Satuan" class="h-20 mb-3">
-                    <h3 class="text-lg font-semibold text-blue-800 mb-3">Laundry Satuan</h3>
-                    <ul class="text-sm text-gray-700 list-disc list-inside mb-4 text-left w-full">
-                        <li>Jaket</li>
-                        <li>boneka kecil</li>
-                        <li>Tas Sekolah</li>
-                        <li>Sepatu Putih</li>
-                        <li>Sepatu berwarna</li>
-                    </ul>
-                </div>
-                <div class="text-center">
-                    <a href="/register" class="bg-teal-500 text-white text-sm px-4 py-2 rounded-md hover:bg-teal-600 transition">
-                        Pesan Sekarang
-                    </a>
-                </div>
+<!-- Layanan Kami -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center text-blue-700 mb-10">Layanan Kami</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="card-shadow text-center">
+                <img src="{{ asset('images/laundry_satuan.png') }}" alt="Ikon layanan laundry satuan" class="h-20 mb-4 mx-auto" />
+                <h3 class="text-lg font-semibold text-blue-800 mb-2">Laundry Satuan</h3>
+                <ul class="text-sm text-gray-600 list-disc list-inside mb-4 text-left">
+                    <li>Sepatu</li><li>Boneka</li><li>Sweater</li><li>Bed Cover</li><li>Jaket</li><li>Tas</li>
+                </ul>
+                <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition cta-button">Pesan Sekarang</a>
             </div>
-            <!-- Laundry Kiloan -->
-            <div class="bg-white rounded-xl shadow-sm p-5 flex flex-col justify-between">
-                <div class="flex flex-col items-center text-center">
-                    <img src="{{ asset('images/laundry_kiloan.png') }}" alt="Laundry Kiloan" class="h-20 mb-3">
-                    <h3 class="text-lg font-semibold text-blue-800 mb-3">Laundry Kiloan</h3>
-                    <ul class="text-sm text-gray-700 list-disc list-inside mb-4 text-left w-full">
-                        <li>Cuci Express</li>
-                        <li>Cuci Reguler</li>
-                    </ul>
-                </div>
-                <div class="text-center">
-                    <a href="/register" class="bg-teal-500 text-white text-sm px-4 py-2 rounded-md hover:bg-teal-600 transition">
-                        Pesan Sekarang
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-teal-100 to-blue-50 border border-teal-200 rounded-3xl p-6 shadow-sm">
-            <div class="md:w-1/3 mb-6 md:mb-0">
-                <img src="{{ asset('images/antar_jemput.png') }}" alt="Gratis Antar Jemput" class="mx-auto h-28">
-            </div>
-            <div class="md:w-2/3 text-center md:text-left">
-                <h3 class="text-2xl font-bold text-teal-600 mb-3">Gratis Antar Jemput</h3>
-                <p class="text-gray-700 text-base leading-relaxed">
-                    Semua layanan kami dilengkapi dengan fasilitas <strong>antar jemput pakaian langsung ke rumah Anda</strong>, tanpa biaya tambahan. Praktis, hemat waktu, dan tanpa repot!
-                </p>
+            <div class="card-shadow text-center">
+                <img src="{{ asset('images/laundry_kiloan.png') }}" alt="Ikon layanan laundry kiloan" class="h-20 mb-4 mx-auto" />
+                <h3 class="text-lg font-semibold text-blue-800 mb-2">Laundry Kiloan</h3>
+                <ul class="text-sm text-gray-600 list-disc list-inside mb-4 text-left">
+                    <li>Cuci Express</li><li>Cuci Reguler</li>
+                </ul>
+                <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition cta-button">Pesan Sekarang</a>
             </div>
         </div>
     </div>
 </section>
 
-{{-- PELACAKAN PESANAN --}}
-<section class="py-8 bg-gradient-to-br from-teal-50 to-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-2xl sm:text-3xl font-bold text-teal-600 mb-4">Pelacakan Pesanan</h2>
-        <p class="text-base sm:text-lg text-gray-700 mb-6 max-w-xl mx-auto">
-            Lacak status pesanan Anda secara real-time dengan mudah.
-        </p>
-        <form action="/pelacakan" method="GET" class="max-w-md mx-auto">
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input type="text" name="kode" required minlength="5" placeholder="Masukkan kode pesanan"
-                    class="w-full border border-gray-300 rounded-md shadow-sm p-3 text-sm sm:text-base focus:ring-teal-400 focus:border-teal-400 bg-white" />
-                <button type="submit"
-                    class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-5 rounded-lg transition-colors text-sm sm:text-base">
-                    Lacak
-                </button>
-            </div>
-        </form>
+<!-- Mengapa Memilih LaundryKuy -->
+<section class="py-12 bg-cyan-50">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold text-blue-700 mb-8">Mengapa Memilih LaundryKuy?</h2>
+        <p class="text-gray-800 text-lg mb-6">Nikmati kemudahan mencuci pakaian dengan layanan antar-jemput gratis dan pilihan cuci express atau reguler. Daftar sekarang untuk pengalaman laundry yang praktis!</p>
+        <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg cta-button">Coba Sekarang</a>
     </div>
 </section>
 
-<section class="bg-gradient-to-b from-teal-50 to-blue-100 py-12" x-data="{ selectedKecamatan: 'Indramayu' }">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center text-blue-900 mb-4">Mitra Berdasarkan Kecamatan</h2>
-        <p class="text-center text-gray-700 mb-8 max-w-2xl mx-auto">
-            Pilih kecamatan untuk melihat beberapa mitra yang tersedia
-        </p>
-
-        <!-- Dropdown Kecamatan -->
-        <div class="flex justify-center mb-10">
-            <select x-model="selectedKecamatan" class="bg-white border border-gray-300 rounded-xl px-5 py-2 text-gray-800 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="Indramayu">Indramayu</option>
-                <option value="Sindang">Sindang</option>
-                <option value="Lohbener">Lohbener</option>
-            </select>
+<!-- Testimoni Pelanggan -->
+<section class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center text-blue-700 mb-10">Apa Kata Pelanggan Kami</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            @foreach ([1 => 'Rina, Indramayu', 2 => 'Dimas, Lohbener', 3 => 'Sari, Sindang'] as $i => $name)
+            <div class="card-shadow text-center">
+                <img src="{{ asset("images/testi$i.jpg") }}" alt="Foto profil pelanggan {{ $name }}" class="w-16 h-16 rounded-full object-cover mx-auto mb-3">
+                <p class="text-gray-600 text-sm italic mb-2">"{{ ['Pelayanan cepat, hasil cucian bersih dan wangi. Kurirnya ramah!', 'LaundryKuy bikin hidup lebih mudah, cucian selalu rapi!', 'Cuci express beneran cepat, cocok buat yang buru-buru!'][$i-1] }}"</p>
+                <span class="text-blue-600 text-xs font-semibold">{{ $name }}</span>
+            </div>
+            @endforeach
         </div>
-
-        @php
-            $dataMitra = [
-                'Indramayu' => [
-                    ['nama' => "Kilo's Laundry", 'alamat' => 'Jl. Jend. Sudirman, Indramayu', 'gambar' => 'laundry1.jpg', 'telepon' => '0812-3456-7890'],
-                    ['nama' => 'Tomodachi Laundry', 'alamat' => 'Jl. Jend. Sudirman No.144, Lemahmekar, Indramayu', 'gambar' => 'laundry2.jpg', 'telepon' => '0813-9876-5432'],
-                    ['nama' => 'Omeh Laundry', 'alamat' => 'Wisma An Nur Ruko No. 1, Karangmalang, Indramayu', 'gambar' => 'laundry3.jpg', 'telepon' => '0821-2233-4455'],
-                ],
-                'Sindang' => [
-                    ['nama' => 'Bebasuh Coin Laundry', 'alamat' => 'Jl. Dharma Ayu, Dermayu, Sindang', 'gambar' => 'laundry4.jpg', 'telepon' => '0812-1000-2000'],
-                    ['nama' => "Kino Laundry", 'alamat' => 'Jl. Cimanuk Barat No. 32, Sindang', 'gambar' => 'laundry5.jpg', 'telepon' => '0812-3344-5566'],
-                    ['nama' => "Kilo's Laundry", 'alamat' => 'Jl. Cimanuk Barat No. 2, Sindang', 'gambar' => 'laundry6.jpg', 'telepon' => '0812-5566-7788'],
-                    ['nama' => 'Shayn Laundry', 'alamat' => 'Samping STIKES, Jl. Wirapati, Sindang', 'gambar' => 'laundry7.jpg', 'telepon' => '0813-1234-5678'],
-                ],
-                'Lohbener' => [
-                    ['nama' => 'Laundry Ibu Ilah', 'alamat' => 'Blok Cangkring, Lohbener', 'gambar' => 'laundry8.jpg', 'telepon' => '0813-7777-8888'],
-                    ['nama' => 'Amanah Laundry', 'alamat' => 'Blok Bangkir Kunir, Lohbener', 'gambar' => 'laundry9.jpg', 'telepon' => '0812-6666-5555'],
-                    ['nama' => 'Awan Laundry', 'alamat' => 'Jl. Raya Lohbener', 'gambar' => 'laundry10.jpg', 'telepon' => '0812-8888-9999'],
-                ]
-            ];
-        @endphp
-
-        <!-- Grid Mitra Scrollable -->
-        <template x-for="(mitras, kecamatan) in {{ Js::from($dataMitra) }}" :key="kecamatan">
-            <div x-show="selectedKecamatan === kecamatan" class="overflow-x-auto">
-                <div class="flex space-x-4 snap-x snap-mandatory max-w-[900px] mx-auto overflow-x-auto px-1">
-                    <template x-for="mitra in mitras" :key="mitra.nama">
-                        <div class="min-w-[260px] max-w-[260px] h-[340px] flex-shrink-0 bg-white rounded-xl shadow-md p-4 text-center space-y-2 snap-start transition hover:shadow-lg">
-                            <img :src="'/images/' + mitra.gambar" :alt="'Foto ' + mitra.nama" class="w-16 h-16 object-cover rounded-full mx-auto border border-teal-400">
-                            <h3 class="text-base font-semibold text-blue-800" x-text="mitra.nama"></h3>
-                            <p class="text-sm text-gray-600 line-clamp-3 h-[42px]" x-text="mitra.alamat"></p>
-                            <p class="text-sm text-gray-500" x-text="'Telp: ' + mitra.telepon"></p>
-                            <a href="{{ url('/register') }}" class="inline-block mt-2 bg-teal-500 text-white px-3 py-1.5 rounded-full text-xs hover:bg-teal-600">
-                                Lihat Detail
-                            </a>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </template>
     </div>
 </section>
 
+<!-- CTA Section -->
+<section class="py-16 bg-cyan-50">
+    <div class="max-w-5xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="card-shadow flex flex-col items-center">
+                <h2 class="text-2xl font-bold text-coral-500 mb-3">Jadi Mitra LaundryKuy</h2>
+                <p class="text-gray-800 text-center mb-4">Kembangkan bisnis laundry Anda dengan sistem digital dan akses pelanggan luas.</p>
+                <a href="/register" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg cta-button hover:bg-blue-700">Gabung Jadi Mitra</a>
+            </div>
+            <div class="card-shadow flex flex-col items-center">
+                <h2 class="text-2xl font-bold text-blue-600 mb-3">Jadi Pelanggan LaundryKuy</h2>
+                <p class="text-gray-800 text-center mb-4">Atur laundry Anda dengan mudah dan nikmati layanan antar-jemput gratis.</p>
+                <a href="/register" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg cta-button hover:bg-blue-700">Daftar Sekarang</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Promo Banner -->
+<section class="py-8 bg-blue-600 text-white text-center">
+    <div class="max-w-5xl mx-auto px-4">
+        <h2 class="text-2xl font-bold mb-2">Mulai Laundry Praktis Sekarang!</h2>
+        <p class="mb-4">Daftar sekarang untuk layanan laundry dengan antar-jemput gratis.</p>
+        <a href="/register" class="bg-coral-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg cta-button hover:bg-coral-600">Coba Sekarang!</a>
+    </div>
+</section>
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    new Swiper('.swiper-beforeafter', {
-        slidesPerView: 1.2,
-        spaceBetween: 20,
-        grabCursor: true,
-        breakpoints: {
-            640: { slidesPerView: 2.2 },
-            1024: { slidesPerView: 3 },
-        }
-    });
-
-    new Swiper('.swiper-mitra', {
-        slidesPerView: 1.2,
-        spaceBetween: 16,
-        loop: true,
-        autoplay: { delay: 3000 },
-        breakpoints: {
-            640: { slidesPerView: 2.5 },
-            1024: { slidesPerView: 3.5 },
-        }
-    });
-
+    // Improved Accordion Script
     document.addEventListener('DOMContentLoaded', () => {
         const toggles = document.querySelectorAll('.accordion-toggle');
 
@@ -264,6 +216,11 @@
                 }
             });
         });
+
+        // Promo Pop-up
+        setTimeout(() => {
+            document.getElementById('promoPopup').classList.add('active');
+        }, 3000);
     });
 </script>
 @endpush

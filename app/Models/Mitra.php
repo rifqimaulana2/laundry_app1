@@ -2,68 +2,69 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Mitra extends Model
 {
-    use HasFactory;
-
-    protected $table = 'mitras'; // Sesuai nama tabel di database
-    public $timestamps = false;
-
     protected $fillable = [
         'user_id',
-        'nama',
         'nama_toko',
-        'alamat',
-        'no_telepon',
         'kecamatan',
+        'alamat_lengkap',
         'longitude',
         'latitude',
+        'foto_toko',
+        'no_telepon',
         'status_approve',
-        'langganan_aktif',
-        'tanggal_langganan_berakhir',
+        'foto_profile',
     ];
 
-    /**
-     * Relasi ke tabel users
-     */
-    public function user()
+    // Relasi ke tabel users
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Relasi ke jam operasional mitra (foreign key: mitra_id)
-     */
-    public function jamOperasional()
-    {
-        return $this->hasMany(JamOperasional::class, 'mitra_id');
-    }
-
-    /**
-     * Relasi ke layanan kiloan mitra (foreign key: mitra_id)
-     */
+    // Relasi ke layanan kiloan
     public function layananMitraKiloan()
     {
-        return $this->hasMany(LayananMitraKiloan::class, 'mitra_id');
+        return $this->hasMany(\App\Models\LayananMitraKiloan::class);
     }
 
-    /**
-     * Relasi ke layanan satuan mitra (foreign key: mitra_id)
-     */
+    // Relasi ke layanan satuan
     public function layananMitraSatuan()
     {
-        return $this->hasMany(LayananMitraSatuan::class, 'mitra_id');
+        return $this->hasMany(\App\Models\LayananMitraSatuan::class);
     }
 
-    /**
-     * Relasi ke pesanan yang dimiliki mitra (foreign key: mitras_id)
-     * Pastikan kolom ini benar-benar ada di tabel pesanan
-     */
+    // Relasi ke jam operasional
+    public function jamOperasionals()
+    {
+        return $this->hasMany(\App\Models\JamOperasional::class);
+    }
+
+    // Relasi ke pesanan
     public function pesanan()
     {
-        return $this->hasMany(Pesanan::class, 'mitras_id');
+        return $this->hasMany(\App\Models\Pesanan::class);
+    }
+
+    // Scope mitra pending
+    public function scopePending($query)
+    {
+        return $query->where('status_approve', 'pending');
+    }
+
+    // Scope mitra disetujui
+    public function scopeDisetujui($query)
+    {
+        return $query->where('status_approve', 'disetujui');
+    }
+
+    // Scope mitra ditolak
+    public function scopeDitolak($query)
+    {
+        return $query->where('status_approve', 'ditolak');
     }
 }

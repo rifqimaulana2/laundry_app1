@@ -2,21 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class JamOperasional extends Model
 {
     use HasFactory;
 
-    protected $table = 'jam_operasional';
-    public $timestamps = false;
+    protected $table = 'jam_operasionals';
 
     protected $fillable = [
         'mitra_id',
-        'hari_buka',
+        'hari',
         'jam_buka',
-        'jam_tutup'
+        'jam_tutup',
+        'is_libur',
     ];
 
     public function mitra()

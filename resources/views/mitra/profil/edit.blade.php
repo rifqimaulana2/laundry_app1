@@ -1,51 +1,54 @@
 @extends('layouts.mitra')
 
-@section('title', 'Edit Profil')
-
 @section('content')
-<h1 class="text-xl font-semibold mb-4">Edit Profil</h1>
-
-<form method="POST" action="{{ route('mitra.profil.update') }}" class="bg-white p-4 rounded shadow">
-    @csrf
-    @method('PUT')
-
-    <div class="mb-4">
-        <label class="block font-medium">Nama</label>
-        <input type="text" name="nama" value="{{ old('nama', $mitra->nama) }}" class="w-full p-2 border rounded">
-    </div>
-
-    <div class="mb-4">
-        <label class="block font-medium">Nama Toko</label>
-        <input type="text" name="nama_toko" value="{{ old('nama_toko', $mitra->nama_toko) }}" class="w-full p-2 border rounded">
-    </div>
-
-    <div class="mb-4">
-        <label class="block font-medium">Alamat</label>
-        <textarea name="alamat" class="w-full p-2 border rounded">{{ old('alamat', $mitra->alamat) }}</textarea>
-    </div>
-
-    <div class="mb-4">
-        <label class="block font-medium">No Telepon</label>
-        <input type="text" name="no_telepon" value="{{ old('no_telepon', $mitra->no_telepon) }}" class="w-full p-2 border rounded">
-    </div>
-
-    <div class="mb-4">
-        <label class="block font-medium">Kecamatan</label>
-        <input type="text" name="kecamatan" value="{{ old('kecamatan', $mitra->kecamatan) }}" class="w-full p-2 border rounded">
-    </div>
-
-    <div class="flex gap-4">
-        <div class="mb-4 flex-1">
-            <label class="block font-medium">Latitude</label>
-            <input type="text" name="latitude" value="{{ old('latitude', $mitra->latitude) }}" class="w-full p-2 border rounded">
+    <div class="max-w-xl mx-auto mt-10">
+        <div class="bg-white rounded-3xl shadow-lg p-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Profil Mitra</h1>
+            <form action="{{ route('mitra.profil.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Nama Toko</label>
+                    <input type="text" name="nama_toko" value="{{ $mitra->nama_toko }}" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Kecamatan</label>
+                    <input type="text" name="kecamatan" value="{{ $mitra->kecamatan }}" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Alamat Lengkap</label>
+                    <textarea name="alamat_lengkap" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>{{ $mitra->alamat_lengkap }}</textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Longitude</label>
+                        <input type="text" name="longitude" value="{{ $mitra->longitude }}" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Latitude</label>
+                        <input type="text" name="latitude" value="{{ $mitra->latitude }}" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">No Telepon</label>
+                    <input type="text" name="no_telepon" value="{{ $mitra->no_telepon }}" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Foto Toko</label>
+                    <input type="file" name="foto_toko" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3">
+                    @if ($mitra->foto_toko)
+                        <img src="{{ asset('storage/' . $mitra->foto_toko) }}" width="100" class="mt-2 rounded-lg shadow">
+                    @endif
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Foto Profil</label>
+                    <input type="file" name="foto_profile" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3">
+                    @if ($mitra->foto_profile)
+                        <img src="{{ asset('storage/' . $mitra->foto_profile) }}" width="100" class="mt-2 rounded-lg shadow">
+                    @endif
+                </div>
+                <button type="submit" class="w-full py-2 px-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition">Simpan</button>
+            </form>
         </div>
-
-        <div class="mb-4 flex-1">
-            <label class="block font-medium">Longitude</label>
-            <input type="text" name="longitude" value="{{ old('longitude', $mitra->longitude) }}" class="w-full p-2 border rounded">
-        </div>
     </div>
-
-    <button class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
-</form>
 @endsection

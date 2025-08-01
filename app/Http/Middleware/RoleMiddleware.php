@@ -13,8 +13,8 @@ class RoleMiddleware
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  mixed ...$roles
+     * @param  \Closure  $next
+     * @param  mixed  ...$roles
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
@@ -22,14 +22,19 @@ class RoleMiddleware
         $user = Auth::user();
 
         if (!$user) {
-            return response()->json(['message' => 'Unauthenticated'], 403);
+            // Untuk API
+            return $request->expectsJson()
+                ? response()->json(['message' => 'Unauthenticated'], 403)
+                : abort(403, 'Anda belum login.');
         }
 
-        // Jika user memiliki salah satu role yang diizinkan
-        if (in_array($user->role, $roles)) {
-            return $next($request);
+        if (!in_array($user->role, $roles)) {
+            // Untuk API
+            return $request->expectsJson()
+                ? response()->json(['message' => 'Unauthorized - Role not allowed'], 403)
+                : abort(403, 'Akses ditolak untuk role ini.');
         }
 
-        return response()->json(['message' => 'Unauthorized - Role not allowed'], 403);
+        return $next($request);
     }
 }

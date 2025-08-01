@@ -32,18 +32,19 @@ class Kernel extends HttpKernel
     ];
 
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+    'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // Middleware Role Custom
-'role' => \App\Http\Middleware\RoleMiddleware::class,
+    // Middleware Role Custom
+    'role' => \App\Http\Middleware\RoleMiddleware::class,
 
-        // Jika kamu pakai Spatie (opsional)
-        // 'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-    ];
+    // Middleware untuk mencegah mitra belum disetujui
+    'cek.status.mitra' => \App\Http\Middleware\CekStatusMitra::class,
+];
+
 }

@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LayananKiloan extends Model
 {
     use HasFactory;
 
     protected $table = 'layanan_kiloan';
+
     public $timestamps = false;
 
-    protected $fillable = ['id', 'nama_paket', 'durasi_hari'];
+    protected $fillable = [
+        'jenis_layanan_id',
+        'nama_paket',
+    ];
 
-    public function mitras()
+    public function jenisLayanan()
     {
-        return $this->hasMany(LayananMitraKiloan::class);
+        return $this->belongsTo(JenisLayanan::class, 'jenis_layanan_id');
     }
 }

@@ -35,27 +35,65 @@
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
 
+        <!-- Field Khusus Pelanggan -->
+        <div id="pelanggan-fields" style="display: none;">
+            <div class="mt-4">
+                <x-input-label for="alamat" value="Alamat" />
+                <x-text-input name="alamat" id="alamat" class="block mt-1 w-full"
+                    value="{{ old('alamat') }}" required />
+                <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="pelanggan_no_telepon" value="Nomor Telepon" />
+                <x-text-input name="no_telepon" id="pelanggan_no_telepon" class="block mt-1 w-full"
+                    value="{{ old('no_telepon') }}" required />
+                <x-input-error :messages="$errors->get('no_telepon')" class="mt-2" />
+            </div>
+        </div>
+
         <!-- Field Khusus Mitra -->
         <div id="mitra-fields" style="display: none;">
             <div class="mt-4">
                 <x-input-label for="nama_usaha" value="Nama Usaha" />
                 <x-text-input name="nama_usaha" id="nama_usaha" class="block mt-1 w-full"
-                    value="{{ old('nama_usaha') }}" />
+                    value="{{ old('nama_usaha') }}" required />
                 <x-input-error :messages="$errors->get('nama_usaha')" class="mt-2" />
             </div>
 
             <div class="mt-4">
-                <x-input-label for="no_telepon" value="Nomor Telepon" />
-                <x-text-input name="no_telepon" id="no_telepon" class="block mt-1 w-full"
-                    value="{{ old('no_telepon') }}" />
+                <x-input-label for="mitra_no_telepon" value="Nomor Telepon" />
+                <x-text-input name="no_telepon" id="mitra_no_telepon" class="block mt-1 w-full"
+                    value="{{ old('no_telepon') }}" required />
                 <x-input-error :messages="$errors->get('no_telepon')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="kecamatan" value="Kecamatan" />
                 <x-text-input name="kecamatan" id="kecamatan" class="block mt-1 w-full"
-                    value="{{ old('kecamatan') }}" />
+                    value="{{ old('kecamatan') }}" required />
                 <x-input-error :messages="$errors->get('kecamatan')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="alamat_lengkap" value="Alamat Lengkap" />
+                <x-text-input name="alamat_lengkap" id="alamat_lengkap" class="block mt-1 w-full"
+                    value="{{ old('alamat_lengkap') }}" required />
+                <x-input-error :messages="$errors->get('alamat_lengkap')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="longitude" value="Longitude" />
+                <x-text-input name="longitude" id="longitude" class="block mt-1 w-full"
+                    value="{{ old('longitude') }}" required />
+                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="latitude" value="Latitude" />
+                <x-text-input name="latitude" id="latitude" class="block mt-1 w-full"
+                    value="{{ old('latitude') }}" required />
+                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
             </div>
         </div>
 
@@ -91,12 +129,21 @@
     <script>
         const roleSelect = document.getElementById('role');
         const mitraFields = document.getElementById('mitra-fields');
+        const pelangganFields = document.getElementById('pelanggan-fields');
 
-        function toggleMitraFields() {
-            mitraFields.style.display = roleSelect.value === 'mitra' ? 'block' : 'none';
+        function toggleRoleFields() {
+            const role = roleSelect.value;
+            mitraFields.style.display = role === 'mitra' ? 'block' : 'none';
+            pelangganFields.style.display = role === 'pelanggan' ? 'block' : 'none';
+
+            // Nonaktifkan field yang tidak ditampilkan untuk mencegah pengiriman data
+            const pelangganInputs = pelangganFields.querySelectorAll('input');
+            const mitraInputs = mitraFields.querySelectorAll('input');
+            pelangganInputs.forEach(input => input.disabled = role !== 'pelanggan');
+            mitraInputs.forEach(input => input.disabled = role !== 'mitra');
         }
 
-        roleSelect.addEventListener('change', toggleMitraFields);
-        document.addEventListener('DOMContentLoaded', toggleMitraFields);
+        roleSelect.addEventListener('change', toggleRoleFields);
+        document.addEventListener('DOMContentLoaded', toggleRoleFields);
     </script>
 </x-guest-layout>

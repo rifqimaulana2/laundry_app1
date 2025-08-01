@@ -1,5 +1,7 @@
 <?php
 
+// database/seeders/StatusMasterSeeder.php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -7,14 +9,15 @@ use Illuminate\Support\Facades\DB;
 
 class StatusMasterSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         DB::table('status_master')->insert([
-            ['id' => 1, 'nama_status' => 'menunggu'],
-            ['id' => 2, 'nama_status' => 'dijemput'],
-            ['id' => 3, 'nama_status' => 'diproses'],
-            ['id' => 4, 'nama_status' => 'selesai'],
-            ['id' => 5, 'nama_status' => 'diantar'],
+            ['nama_status' => 'menunggu_konfirmasi'],
+            ['nama_status' => 'diproses'],
+            ['nama_status' => 'dijemput'],
+            ['nama_status' => 'diantar'],
+            ['nama_status' => 'selesai'],
+            ['nama_status' => 'dibatalkan'],
         ]);
     }
 }

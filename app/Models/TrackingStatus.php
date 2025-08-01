@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Pesanan;
+use App\Models\StatusMaster;
+use App\Models\User;
+use App\Models\Mitra;
 
 class TrackingStatus extends Model
 {
@@ -21,7 +25,11 @@ class TrackingStatus extends Model
         'pesan'
     ];
 
-    public function status()
+    protected $casts = [
+        'waktu' => 'datetime',
+    ];
+
+    public function statusMaster()
     {
         return $this->belongsTo(StatusMaster::class, 'status_master_id');
     }

@@ -10,25 +10,26 @@ public function run(): void
 {
     $this->call([
         RoleSeeder::class,                     // ← Tambah di awal
-
         UsersSeeder::class,
         PelangganProfilesSeeder::class,
         MitrasSeeder::class,
-        JamOperasionalSeeder::class,
+        EmployeesSeeder::class,
+        JamOperasionalsSeeder::class,
         JenisLayananSeeder::class,
         LayananKiloanSeeder::class,
         LayananMitraKiloanSeeder::class,
         LayananSatuanSeeder::class,
         LayananMitraSatuanSeeder::class,
         WalkinCustomerSeeder::class,
-        PesananSeeder::class,
+        PesanansSeeder::class,
         PesananDetailKiloanSeeder::class,
         PesananDetailSatuanSeeder::class,
+        TagihanSeeder::class,
         StatusMasterSeeder::class,
         TrackingStatusSeeder::class,
         NotifikasiSeeder::class,
         RiwayatTransaksiSeeder::class,
-        TagihanPembayaranSeeder::class,
+        SuperadminSeeder::class,
 
     ]);
 }

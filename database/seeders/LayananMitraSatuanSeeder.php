@@ -7,21 +7,33 @@ use Illuminate\Support\Facades\DB;
 
 class LayananMitraSatuanSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         DB::table('layanan_mitra_satuan')->insert([
-            ['id' => 1,  'layanan_satuan_id' => 1, 'mitra_id' => 2, 'harga_per_item' => 15000],
-            ['id' => 2,  'layanan_satuan_id' => 2, 'mitra_id' => 2, 'harga_per_item' => 12000],
-            ['id' => 3,  'layanan_satuan_id' => 4, 'mitra_id' => 2, 'harga_per_item' => 13000],
-            ['id' => 4,  'layanan_satuan_id' => 1, 'mitra_id' => 3, 'harga_per_item' => 14000],
-            ['id' => 5,  'layanan_satuan_id' => 3, 'mitra_id' => 3, 'harga_per_item' => 10000],
-            ['id' => 6,  'layanan_satuan_id' => 5, 'mitra_id' => 3, 'harga_per_item' => 16000],
-            ['id' => 7,  'layanan_satuan_id' => 2, 'mitra_id' => 4, 'harga_per_item' => 12500],
-            ['id' => 8,  'layanan_satuan_id' => 4, 'mitra_id' => 4, 'harga_per_item' => 13500],
-            ['id' => 9,  'layanan_satuan_id' => 5, 'mitra_id' => 4, 'harga_per_item' => 15500],
-            ['id' => 10, 'layanan_satuan_id' => 1, 'mitra_id' => 5, 'harga_per_item' => 14500],
-            ['id' => 11, 'layanan_satuan_id' => 2, 'mitra_id' => 5, 'harga_per_item' => 13000],
-            ['id' => 12, 'layanan_satuan_id' => 3, 'mitra_id' => 5, 'harga_per_item' => 11000],
+            ['layanan_satuan_id' => 1, 'mitra_id' => 1, 'harga_per_item' => 15000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 2, 'mitra_id' => 1, 'harga_per_item' => 23000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 3, 'mitra_id' => 1, 'harga_per_item' => 24000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 4, 'mitra_id' => 1, 'harga_per_item' => 54000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 5, 'mitra_id' => 1, 'harga_per_item' => 31000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 6, 'mitra_id' => 1, 'harga_per_item' => 36000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 1, 'mitra_id' => 2, 'harga_per_item' => 17000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 2, 'mitra_id' => 2, 'harga_per_item' => 22000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 3, 'mitra_id' => 2, 'harga_per_item' => 26000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 4, 'mitra_id' => 2, 'harga_per_item' => 52000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 5, 'mitra_id' => 2, 'harga_per_item' => 29000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 6, 'mitra_id' => 2, 'harga_per_item' => 37000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 1, 'mitra_id' => 3, 'harga_per_item' => 16000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 2, 'mitra_id' => 3, 'harga_per_item' => 21000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 3, 'mitra_id' => 3, 'harga_per_item' => 27000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 4, 'mitra_id' => 3, 'harga_per_item' => 31000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 5, 'mitra_id' => 3, 'harga_per_item' => 32000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 6, 'mitra_id' => 3, 'harga_per_item' => 36000, 'durasi_hari' => 3],
+            ['layanan_satuan_id' => 1, 'mitra_id' => 4, 'harga_per_item' => 17000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 2, 'mitra_id' => 4, 'harga_per_item' => 22000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 3, 'mitra_id' => 4, 'harga_per_item' => 25000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 4, 'mitra_id' => 4, 'harga_per_item' => 32000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 5, 'mitra_id' => 4, 'harga_per_item' => 55000, 'durasi_hari' => 2],
+            ['layanan_satuan_id' => 6, 'mitra_id' => 4, 'harga_per_item' => 36000, 'durasi_hari' => 2],
         ]);
     }
 }

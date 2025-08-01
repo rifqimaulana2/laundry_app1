@@ -40,11 +40,20 @@ class AuthenticatedSessionController extends Controller
         }
 
         // 🔀 Redirect sesuai role
+        return $this->authenticated($request, $user);
+    }
+
+    /**
+     * Redirect setelah berhasil login sesuai role pengguna
+     */
+    protected function authenticated(Request $request, $user): RedirectResponse
+    {
         return match ($user->role) {
             'superadmin' => redirect()->route('superadmin.dashboard'),
             'mitra'      => redirect()->route('mitra.dashboard'),
+            'employee'   => redirect()->route('employee.dashboard'), 
             'pelanggan'  => redirect()->route('pelanggan.dashboard'),
-            default      => redirect('/'),
+            default      => redirect('/home'),
         };
     }
 

@@ -2,75 +2,80 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\WalkinCustomer;
+use App\Models\Mitra;
+use App\Models\Tagihan;
+use App\Models\PesananDetailKiloan;
+use App\Models\PesananDetailSatuan;
+use App\Models\TrackingStatus;
 
 class Pesanan extends Model
 {
     use HasFactory;
 
-    protected $table = 'pesanan';
+    protected $table = 'pesanans';
 
     protected $fillable = [
         'user_id',
         'walkin_customer_id',
         'mitra_id',
         'jenis_pesanan',
-        'status_pesanan',
-        'status_konfirmasi',
-        'status_harga',
-        'status_bayar',
-        'dp',
-        'total_harga',
-        'sisa_tagihan',
-        'waktu_pesan',
-        'tanggal_jemput',
-        'tanggal_kirim',
-        'dijemput_kurir',
-        'diantar_kurir',
-        'keterangan',
-        'jatuh_tempo',
+        'catatan_pesanan',
+        'tipe_dp_wajib',
+        'tipe_bisa_lunas',
+        'tanggal_pesan',
+        'opsi_jemput',
+        'jadwal_jemput',
+        'opsi_antar',
+        'jadwal_antar',
+        'catatan_pengiriman',
     ];
 
-    // Relasi ke User (pelanggan)
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke data profil pelanggan
-    public function pelangganProfile()
-    {
-        return $this->belongsTo(\App\Models\PelangganProfile::class, 'user_id', 'user_id');
-    }
-
-    // Relasi ke mitra
-    public function mitra()
-    {
-        return $this->belongsTo(Mitra::class);
-    }
-
-    // Relasi ke walk-in customer
     public function walkinCustomer()
     {
-        return $this->belongsTo(WalkinCustomer::class);
+        return $this->belongsTo(WalkinCustomer::class, 'walkin_customer_id');
     }
 
-    // Detail pesanan kiloan (banyak)
-    public function pesananDetailKiloan()
+
+    public function detailsKiloan()
     {
-        return $this->hasMany(\App\Models\PesananDetailKiloan::class);
+        return $this->hasMany(PesananDetailKiloan::class, 'pesanan_id');
     }
 
-    // Detail pesanan satuan (banyak)
-    public function pesananDetailSatuan()
+    public function detailsSatuan()
     {
-        return $this->hasMany(\App\Models\PesananDetailSatuan::class);
+        return $this->hasMany(PesananDetailSatuan::class, 'pesanan_id');
     }
 
-    // Tracking status
+    public function tagihan()
+    {
+        return $this->hasOne(Tagihan::class, 'pesanan_id');
+    }
+
+    public function mitra()
+    {
+        return $this->belongsTo(Mitra::class, 'mitra_id');
+    }
+
+    // ✅ Relasi ke tracking status
     public function trackingStatus()
     {
         return $this->hasMany(TrackingStatus::class);
     }
+
+    // ✅ Ambil status terakhir (latest)
+    public function latestStatus()
+    {
+        return $this->hasOne(TrackingStatus::class)->latestOfMany('waktu');
+    }
+
+
 }

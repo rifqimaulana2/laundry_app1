@@ -2,28 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+// app/Models/PelangganProfile.php
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PelangganProfile extends Model
 {
-    use HasFactory;
-
     protected $table = 'pelanggan_profiles';
-    public $timestamps = false;
 
     protected $fillable = [
         'user_id',
-        'nama',
-        'no_telepon',
         'alamat',
-        'kecamatan',
-        'longitude',
-        'latitude',
+        'no_telepon',
         'foto_profil',
+        'latitude',
+        'longitude',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

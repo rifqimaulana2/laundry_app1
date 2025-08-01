@@ -7,14 +7,15 @@ use Illuminate\Support\Facades\DB;
 
 class LayananSatuanSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         DB::table('layanan_satuan')->insert([
-            ['nama_layanan' => 'Sepatu'],
-            ['nama_layanan' => 'Jaket'],
-            ['nama_layanan' => 'Boneka Kecil'],
-            ['nama_layanan' => 'Tas Sekolah'],
-            ['nama_layanan' => 'Sprei'],
+            ['jenis_layanan_id' => 2, 'nama_layanan' => 'Sepatu'],
+            ['jenis_layanan_id' => 2, 'nama_layanan' => 'Boneka'],
+            ['jenis_layanan_id' => 2, 'nama_layanan' => 'Sweater'],
+            ['jenis_layanan_id' => 2, 'nama_layanan' => 'Bed Cover'],
+            ['jenis_layanan_id' => 2, 'nama_layanan' => 'Jaket'],
+            ['jenis_layanan_id' => 2, 'nama_layanan' => 'Tas'],
         ]);
     }
 }

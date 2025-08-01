@@ -2,24 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RiwayatTransaksi extends Model
 {
     use HasFactory;
 
     protected $table = 'riwayat_transaksi';
-    public $timestamps = false;
 
     protected $fillable = [
         'pesanan_id',
-        'keterangan', // bukan 'status' sesuai kolom database kamu
-        'jumlah'
+        'user_id',
+        'nominal',
+        'jenis_transaksi',
+        'metode_bayar',
+        'waktu',
+    ];
+
+    protected $casts = [
+        'waktu' => 'datetime',
     ];
 
     public function pesanan()
     {
         return $this->belongsTo(Pesanan::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

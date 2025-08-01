@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class JenisLayananSeeder extends Seeder
 {
-    public function run(): void
-    {
-        DB::table('jenis_layanan')->insert([
-            ['id' => 1, 'nama_layanan' => 'Kiloan'],
-            ['id' => 2, 'nama_layanan' => 'Satuan'],
-        ]);
+    public function run()
+{
+    DB::table('jenis_layanan')->insert([
+        ['nama_layanan' => 'Kiloan', 'created_at' => now(), 'updated_at' => now()],
+        ['nama_layanan' => 'Satuan', 'created_at' => now(), 'updated_at' => now()],
+    ]);
     }
 }
