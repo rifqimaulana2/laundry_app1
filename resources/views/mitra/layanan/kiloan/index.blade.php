@@ -13,6 +13,7 @@
                         <tr>
                             <th class="p-4 text-sm font-semibold text-gray-700">Nama Paket</th>
                             <th class="p-4 text-sm font-semibold text-gray-700">Harga per Kg</th>
+                            <th class="p-4 text-sm font-semibold text-gray-700">Durasi Hari</th>
                             <th class="p-4 text-sm font-semibold text-gray-700">Aksi</th>
                         </tr>
                     </thead>
@@ -21,6 +22,7 @@
                             <tr class="border-t hover:bg-gray-50">
                                 <td class="p-4 text-sm text-gray-800">{{ $layanan->layananKiloan->nama_paket }}</td>
                                 <td class="p-4 text-sm text-gray-800">Rp {{ number_format($layanan->harga_per_kg, 0, ',', '.') }}</td>
+                                <td class="p-4 text-sm text-gray-800">{{ $layanan->durasi_hari }} hari</td>
                                 <td class="p-4 flex gap-2">
                                     <a href="{{ route('mitra.layanan-kiloan.edit', $layanan) }}" class="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 font-medium">Edit</a>
                                     <form action="{{ route('mitra.layanan-kiloan.destroy', $layanan) }}" method="POST" onsubmit="return confirm('Hapus layanan kiloan?')">
@@ -32,7 +34,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="p-4 text-center text-sm text-gray-500">Belum ada layanan kiloan.</td>
+                                <td colspan="4" class="p-4 text-center text-sm text-gray-500">Belum ada layanan kiloan.</td>
                             </tr>
                         @endforelse
                     </tbody>

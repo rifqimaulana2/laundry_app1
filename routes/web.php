@@ -30,12 +30,14 @@ use App\Http\Controllers\Mitra\WalkinCustomerController as MitraWalkinCustomerCo
 use App\Http\Controllers\Mitra\PesananController as MitraPesananController;
 use App\Http\Controllers\Mitra\TagihanController as MitraTagihanController;
 use App\Http\Controllers\Mitra\RiwayatTransaksiController;
+use App\Http\Controllers\Mitra\TrackingStatusController;
+
 
 // Employee
-use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;
-use App\Http\Controllers\Employee\PesananController as EmployeePesananController;
-use App\Http\Controllers\Employee\TagihanController as EmployeeTagihanController;
-use App\Http\Controllers\Employee\WalkinCustomerController as EmployeeWalkinCustomerController;
+use App\Http\Controllers\Employee\DashboardController;
+use App\Http\Controllers\Employee\PesananController;
+use App\Http\Controllers\Employee\TagihanController;
+use App\Http\Controllers\Employee\WalkinCustomerController;
 
 // Pelanggan
 use App\Http\Controllers\Pelanggan\DashboardController as PelangganDashboardController;
@@ -93,6 +95,8 @@ Route::prefix('mitra')->middleware(['auth', 'role:mitra'])->name('mitra.')->grou
     Route::resource('pesanan', MitraPesananController::class)->only(['index', 'create', 'store', 'show']);
     Route::resource('tagihan', MitraTagihanController::class)->only(['index', 'show']);
     Route::resource('transaksi', RiwayatTransaksiController::class)->only(['index', 'show']);
+    Route::get('tracking-status', [TrackingStatusController::class, 'index'])->name('tracking_status.index');
+
 
     Route::get('/profil', [MitraProfilController::class, 'edit'])->name('profil.edit');
     Route::put('/profil', [MitraProfilController::class, 'update'])->name('profil.update');
@@ -101,11 +105,26 @@ Route::prefix('mitra')->middleware(['auth', 'role:mitra'])->name('mitra.')->grou
 });
 
 // EMPLOYEE
-Route::prefix('employee')->middleware(['auth', 'role:employee'])->name('employee.')->group(function () {
-    Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('pesanan', EmployeePesananController::class)->only(['index', 'show']);
-    Route::resource('tagihan', EmployeeTagihanController::class)->only(['index', 'show']);
-    Route::resource('walkin-customer', EmployeeWalkinCustomerController::class);
+Route::middleware(['auth'])->prefix('employee')->name('employee.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Pesanan
+    Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
+    Route::get('/pesanan/{pesanan}', [PesananController::class, 'show'])->name('pesanan.show');
+    Route::get('/pesanan/create', [PesananController::class, 'create'])->name('pesanan.create');
+    Route::post('/pesanan', [PesananController::class, 'store'])->name('pesanan.store');
+
+    // Tagihan
+    Route::get('/tagihan', [TagihanController::class, 'index'])->name('tagihan.index');
+    Route::get('/tagihan/{tagihan}', [TagihanController::class, 'show'])->name('tagihan.show');
+
+    // Walk-In Customer
+    Route::get('/walkin-customer', [WalkinCustomerController::class, 'index'])->name('walkin_customer.index');
+    Route::get('/walkin-customer/create', [WalkinCustomerController::class, 'create'])->name('walkin_customer.create');
+    Route::post('/walkin-customer', [WalkinCustomerController::class, 'store'])->name('walkin_customer.store');
+    Route::get('/walkin-customer/{walkin}', [WalkinCustomerController::class, 'show'])->name('walkin_customer.show');
+    Route::get('/walkin-customer/{walkin}/edit', [WalkinCustomerController::class, 'edit'])->name('walkin_customer.edit');
+    Route::put('/walkin-customer/{walkin}', [WalkinCustomerController::class, 'update'])->name('walkin_customer.update');
 });
 
 // PELANGGAN

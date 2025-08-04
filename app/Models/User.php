@@ -40,4 +40,15 @@ class User extends Authenticatable
         return $this->hasOne(Employee::class, 'user_id');
     }
     
+    public function pesanans()
+{
+    return $this->hasMany(Pesanan::class, 'user_id');
+}
+public function pelanggan()
+{
+    return $this->hasOne(PelangganProfile::class, 'user_id');
+}
+
+
+
 }

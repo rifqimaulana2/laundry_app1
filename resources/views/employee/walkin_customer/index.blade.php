@@ -4,7 +4,7 @@
 <div class="bg-white p-6 rounded-lg shadow-md">
     <h1 class="text-2xl font-bold mb-4">🧍 Daftar Walk-in Customer</h1>
 
-    <a href="{{ route('employee.pelanggan-walkin.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4 inline-block">➕ Tambah Customer</a>
+    <a href="{{ route('employee.walkin_customer.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4 inline-block">➕ Tambah Customer</a>
 
     <div class="overflow-x-auto">
         <table class="w-full table-auto border rounded">
@@ -25,8 +25,8 @@
                         <td class="border px-4 py-2">{{ $customer->no_tlp }}</td>
                         <td class="border px-4 py-2">{{ $customer->alamat }}</td>
                         <td class="border px-4 py-2">
-                            <a href="{{ route('employee.pelanggan-walkin.show', $customer) }}" class="text-blue-600 hover:underline">Detail</a>
-                            <a href="{{ route('employee.pelanggan-walkin.edit', $customer) }}" class="text-green-600 hover:underline ml-2">Edit</a>
+                            <a href="{{ route('employee.walkin_customer.show', $customer) }}" class="text-blue-600 hover:underline">Detail</a>
+                            <a href="{{ route('employee.walkin_customer.edit', $customer) }}" class="text-green-600 hover:underline ml-2">Edit</a>
                         </td>
                     </tr>
                 @empty

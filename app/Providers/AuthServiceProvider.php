@@ -3,9 +3,14 @@
 namespace App\Providers;
 
 use App\Models\Pesanan;
+use App\Models\JamOperasional;
+use App\Models\LayananMitraKiloan;
+use App\Models\LayananMitraSatuan;
 use App\Policies\PesananPolicy;
+use App\Policies\JamOperasionalPolicy;
+use App\Policies\LayananMitraKiloanPolicy;
+use App\Policies\LayananMitraSatuanPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +21,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Pesanan::class => PesananPolicy::class,
+        JamOperasional::class => JamOperasionalPolicy::class,
+        LayananMitraKiloan::class => LayananMitraKiloanPolicy::class,
+        LayananMitraSatuan::class => LayananMitraSatuanPolicy::class,
     ];
 
     /**
@@ -24,7 +32,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-
-        //
     }
 }

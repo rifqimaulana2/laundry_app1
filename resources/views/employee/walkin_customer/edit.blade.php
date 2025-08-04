@@ -4,7 +4,7 @@
 <div class="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto">
     <h1 class="text-2xl font-bold mb-4">✏️ Edit Walk-in Customer</h1>
 
-    <form action="{{ route('employee.pelanggan-walkin.update', $walkinCustomer) }}" method="POST">
+    <form action="{{ route('employee.walkin_customer.update', $walkinCustomer) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-4">

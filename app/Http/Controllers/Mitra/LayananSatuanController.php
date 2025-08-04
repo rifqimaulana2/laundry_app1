@@ -27,12 +27,14 @@ class LayananSatuanController extends Controller
         $request->validate([
             'layanan_satuan_id' => 'required|exists:layanan_satuan,id',
             'harga_per_item' => 'required|numeric|min:0',
+            'durasi_hari' => 'required|integer|min:1',
         ]);
 
         LayananMitraSatuan::create([
             'mitra_id' => auth()->user()->mitra->id,
             'layanan_satuan_id' => $request->layanan_satuan_id,
             'harga_per_item' => $request->harga_per_item,
+            'durasi_hari' => $request->durasi_hari,
         ]);
 
         return redirect()->route('mitra.layanan-satuan.index')->with('success', 'Layanan satuan berhasil ditambahkan.');
@@ -51,9 +53,14 @@ class LayananSatuanController extends Controller
         $request->validate([
             'layanan_satuan_id' => 'required|exists:layanan_satuan,id',
             'harga_per_item' => 'required|numeric|min:0',
+            'durasi_hari' => 'required|integer|min:1',
         ]);
 
-        $layananSatuan->update($request->all());
+        $layananSatuan->update([
+            'layanan_satuan_id' => $request->layanan_satuan_id,
+            'harga_per_item' => $request->harga_per_item,
+            'durasi_hari' => $request->durasi_hari,
+        ]);
 
         return redirect()->route('mitra.layanan-satuan.index')->with('success', 'Layanan satuan berhasil diperbarui.');
     }
@@ -65,4 +72,3 @@ class LayananSatuanController extends Controller
         return redirect()->route('mitra.layanan-satuan.index')->with('success', 'Layanan satuan berhasil dihapus.');
     }
 }
-?>

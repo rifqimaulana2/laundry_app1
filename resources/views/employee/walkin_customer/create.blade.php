@@ -4,7 +4,7 @@
 <div class="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto">
     <h1 class="text-2xl font-bold mb-4">➕ Tambah Walk-in Customer</h1>
 
-    <form action="{{ route('employee.pelanggan-walkin.store') }}" method="POST">
+    <form action="{{ route('employee.walkin_customer.store') }}" method="POST">
         @csrf
         <div class="mb-4">
             <label for="nama" class="block text-sm font-medium">Nama</label>

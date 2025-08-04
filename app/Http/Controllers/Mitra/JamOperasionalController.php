@@ -48,9 +48,10 @@ class JamOperasionalController extends Controller
     {
         $this->authorize('update', $jamOperasional);
         $request->validate([
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari_buka' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'jam_buka' => 'required',
             'jam_tutup' => 'required',
+
         ]);
 
         $jamOperasional->update($request->all());

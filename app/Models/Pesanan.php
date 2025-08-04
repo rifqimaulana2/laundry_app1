@@ -45,12 +45,12 @@ class Pesanan extends Model
     }
 
 
-    public function detailsKiloan()
+    public function pesanandetailKiloan()
     {
         return $this->hasMany(PesananDetailKiloan::class, 'pesanan_id');
     }
 
-    public function detailsSatuan()
+    public function pesanandetailSatuan()
     {
         return $this->hasMany(PesananDetailSatuan::class, 'pesanan_id');
     }
@@ -76,6 +76,8 @@ class Pesanan extends Model
     {
         return $this->hasOne(TrackingStatus::class)->latestOfMany('waktu');
     }
+
+    
 
 
 }

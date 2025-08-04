@@ -19,6 +19,10 @@
                     <label class="block mb-2 text-sm font-medium text-gray-700">Harga per Item</label>
                     <input type="number" name="harga_per_item" value="{{ $layananSatuan->harga_per_item }}" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>
                 </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Durasi Hari</label>
+                    <input type="number" name="durasi_hari" value="{{ $layananSatuan->durasi_hari ?? 1 }}" class="w-full rounded-lg border-gray-300 focus:ring-green-500 focus:border-green-500 text-gray-800 py-2 px-3" required>
+                </div>
                 <button type="submit" class="w-full py-2 px-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition">Simpan</button>
             </form>
         </div>

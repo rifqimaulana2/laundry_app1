@@ -10,20 +10,33 @@
 <body class="bg-gray-100 min-h-screen font-sans antialiased">
 
     <!-- Navbar -->
-    <nav class="bg-blue-600 text-white shadow">
-        <div class="container mx-auto flex justify-between items-center py-4 px-4">
-            <a href="{{ route('employee.dashboard') }}" class="text-xl font-bold tracking-wide">
-                LaundryKuy - Pegawai
-            </a>
-            <div class="flex items-center gap-4">
-                <span class="font-medium">{{ Auth::user()->name }}</span>
-                <form action="{{ route('logout') }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="text-sm hover:underline">Keluar</button>
-                </form>
-            </div>
+<nav class="bg-blue-600 text-white shadow">
+    <div class="container mx-auto flex justify-between items-center py-4 px-4">
+        <a href="{{ route('employee.dashboard') }}" class="text-xl font-bold tracking-wide">
+            LaundryKuy - Pegawai
+        </a>
+        <div class="flex items-center gap-4">
+            <span class="font-medium">{{ Auth::user()->name }}</span>
+            <form action="{{ route('logout') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="text-sm hover:underline">Keluar</button>
+            </form>
         </div>
-    </nav>
+    </div>
+
+    <!-- Menu Navigasi Pegawai -->
+    <div class="bg-blue-500">
+        <div class="container mx-auto px-4 py-2">
+            <ul class="flex gap-6">
+                <li><a href="{{ route('employee.dashboard') }}" class="hover:underline">Dashboard</a></li>
+                <li><a href="{{ route('employee.pesanan.index') }}" class="hover:underline">Pesanan</a></li>
+                <li><a href="{{ route('employee.tagihan.index') }}" class="hover:underline">Tagihan</a></li>
+                <li><a href="{{ route('employee.walkin_customer.index') }}" class="hover:underline">Pelanggan Walk-In</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 
     <!-- Main Content -->
     <main class="container mx-auto mt-6 px-4">

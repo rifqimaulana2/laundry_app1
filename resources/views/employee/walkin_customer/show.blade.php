@@ -11,7 +11,7 @@
     </div>
 
     <div class="mt-4">
-        <a href="{{ route('employee.pelanggan-walkin.edit', $walkinCustomer) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        <a href="{{ route('employee.walkin_customer.edit', $walkinCustomer) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
             ✏️ Edit
         </a>
     </div>
