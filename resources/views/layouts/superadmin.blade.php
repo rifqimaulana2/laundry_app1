@@ -107,25 +107,10 @@
                 <a href="{{ route('superadmin.mitras.approval.index') }}"><i data-lucide="check-circle" class="w-5 h-5"></i><span class="sidebar-text">Persetujuan Mitra</span></a>
             </div>
 
-            <button class="collapsible"><i data-lucide="briefcase" class="w-5 h-5"></i><span class="sidebar-text">Karyawan</span></button>
-            <div class="content">
-                <a href="{{ route('superadmin.employees.index') }}"><i data-lucide="briefcase" class="w-5 h-5"></i><span class="sidebar-text">Karyawan</span></a>
-            </div>
+            {{-- Menu Layanan yang sudah disatukan --}}
+            <a href="{{ route('superadmin.layanan-master.index') }}"><i data-lucide="package" class="w-5 h-5"></i><span class="sidebar-text">Layanan Master</span></a>
+                <a href="{{ route('superadmin.status-master.index') }}" class="hover:text-blue-600">Status Master</a>
 
-            <button class="collapsible"><i data-lucide="list" class="w-5 h-5"></i><span class="sidebar-text">Layanan</span></button>
-            <div class="content">
-                <a href="{{ route('superadmin.jenis-layanan.index') }}"><i data-lucide="list" class="w-5 h-5"></i><span class="sidebar-text">Jenis Layanan</span></a>
-                <a href="{{ route('superadmin.layanan-kiloan.index') }}"><i data-lucide="scale" class="w-5 h-5"></i><span class="sidebar-text">Layanan Kiloan</span></a>
-                <a href="{{ route('superadmin.layanan-satuan.index') }}"><i data-lucide="package" class="w-5 h-5"></i><span class="sidebar-text">Layanan Satuan</span></a>
-            </div>
-
-            <button class="collapsible"><i data-lucide="shopping-cart" class="w-5 h-5"></i><span class="sidebar-text">Transaksi</span></button>
-            <div class="content">
-                <a href="{{ route('superadmin.pesanan.index') }}"><i data-lucide="shopping-cart" class="w-5 h-5"></i><span class="sidebar-text">Pesanan</span></a>
-                <a href="{{ route('superadmin.tagihan.index') }}"><i data-lucide="alert-circle" class="w-5 h-5"></i><span class="sidebar-text">Tagihan</span></a>
-                <a href="{{ route('superadmin.transaksi.index') }}"><i data-lucide="credit-card" class="w-5 h-5"></i><span class="sidebar-text">Transaksi</span></a>
-                <a href="{{ route('superadmin.walkin-customers.index') }}"><i data-lucide="user" class="w-5 h-5"></i><span class="sidebar-text">Walk-in Customer</span></a>
-            </div>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST">
                 @csrf

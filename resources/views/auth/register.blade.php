@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
 
         @if (session('status'))
@@ -40,14 +40,14 @@
             <div class="mt-4">
                 <x-input-label for="alamat" value="Alamat" />
                 <x-text-input name="alamat" id="alamat" class="block mt-1 w-full"
-                    value="{{ old('alamat') }}" required />
+                    value="{{ old('alamat') }}" />
                 <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="pelanggan_no_telepon" value="Nomor Telepon" />
                 <x-text-input name="no_telepon" id="pelanggan_no_telepon" class="block mt-1 w-full"
-                    value="{{ old('no_telepon') }}" required />
+                    value="{{ old('no_telepon') }}" />
                 <x-input-error :messages="$errors->get('no_telepon')" class="mt-2" />
             </div>
         </div>
@@ -57,43 +57,36 @@
             <div class="mt-4">
                 <x-input-label for="nama_usaha" value="Nama Usaha" />
                 <x-text-input name="nama_usaha" id="nama_usaha" class="block mt-1 w-full"
-                    value="{{ old('nama_usaha') }}" required />
+                    value="{{ old('nama_usaha') }}" />
                 <x-input-error :messages="$errors->get('nama_usaha')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="mitra_no_telepon" value="Nomor Telepon" />
                 <x-text-input name="no_telepon" id="mitra_no_telepon" class="block mt-1 w-full"
-                    value="{{ old('no_telepon') }}" required />
+                    value="{{ old('no_telepon') }}" />
                 <x-input-error :messages="$errors->get('no_telepon')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="kecamatan" value="Kecamatan" />
                 <x-text-input name="kecamatan" id="kecamatan" class="block mt-1 w-full"
-                    value="{{ old('kecamatan') }}" required />
+                    value="{{ old('kecamatan') }}" />
                 <x-input-error :messages="$errors->get('kecamatan')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="alamat_lengkap" value="Alamat Lengkap" />
                 <x-text-input name="alamat_lengkap" id="alamat_lengkap" class="block mt-1 w-full"
-                    value="{{ old('alamat_lengkap') }}" required />
+                    value="{{ old('alamat_lengkap') }}" />
                 <x-input-error :messages="$errors->get('alamat_lengkap')" class="mt-2" />
             </div>
 
             <div class="mt-4">
-                <x-input-label for="longitude" value="Longitude" />
-                <x-text-input name="longitude" id="longitude" class="block mt-1 w-full"
-                    value="{{ old('longitude') }}" required />
-                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-            </div>
-
-            <div class="mt-4">
-                <x-input-label for="latitude" value="Latitude" />
-                <x-text-input name="latitude" id="latitude" class="block mt-1 w-full"
-                    value="{{ old('latitude') }}" required />
-                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
+                <x-input-label for="foto_toko" value="Foto Toko (Wajib)" />
+                <input type="file" name="foto_toko" id="foto_toko" accept="image/*" required
+                    class="block mt-1 w-full text-sm text-gray-700 border border-gray-300 rounded-lg shadow-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+                <x-input-error :messages="$errors->get('foto_toko')" class="mt-2" />
             </div>
         </div>
 
@@ -136,11 +129,13 @@
             mitraFields.style.display = role === 'mitra' ? 'block' : 'none';
             pelangganFields.style.display = role === 'pelanggan' ? 'block' : 'none';
 
-            // Nonaktifkan field yang tidak ditampilkan untuk mencegah pengiriman data
-            const pelangganInputs = pelangganFields.querySelectorAll('input');
-            const mitraInputs = mitraFields.querySelectorAll('input');
-            pelangganInputs.forEach(input => input.disabled = role !== 'pelanggan');
-            mitraInputs.forEach(input => input.disabled = role !== 'mitra');
+            // Enable/Disable input berdasarkan role
+            pelangganFields.querySelectorAll('input, select, textarea').forEach(input => {
+                input.disabled = role !== 'pelanggan';
+            });
+            mitraFields.querySelectorAll('input, select, textarea').forEach(input => {
+                input.disabled = role !== 'mitra';
+            });
         }
 
         roleSelect.addEventListener('change', toggleRoleFields);

@@ -9,15 +9,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Superadmin\DashboardController as SuperadminDashboardController;
 use App\Http\Controllers\Superadmin\UserController;
 use App\Http\Controllers\Superadmin\MitraController;
-use App\Http\Controllers\Superadmin\EmployeeController as SuperadminEmployeeController;
-use App\Http\Controllers\Superadmin\JenisLayananController;
-use App\Http\Controllers\Superadmin\LayananKiloanController as SuperadminLayananKiloanController;
-use App\Http\Controllers\Superadmin\LayananSatuanController as SuperadminLayananSatuanController;
-use App\Http\Controllers\Superadmin\PesananController as SuperadminPesananController;
-use App\Http\Controllers\Superadmin\TagihanController as SuperadminTagihanController;
-use App\Http\Controllers\Superadmin\TransaksiController as SuperadminTransaksiController;
-use App\Http\Controllers\Superadmin\WalkinCustomerController as SuperadminWalkinCustomerController;
+use App\Http\Controllers\Superadmin\LayananMasterController;
 use App\Http\Controllers\Superadmin\MitraApprovalController;
+use App\Http\Controllers\Superadmin\StatusMasterController;
 
 // Mitra
 use App\Http\Controllers\Mitra\DashboardController as MitraDashboardController;
@@ -31,7 +25,6 @@ use App\Http\Controllers\Mitra\PesananController as MitraPesananController;
 use App\Http\Controllers\Mitra\TagihanController as MitraTagihanController;
 use App\Http\Controllers\Mitra\RiwayatTransaksiController;
 use App\Http\Controllers\Mitra\TrackingStatusController;
-
 
 // Employee
 use App\Http\Controllers\Employee\DashboardController;
@@ -73,52 +66,89 @@ Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->name('supe
 
     Route::resource('mitras', MitraController::class);
     Route::resource('users', UserController::class);
-    Route::resource('employees', SuperadminEmployeeController::class);
-    Route::resource('jenis-layanan', JenisLayananController::class);
-    Route::resource('layanan-kiloan', SuperadminLayananKiloanController::class);
-    Route::resource('layanan-satuan', SuperadminLayananSatuanController::class);
-    Route::resource('pesanan', SuperadminPesananController::class);
-    Route::resource('tagihan', SuperadminTagihanController::class);
-    Route::resource('transaksi', SuperadminTransaksiController::class);
-    Route::resource('walkin-customers', SuperadminWalkinCustomerController::class);
+
+    Route::prefix('layanan-master')->group(function () {
+        Route::get('/', [LayananMasterController::class, 'index'])->name('layanan-master.index');
+
+        // Status Master
+        Route::resource('status-master', StatusMasterController::class)->except(['show']);
+
+        // Jenis Layanan
+        Route::get('jenis/create', [LayananMasterController::class, 'createJenis'])->name('layanan-master.jenis.create');
+        Route::post('jenis', [LayananMasterController::class, 'storeJenis'])->name('layanan-master.jenis.store');
+        Route::get('jenis/{jenisLayanan}/edit', [LayananMasterController::class, 'editJenis'])->name('layanan-master.jenis.edit');
+        Route::put('jenis/{jenisLayanan}', [LayananMasterController::class, 'updateJenis'])->name('layanan-master.jenis.update');
+        Route::delete('jenis/{jenisLayanan}', [LayananMasterController::class, 'destroyJenis'])->name('layanan-master.jenis.destroy');
+
+        // Layanan Kiloan
+        Route::get('kiloan/create', [LayananMasterController::class, 'createKiloan'])->name('layanan-master.kiloan.create');
+        Route::post('kiloan', [LayananMasterController::class, 'storeKiloan'])->name('layanan-master.kiloan.store');
+        Route::get('kiloan/{layananKiloan}/edit', [LayananMasterController::class, 'editKiloan'])->name('layanan-master.kiloan.edit');
+        Route::put('kiloan/{layananKiloan}', [LayananMasterController::class, 'updateKiloan'])->name('layanan-master.kiloan.update');
+        Route::delete('kiloan/{layananKiloan}', [LayananMasterController::class, 'destroyKiloan'])->name('layanan-master.kiloan.destroy');
+
+        // Layanan Satuan
+        Route::get('satuan/create', [LayananMasterController::class, 'createSatuan'])->name('layanan-master.satuan.create');
+        Route::post('satuan', [LayananMasterController::class, 'storeSatuan'])->name('layanan-master.satuan.store');
+        Route::get('satuan/{layananSatuan}/edit', [LayananMasterController::class, 'editSatuan'])->name('layanan-master.satuan.edit');
+        Route::put('satuan/{layananSatuan}', [LayananMasterController::class, 'updateSatuan'])->name('layanan-master.satuan.update');
+        Route::delete('satuan/{layananSatuan}', [LayananMasterController::class, 'destroySatuan'])->name('layanan-master.satuan.destroy');
+    });
 });
 
 // MITRA
 Route::prefix('mitra')->middleware(['auth', 'role:mitra'])->name('mitra.')->group(function () {
+    // Dashboard
     Route::get('/dashboard', [MitraDashboardController::class, 'index'])->name('dashboard');
 
+    // CRUD untuk mitra
     Route::resource('jam-operasional', JamOperasionalController::class);
     Route::resource('layanan-kiloan', MitraLayananKiloanController::class);
     Route::resource('layanan-satuan', MitraLayananSatuanController::class);
     Route::resource('employee', MitraEmployeeController::class);
     Route::resource('walkin-customers', MitraWalkinCustomerController::class);
+
+    // Pesanan hanya index, create, store, show
     Route::resource('pesanan', MitraPesananController::class)->only(['index', 'create', 'store', 'show']);
-    Route::resource('tagihan', MitraTagihanController::class)->only(['index', 'show']);
-    Route::resource('transaksi', RiwayatTransaksiController::class)->only(['index', 'show']);
+
+    // Tagihan — tambah edit dan update agar route update tidak error
+    Route::get('tagihan', [MitraTagihanController::class, 'index'])->name('tagihan.index');
+    Route::get('tagihan/{tagihan}', [MitraTagihanController::class, 'show'])->name('tagihan.show');
+    Route::get('tagihan/{tagihan}/edit', [MitraTagihanController::class, 'edit'])->name('tagihan.edit');
+    Route::put('tagihan/{tagihan}', [MitraTagihanController::class, 'update'])->name('tagihan.update');
+
+    // Transaksi — perbaikan nama route agar sesuai blade yang meletakkan di mitra/transaksi/index.blade.php
+    Route::get('transaksi', [RiwayatTransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('transaksi/{transaksi}', [RiwayatTransaksiController::class, 'show'])->name('transaksi.show');
+
+    // Tracking Status
     Route::get('tracking-status', [TrackingStatusController::class, 'index'])->name('tracking_status.index');
 
-
+    // Profil
     Route::get('/profil', [MitraProfilController::class, 'edit'])->name('profil.edit');
     Route::put('/profil', [MitraProfilController::class, 'update'])->name('profil.update');
 
+    // Jadwal Antar Jemput
+Route::get('jadwal', [MitraPesananController::class, 'jadwalAntarJemput'])->name('jadwal.index');
+
+
+    // Konfirmasi Timbangan
     Route::post('/pesanan/{pesanan}/konfirmasi-timbangan', [PelangganPesananController::class, 'konfirmasiTimbangan'])->name('pesanan.konfirmasi.timbangan');
 });
 
+
 // EMPLOYEE
-Route::middleware(['auth'])->prefix('employee')->name('employee.')->group(function () {
+Route::prefix('employee')->middleware(['auth'])->name('employee.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Pesanan
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
-    Route::get('/pesanan/{pesanan}', [PesananController::class, 'show'])->name('pesanan.show');
     Route::get('/pesanan/create', [PesananController::class, 'create'])->name('pesanan.create');
     Route::post('/pesanan', [PesananController::class, 'store'])->name('pesanan.store');
+    Route::get('/pesanan/{pesanan}', [PesananController::class, 'show'])->name('pesanan.show');
 
-    // Tagihan
     Route::get('/tagihan', [TagihanController::class, 'index'])->name('tagihan.index');
     Route::get('/tagihan/{tagihan}', [TagihanController::class, 'show'])->name('tagihan.show');
 
-    // Walk-In Customer
     Route::get('/walkin-customer', [WalkinCustomerController::class, 'index'])->name('walkin_customer.index');
     Route::get('/walkin-customer/create', [WalkinCustomerController::class, 'create'])->name('walkin_customer.create');
     Route::post('/walkin-customer', [WalkinCustomerController::class, 'store'])->name('walkin_customer.store');
@@ -138,6 +168,7 @@ Route::prefix('pelanggan')->middleware(['auth', 'role:pelanggan'])->name('pelang
     Route::get('/pesanan/create/{mitra}', [PelangganPesananController::class, 'create'])->name('pesanan.create');
     Route::post('/pesanan/{mitra}', [PelangganPesananController::class, 'store'])->name('pesanan.store');
     Route::get('/pesanan/{pesanan}', [PelangganPesananController::class, 'show'])->name('pesanan.show');
+    Route::get('/pesanan/{pesanan}/pelunasan', [PelangganPesananController::class, 'pelunasan'])->name('pesanan.pelunasan');
 
     Route::get('/tagihan', [PelangganTagihanController::class, 'index'])->name('tagihan.index');
     Route::get('/tagihan/{tagihan}', [PelangganTagihanController::class, 'show'])->name('tagihan.show');
@@ -146,6 +177,4 @@ Route::prefix('pelanggan')->middleware(['auth', 'role:pelanggan'])->name('pelang
 
     Route::get('/profil/edit', [PelangganProfilController::class, 'edit'])->name('profil.edit');
     Route::put('/profil', [PelangganProfilController::class, 'update'])->name('profil.update');
-
-    Route::get('/pesanan/{pesanan}/pelunasan', [PelangganPesananController::class, 'pelunasan'])->name('pesanan.pelunasan');
 });
