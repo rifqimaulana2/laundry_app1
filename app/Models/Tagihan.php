@@ -13,6 +13,7 @@ class Tagihan extends Model
         'pesanan_id',
         'total_tagihan',
         'dp_dibayar',
+        'order_id', 
         'sisa_tagihan',
         'metode_bayar',
         'status_pembayaran',

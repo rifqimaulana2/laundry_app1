@@ -9,7 +9,7 @@
     <p><strong>Tanggal Pesan:</strong> {{ $pesanan->tanggal_pesan }}</p>
     <p><strong>Catatan:</strong> {{ $pesanan->catatan_pesanan ?? '-' }}</p>
 
-    @if ($pesanan->detailsKiloan->count())
+    @if ($pesanan->kiloanDetails->count())
         <h2 class="text-xl font-semibold mt-6">🧺 Detail Kiloan</h2>
         <table class="w-full table-auto border mt-2">
             <thead class="bg-gray-200">
@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($pesanan->detailsKiloan as $detail)
+                @foreach ($pesanan->kiloanDetails as $detail)
                     <tr>
                         <td class="border px-4 py-2">{{ $detail->layananMitraKiloan->layananKiloan->nama_paket }}</td>
                         <td class="border px-4 py-2">{{ $detail->berat_final ?? '-' }} Kg</td>
@@ -33,7 +33,7 @@
         </table>
     @endif
 
-    @if ($pesanan->detailsSatuan->count())
+    @if ($pesanan->satuanDetails->count())
         <h2 class="text-xl font-semibold mt-6">👕 Detail Satuan</h2>
         <table class="w-full table-auto border mt-2">
             <thead class="bg-gray-200">
@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($pesanan->detailsSatuan as $detail)
+                @foreach ($pesanan->satuanDetails as $detail)
                     <tr>
                         <td class="border px-4 py-2">{{ $detail->layananMitraSatuan->layananSatuan->nama_layanan }}</td>
                         <td class="border px-4 py-2">{{ $detail->jumlah_item }}</td>

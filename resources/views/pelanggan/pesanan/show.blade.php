@@ -40,7 +40,7 @@
             @endif
         </div>
 
-        @if ($pesanan->detailsKiloan->count())
+        @if ($pesanan->kiloanDetails->count())
         <div>
             <h2 class="text-xl font-semibold text-gray-800 mb-2 mt-6">🧺 Detail Kiloan</h2>
             <div class="overflow-x-auto">
@@ -54,7 +54,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
-                        @foreach ($pesanan->detailsKiloan as $detail)
+                        @foreach ($pesanan->kiloanDetails as $detail)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-4 py-2">{{ $detail->layananMitraKiloan->layananKiloan->nama_paket }}</td>
                             <td class="px-4 py-2">{{ $detail->berat_final ?? '-' }} kg</td>
@@ -70,7 +70,7 @@
         </div>
         @endif
 
-        @if ($pesanan->detailsSatuan->count())
+        @if ($pesanan->satuanDetails->count())
         <div>
             <h2 class="text-xl font-semibold text-gray-800 mb-2 mt-6">🧦 Detail Satuan</h2>
             <div class="overflow-x-auto">
@@ -84,7 +84,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
-                        @foreach ($pesanan->detailsSatuan as $detail)
+                        @foreach ($pesanan->satuanDetails as $detail)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-4 py-2">{{ $detail->layananMitraSatuan->layananSatuan->nama_layanan }}</td>
                             <td class="px-4 py-2">{{ $detail->jumlah_item }}</td>

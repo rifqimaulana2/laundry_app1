@@ -11,6 +11,7 @@ use App\Models\Tagihan;
 use App\Models\PesananDetailKiloan;
 use App\Models\PesananDetailSatuan;
 use App\Models\TrackingStatus;
+use App\Models\PelangganProfile;
 
 class Pesanan extends Model
 {
@@ -34,50 +35,67 @@ class Pesanan extends Model
         'catatan_pengiriman',
     ];
 
-    public function user()
+    // Relasi ke user (pelanggan terdaftar)
+    public function pelanggan()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id')->withDefault();
     }
 
+    // Relasi ke profile pelanggan (alamat, no_telp)
+    public function pelangganProfile()
+    {
+        return $this->hasOne(PelangganProfile::class, 'user_id', 'user_id')->withDefault();
+    }
+
+    // Relasi ke pelanggan walk-in
     public function walkinCustomer()
     {
-        return $this->belongsTo(WalkinCustomer::class, 'walkin_customer_id');
+        return $this->belongsTo(WalkinCustomer::class, 'walkin_customer_id')->withDefault();
     }
 
-
-    public function pesanandetailKiloan()
+    // Detail layanan kiloan
+    public function kiloanDetails()
     {
         return $this->hasMany(PesananDetailKiloan::class, 'pesanan_id');
     }
 
-    public function pesanandetailSatuan()
+    // Detail layanan satuan
+    public function satuanDetails()
     {
         return $this->hasMany(PesananDetailSatuan::class, 'pesanan_id');
     }
 
+    // Tagihan
     public function tagihan()
     {
         return $this->hasOne(Tagihan::class, 'pesanan_id');
     }
 
+    // Mitra
     public function mitra()
     {
         return $this->belongsTo(Mitra::class, 'mitra_id');
     }
 
-    // ✅ Relasi ke tracking status
+    // Riwayat status tracking
     public function trackingStatus()
     {
-        return $this->hasMany(TrackingStatus::class);
+        return $this->hasMany(TrackingStatus::class, 'pesanan_id');
     }
 
-    // ✅ Ambil status terakhir (latest)
+    // Status terakhir (latest status by waktu)
     public function latestStatus()
     {
-        return $this->hasOne(TrackingStatus::class)->latestOfMany('waktu');
+        return $this->hasOne(TrackingStatus::class, 'pesanan_id')->latestOfMany('waktu');
     }
-
-    
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+public function riwayatTransaksi()
+{
+    return $this->hasMany(RiwayatTransaksi::class, 'pesanan_id');
+}
 
 
 }

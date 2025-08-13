@@ -12,10 +12,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // Hitung total data
         $totalUsers = User::count();
         $totalMitras = Mitra::where('status_approve', 'disetujui')->count();
-        $totalApprovalMitra = Mitra::where('status_approve', 'pending')->count();
-
+        $totalEmployees = User::where('role', 'employee')->count();
+        $totalJenisLayanan = DB::table('jenis_layanan')->count();
+        $totalStatus = DB::table('status_master')->count();
 
         // Data statistik bulanan
         $monthlyUserRegistrations = User::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
@@ -41,7 +43,9 @@ class DashboardController extends Controller
         return view('superadmin.dashboard', compact(
             'totalUsers',
             'totalMitras',
-            'totalApprovalMitra',
+            'totalEmployees',
+            'totalJenisLayanan',
+            'totalStatus',
             'months',
             'users',
             'mitras'

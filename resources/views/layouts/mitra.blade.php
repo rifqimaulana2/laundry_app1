@@ -155,31 +155,13 @@
                     <i data-lucide="file-text" class="w-4 h-4"></i>
                     <span class="sidebar-text">Semua Pesanan</span>
                 </a>
-                <a href="{{ route('mitra.tagihan.index') }}"
+                <a href="{{ route('mitra.transaksi.index') }}"
                    class="{{ Request::routeIs('mitra.tagihan.*') ? 'bg-white/20 font-semibold border-l-4 border-white' : '' }}">
                     <i data-lucide="alert-circle" class="w-4 h-4"></i>
                     <span class="sidebar-text">Tagihan</span>
                 </a>
-                <a href="{{ route('mitra.transaksi.index') }}"
-                   class="{{ Request::routeIs('mitra.transaksi.*') ? 'bg-white/20 font-semibold border-l-4 border-white' : '' }}">
-                    <i data-lucide="credit-card" class="w-4 h-4"></i>
-                    <span class="sidebar-text">Riwayat Transaksi</span>
-                </a>
-                <a href="{{ route('mitra.tracking_status.index') }}"
-                    class="{{ Request::routeIs('mitra.tracking_status.*') ? 'bg-white/20 font-semibold border-l-4 border-white' : '' }}">
-                    <i data-lucide="map-pin" class="w-5 h-5"></i>
-                    <span class="sidebar-text">Tracking Status</span>
-                </a>
 
             </div>
-            
-            <li>
-    <a href="{{ route('mitra.jadwal.index') }}"
-       class="block py-2 px-4 rounded hover:bg-gray-100
-       {{ request()->routeIs('mitra.jadwal.index') ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-700' }}">
-       Jadwal Antar Jemput
-    </a>
-</li>
 
 
             <a href="{{ route('mitra.profil.edit') }}"

@@ -1,93 +1,99 @@
-<!-- resources/views/transaksi/show.blade.php -->
 @extends('layouts.mitra')
 
+@section('title', 'Detail Transaksi')
+
 @section('content')
-<div class="max-w-4xl mx-auto mt-10">
-    <div class="bg-white rounded-2xl shadow-lg p-6">
-        <h1 class="text-xl font-bold text-gray-800 mb-6">Detail Transaksi #{{ $transaksi->id }}</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-                <p><span class="font-semibold text-gray-700">Pesanan:</span> #{{ $transaksi->pesanan->id }}</p>
-                <p><span class="font-semibold text-gray-700">Pelanggan:</span> {{ $transaksi->pesanan->user ? $transaksi->pesanan->user->name : $transaksi->pesanan->walkinCustomer?->nama ?? '-' }}</p>
-                <p><span class="font-semibold text-gray-700">Nominal:</span> Rp {{ number_format($transaksi->nominal, 0, ',', '.') }}</p>
-            </div>
-            <div>
-                <p><span class="font-semibold text-gray-700">Jenis Transaksi:</span> {{ $transaksi->jenis_transaksi }}</p>
-                <p><span class="font-semibold text-gray-700">Metode Pembayaran:</span> {{ $transaksi->metode_bayar }}</p>
-                <p><span class="font-semibold text-gray-700">Waktu:</span> {{ \Carbon\Carbon::parse($transaksi->waktu)->format('d/m/Y H:i') }}</p>
-            </div>
-        </div>
-        <h3 class="text-lg font-bold text-gray-700 mb-2">Detail Pesanan</h3>
-        @if ($transaksi->pesanan->pesananDetailKiloan->isNotEmpty())
-            <h4 class="font-medium text-gray-600 mb-2">Kiloan</h4>
-            <div class="overflow-x-auto mb-6">
-                <table class="w-full text-left rounded-lg">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Nama Paket</th>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Berat (kg)</th>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Harga per Kg</th>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($transaksi->pesanan->pesananDetailKiloan as $detail)
-                            <tr class="border-t hover:bg-gray-50">
-                                <td class="p-3 text-sm text-gray-800">{{ $detail->layananMitraKiloan->layananKiloan->nama_paket }}</td>
-                                <td class="p-3 text-sm text-gray-800">{{ $detail->berat_final ?? $detail->berat_sementara }} {{ $detail->berat_final ? '' : '(Sementara)' }}</td>
-                                <td class="p-3 text-sm text-gray-800">Rp {{ number_format($detail->harga_per_kg, 0, ',', '.') }}</td>
-                                <td class="p-3 text-sm text-gray-800">Rp {{ number_format($detail->subtotal ?? ($detail->berat_sementara * $detail->harga_per_kg), 0, ',', '.') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <p class="text-gray-500 mb-6">Tidak ada detail kiloan.</p>
-        @endif
-        @if ($transaksi->pesanan->pesananDetailSatuan->isNotEmpty())
-            <h4 class="font-medium text-gray-600 mb-2">Satuan</h4>
-            <div class="overflow-x-auto mb-6">
-                <table class="w-full text-left rounded-lg">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Nama Layanan</th>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Jumlah Item</th>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Harga per Item</th>
-                            <th class="p-3 text-sm font-semibold text-gray-700">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($transaksi->pesanan->pesananDetailSatuan as $detail)
-                            <tr class="border-t hover:bg-gray-50">
-                                <td class="p-3 text-sm text-gray-800">{{ $detail->layananMitraSatuan->layananSatuan->nama_layanan }}</td>
-                                <td class="p-3 text-sm text-gray-800">{{ $detail->jumlah_item }}</td>
-                                <td class="p-3 text-sm text-gray-800">Rp {{ number_format($detail->harga_per_item, 0, ',', '.') }}</td>
-                                <td class="p-3 text-sm text-gray-800">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <p class="text-gray-500 mb-6">Tidak ada detail satuan.</p>
-        @endif
-        <h3 class="text-lg font-bold text-gray-700 mb-2">Informasi Tagihan</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <p><span class="font-semibold text-gray-700">Total Tagihan:</span> Rp {{ number_format($transaksi->pesanan->tagihan->total_tagihan ?? 0, 0, ',', '.') }}</p>
-                <p><span class="font-semibold text-gray-700">DP Dibayar:</span> Rp {{ number_format($transaksi->pesanan->tagihan->dp_dibayar, 0, ',', '.') }}</p>
-                <p><span class="font-semibold text-gray-700">Sisa Tagihan:</span> Rp {{ number_format($transaksi->pesanan->tagihan->sisa_tagihan ?? 0, 0, ',', '.') }}</p>
-            </div>
-            <div>
-                <p><span class="font-semibold text-gray-700">Metode Pembayaran:</span> {{ $transaksi->pesanan->tagihan->metode_bayar }}</p>
-                <p><span class="font-semibold text-gray-700">Status Pembayaran:</span> {{ $transaksi->pesanan->tagihan->status_pembayaran }}</p>
-                <p><span class="font-semibold text-gray-700">Jatuh Tempo Pelunasan:</span> {{ $transaksi->pesanan->tagihan->jatuh_tempo_pelunasan ? \Carbon\Carbon::parse($transaksi->pesanan->tagihan->jatuh_tempo_pelunasan)->format('d/m/Y') : '-' }}</p>
-            </div>
-        </div>
-        <div class="mt-6">
-            <a href="{{ route('mitra.transaksi.index') }}" class="inline-block bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Kembali ke Daftar Transaksi</a>
+<div class="p-6 max-w-5xl mx-auto bg-white rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-6">
+        Detail Transaksi Pesanan #{{ $pesanan->id }}
+    </h1>
+
+    {{-- INFORMASI PESANAN --}}
+    <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Informasi Pesanan</h2>
+        <div class="border rounded p-4 bg-gray-50">
+            <p><strong>Pelanggan:</strong>
+                {{ $pesanan->pelangganProfile->nama_lengkap
+                    ?? $pesanan->walkinCustomer->nama
+                    ?? '-' }}
+            </p>
+            <p><strong>Jenis Pesanan:</strong> {{ $pesanan->jenis_pesanan }}</p>
+            <p><strong>Tanggal Pesan:</strong> {{ $pesanan->tanggal_pesan }}</p>
         </div>
     </div>
+
+    {{-- TAGIHAN --}}
+    <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Tagihan</h2>
+        <div class="border rounded p-4 bg-gray-50">
+            <p><strong>Total Tagihan:</strong> Rp{{ number_format($pesanan->tagihan->total_tagihan ?? 0,0,',','.') }}</p>
+            <p><strong>DP Dibayar:</strong> Rp{{ number_format($pesanan->tagihan->dp_dibayar ?? 0,0,',','.') }}</p>
+            <p><strong>Sisa Tagihan:</strong> Rp{{ number_format($pesanan->tagihan->sisa_tagihan ?? 0,0,',','.') }}</p>
+            <p><strong>Status Pembayaran:</strong> {{ ucfirst(str_replace('_',' ', $pesanan->tagihan->status_pembayaran ?? '-')) }}</p>
+        </div>
+    </div>
+
+    {{-- RIWAYAT TRANSAKSI --}}
+    <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Riwayat Pembayaran</h2>
+        <table class="w-full border text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="p-2 border">Tanggal</th>
+                    <th class="p-2 border">Nominal</th>
+                    <th class="p-2 border">Jenis Transaksi</th>
+                    <th class="p-2 border">Metode Bayar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($pesanan->tagihan->riwayatTransaksi ?? [] as $r)
+                    <tr>
+                        <td class="p-2 border">{{ $r->created_at }}</td>
+                        <td class="p-2 border">Rp{{ number_format($r->nominal,0,',','.') }}</td>
+                        <td class="p-2 border">{{ ucfirst($r->jenis_transaksi) }}</td>
+                        <td class="p-2 border">{{ ucfirst($r->metode_bayar) }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="p-2 text-center text-gray-500">Belum ada pembayaran</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    {{-- FORM TAMBAH PEMBAYARAN --}}
+    @if(($pesanan->tagihan->sisa_tagihan ?? 0) > 0)
+    <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Tambah Pembayaran</h2>
+        <form action="{{ route('mitra.transaksi.store', $pesanan->tagihan->id) }}" method="POST" class="space-y-3">
+            @csrf
+            <div>
+                <label class="block font-medium">Nominal</label>
+                <input type="number" name="nominal" class="border rounded p-2 w-full" required>
+            </div>
+            <div>
+                <label class="block font-medium">Jenis Transaksi</label>
+                <select name="jenis_transaksi" class="border rounded p-2 w-full">
+                    <option value="dp">DP</option>
+                    <option value="pelunasan">Pelunasan</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-medium">Metode Bayar</label>
+                <select name="metode_bayar" class="border rounded p-2 w-full">
+                    <option value="transfer">Transfer</option>
+                    <option value="cash">Cash</option>
+                    <option value="tunai">Tunai</option>
+                </select>
+            </div>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                Simpan Pembayaran
+            </button>
+        </form>
+    </div>
+    @endif
+
+    <a href="{{ route('mitra.transaksi.index') }}" class="px-4 py-2 border rounded">Kembali</a>
 </div>
 @endsection

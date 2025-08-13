@@ -27,8 +27,8 @@
                     <tbody class="bg-white divide-y divide-gray-100">
                         @foreach ($pesanans as $pesanan)
                             @php
-                                $beratSementara = $pesanan->detailsKiloan->sum('berat_sementara');
-                                $beratFinal = $pesanan->detailsKiloan->sum('berat_final');
+                                $beratSementara = $pesanan->kiloanDetails->sum('berat_sementara');
+                                $beratFinal = $pesanan->kiloanDetails->sum('berat_final');
                                 $status = strtolower($pesanan->tagihan->status_pembayaran);
                             @endphp
                             <tr class="hover:bg-gray-50 transition-all duration-200">

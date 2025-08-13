@@ -1,3 +1,4 @@
+{{-- resources/views/superadmin/dashboard.blade.php --}}
 @extends('layouts.superadmin')
 
 @section('title', 'Dashboard Superadmin')
@@ -8,7 +9,8 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Total Pengguna -->
-        <a href="{{ url('/superadmin/users') }}" class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
+        <a href="{{ route('superadmin.users.index') }}" 
+           class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
             <div class="flex items-center gap-5">
                 <div class="p-4 bg-blue-600 text-white rounded-full shadow">
                     <i data-lucide="users" class="w-7 h-7"></i>
@@ -22,7 +24,8 @@
         </a>
 
         <!-- Total Mitra -->
-        <a href="{{ url('/superadmin/mitras') }}" class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
+        <a href="{{ route('superadmin.mitras.index') }}" 
+           class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
             <div class="flex items-center gap-5">
                 <div class="p-4 bg-green-600 text-white rounded-full shadow">
                     <i data-lucide="handshake" class="w-7 h-7"></i>
@@ -30,21 +33,52 @@
                 <div>
                     <p class="text-lg font-semibold text-gray-700">Total Mitra</p>
                     <p class="text-3xl font-bold text-green-600">{{ $totalMitras }}</p>
-                    <p class="text-sm text-gray-500">Mitra aktif</p>
+                    <p class="text-sm text-gray-500">Mitra terdaftar</p>
                 </div>
             </div>
         </a>
 
-        <!-- Persetujuan Mitra -->
-        <a href="{{ url('/superadmin/mitras/approval') }}" class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
+        <!-- Total Employee -->
+        <a href="{{ route('superadmin.employees.index') }}" 
+           class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
             <div class="flex items-center gap-5">
-                <div class="p-4 bg-orange-500 text-white rounded-full shadow">
-                    <i data-lucide="check-circle" class="w-7 h-7"></i>
+                <div class="p-4 bg-purple-600 text-white rounded-full shadow">
+                    <i data-lucide="user-cog" class="w-7 h-7"></i>
                 </div>
                 <div>
-                    <p class="text-lg font-semibold text-gray-700">Persetujuan Mitra</p>
-                    <p class="text-3xl font-bold text-orange-500">{{ $totalApprovalMitra }}</p>
-                    <p class="text-sm text-gray-500">Menunggu persetujuan</p>
+                    <p class="text-lg font-semibold text-gray-700">Total Employee</p>
+                    <p class="text-3xl font-bold text-purple-600">{{ $totalEmployees }}</p>
+                    <p class="text-sm text-gray-500">Karyawan aktif</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- Total Jenis Layanan -->
+        <a href="{{ route('superadmin.layanan-master.index') }}" 
+           class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
+            <div class="flex items-center gap-5">
+                <div class="p-4 bg-orange-500 text-white rounded-full shadow">
+                    <i data-lucide="package" class="w-7 h-7"></i>
+                </div>
+                <div>
+                    <p class="text-lg font-semibold text-gray-700">Jenis Layanan</p>
+                    <p class="text-3xl font-bold text-orange-500">{{ $totalJenisLayanan }}</p>
+                    <p class="text-sm text-gray-500">Jenis layanan terdaftar</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- Total Status -->
+        <a href="{{ route('superadmin.status-master.index') }}" 
+           class="block bg-white rounded-2xl shadow p-6 hover:shadow-lg transition transform hover:-translate-y-1">
+            <div class="flex items-center gap-5">
+                <div class="p-4 bg-red-500 text-white rounded-full shadow">
+                    <i data-lucide="list-check" class="w-7 h-7"></i>
+                </div>
+                <div>
+                    <p class="text-lg font-semibold text-gray-700">Status</p>
+                    <p class="text-3xl font-bold text-red-500">{{ $totalStatus }}</p>
+                    <p class="text-sm text-gray-500">Status layanan aktif</p>
                 </div>
             </div>
         </a>

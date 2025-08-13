@@ -4,94 +4,72 @@ namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mitra;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class MitraController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan daftar mitra + pencarian
+     */
+    public function index(Request $request)
     {
-        $mitras = Mitra::with('user')->get();
+        $search = $request->input('search');
+
+        $mitras = Mitra::with('user')
+            ->when($search, function ($query) use ($search) {
+                $query->where('nama_toko', 'like', "%{$search}%")
+                      ->orWhereHas('user', function ($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                      })
+                      ->orWhere('kecamatan', 'like', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
         return view('superadmin.mitras.index', compact('mitras'));
     }
 
-    public function create()
+    /**
+     * Menampilkan detail mitra (opsional)
+     */
+    public function show(Mitra $mitra)
     {
-        $users = User::where('role', 'mitra')->doesntHave('mitra')->get();
-        return view('superadmin.mitras.create', compact('users'));
+        return view('superadmin.mitras.show', compact('mitra'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'nama_toko' => 'required|string|max:255',
-            'kecamatan' => 'required|string|max:255',
-            'alamat_lengkap' => 'required|string',
-            'longitude' => 'required|string|max:255',
-            'latitude' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:255',
-            'foto_toko' => 'nullable|image|max:2048',
-            'foto_profile' => 'nullable|image|max:2048',
-            'status_approve' => 'required|in:pending,disetujui,ditolak',
-        ]);
-
-        $data = $request->all();
-        if ($request->hasFile('foto_toko')) {
-            $data['foto_toko'] = $request->file('foto_toko')->store('toko', 'public');
-        }
-        if ($request->hasFile('foto_profile')) {
-            $data['foto_profile'] = $request->file('foto_profile')->store('profile', 'public');
-        }
-
-        Mitra::create($data);
-
-        return redirect()->route('superadmin.mitras.index')->with('success', 'Mitra berhasil ditambahkan.');
-    }
-
-    public function edit(Mitra $mitra)
-    {
-        $users = User::where('role', 'mitra')->get();
-        return view('superadmin.mitras.edit', compact('mitra', 'users'));
-    }
-
-    public function update(Request $request, Mitra $mitra)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'nama_toko' => 'required|string|max:255',
-            'kecamatan' => 'required|string|max:255',
-            'alamat_lengkap' => 'required|string',
-            'longitude' => 'required|string|max:255',
-            'latitude' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:255',
-            'foto_toko' => 'nullable|image|max:2048',
-            'foto_profile' => 'nullable|image|max:2048',
-            'status_approve' => 'required|in:pending,disetujui,ditolak',
-        ]);
-
-        $data = $request->all();
-        if ($request->hasFile('foto_toko')) {
-            $data['foto_toko'] = $request->file('foto_toko')->store('toko', 'public');
-        }
-        if ($request->hasFile('foto_profile')) {
-            $data['foto_profile'] = $request->file('foto_profile')->store('profile', 'public');
-        }
-
-        $mitra->update($data);
-
-        return redirect()->route('superadmin.mitras.index')->with('success', 'Mitra berhasil diperbarui.');
-    }
-
+    /**
+     * Menghapus mitra
+     */
     public function destroy(Mitra $mitra)
     {
         $mitra->delete();
         return redirect()->route('superadmin.mitras.index')->with('success', 'Mitra berhasil dihapus.');
     }
 
-    // ✅ Tambahkan ini:
-    public function show(Mitra $mitra)
+    /**
+     * Approve mitra
+     */
+    public function approve($id)
     {
-        return view('superadmin.mitras.show', compact('mitra'));
+        $mitra = Mitra::findOrFail($id);
+        $mitra->status_approve = 'disetujui';
+        $mitra->save();
+
+        return redirect()->route('superadmin.mitras.index')
+                         ->with('success', 'Mitra berhasil disetujui.');
+    }
+
+    /**
+     * Reject mitra
+     */
+    public function reject($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+        $mitra->status_approve = 'ditolak';
+        $mitra->save();
+
+        return redirect()->route('superadmin.mitras.index')
+                         ->with('success', 'Mitra berhasil ditolak.');
     }
 }

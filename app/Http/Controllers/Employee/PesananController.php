@@ -37,8 +37,8 @@ class PesananController extends Controller
         }
 
         $pesanan->load([
-            'detailsKiloan.layananMitraKiloan.layananKiloan',
-            'detailsSatuan.layananMitraSatuan.layananSatuan',
+            'kiloanDetails.layananMitraKiloan.layananKiloan',
+            'satuanDetails.layananMitraSatuan.layananSatuan',
             'tagihan',
             'user',
             'walkinCustomer'
