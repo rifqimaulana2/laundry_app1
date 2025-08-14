@@ -23,8 +23,6 @@ use App\Http\Controllers\Mitra\LayananSatuanController as MitraLayananSatuanCont
 use App\Http\Controllers\Mitra\EmployeeController as MitraEmployeeController;
 use App\Http\Controllers\Mitra\WalkinCustomerController as MitraWalkinCustomerController;
 use App\Http\Controllers\Mitra\PesananController as MitraPesananController;
-use App\Http\Controllers\Mitra\TransaksiController;
-use App\Http\Controllers\Mitra\TrackingStatusController;
 
 // Employee
 use App\Http\Controllers\Employee\DashboardController;
@@ -115,26 +113,34 @@ Route::prefix('mitra')
         Route::resource('employee', MitraEmployeeController::class);
         Route::resource('walkin-customers', MitraWalkinCustomerController::class);
 
-        // Pesanan
+        // PESANAN (sudah termasuk transaksi, tracking, jadwal, timbangan, tambah pembayaran)
         Route::resource('pesanan', MitraPesananController::class)
             ->only(['index', 'create', 'store', 'show']);
+
+        // Konfirmasi timbangan real
         Route::post('/pesanan/{pesanan}/konfirmasi-timbangan', [MitraPesananController::class, 'konfirmasiTimbangan'])
-            ->name('pesanan.konfirmasi.timbangan');
+            ->name('pesanan.konfirmasiTimbangan');
+
+        // Update status
         Route::post('/pesanan/{pesanan}/update-status', [MitraPesananController::class, 'updateStatus'])
-            ->name('pesanan.update.status');
+            ->name('pesanan.updateStatus');
+
+        // Tambah pembayaran
+        Route::post('/pesanan/{tagihan}/tambah-pembayaran', [MitraPesananController::class, 'tambahPembayaran'])
+            ->name('pesanan.tambahPembayaran');
+
+        // Jadwal antar jemput
         Route::get('jadwal', [MitraPesananController::class, 'jadwalAntarJemput'])
             ->name('jadwal.index');
 
-        // Transaksi
-        Route::get('transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
-        Route::get('transaksi/{transaksi}', [TransaksiController::class, 'show'])->name('transaksi.show');
-        Route::post('transaksi/{tagihan}', [TransaksiController::class, 'store'])->name('transaksi.store');
-        Route::get('transaksi/{tagihan}/pelunasan', [TransaksiController::class, 'pelunasan'])->name('transaksi.pelunasan');
+        // TRANSAKSI (gabungan di PesananController)
+        Route::get('transaksi', [MitraPesananController::class, 'transaksiIndex'])->name('transaksi.index');
+        Route::get('transaksi/{pesanan}', [MitraPesananController::class, 'transaksiShow'])->name('transaksi.show');
+        Route::get('transaksi/{pesanan}/pelunasan', [MitraPesananController::class, 'pelunasanForm'])->name('transaksi.pelunasan');
+        Route::post('transaksi/{pesanan}/pelunasan', [MitraPesananController::class, 'prosesPelunasan'])->name('transaksi.prosesPelunasan');
+        Route::post('transaksi/{tagihan}', [MitraPesananController::class, 'storePembayaran'])->name('transaksi.store');
 
-        // Tracking Status
-        Route::get('tracking-status', [TrackingStatusController::class, 'index'])->name('tracking_status.index');
-
-        // Profil Mitra
+        // PROFIL MITRA
         Route::get('/profil', [MitraProfilController::class, 'edit'])->name('profil.edit');
         Route::put('/profil', [MitraProfilController::class, 'update'])->name('profil.update');
     });

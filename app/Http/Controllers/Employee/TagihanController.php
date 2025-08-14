@@ -15,7 +15,7 @@ class TagihanController extends Controller
         $tagihans = Tagihan::whereHas('pesanan', function ($query) use ($mitraId) {
             $query->where('mitra_id', $mitraId);
         })
-        ->with(['pesanan.user', 'pesanan.walkinCustomer'])
+        ->with(['pesanan.user', 'pesanan.walkin_Customers'])
         ->get();
 
         return view('employee.tagihan.index', compact('tagihans'));
@@ -29,7 +29,7 @@ class TagihanController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $tagihan->load(['pesanan.user', 'pesanan.walkinCustomer']);
+        $tagihan->load(['pesanan.user', 'pesanan.walkin_Customers']);
 
         return view('employee.tagihan.show', compact('tagihan'));
     }

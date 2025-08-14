@@ -1,190 +1,307 @@
 @extends('layouts.mitra')
 
-@section('title', 'Buat Pesanan Baru')
+@section('title', 'Tambah Pesanan')
 
 @section('content')
-<div class="p-6 max-w-5xl mx-auto bg-white rounded-lg shadow">
-    <h1 class="text-2xl font-bold mb-6">Buat Pesanan Baru</h1>
+<div class="p-6 max-w-6xl mx-auto space-y-6">
+    {{-- Header --}}
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Tambah Pesanan</h1>
+        <a href="{{ route('mitra.pesanan.index') }}"
+           class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium">
+            Kembali
+        </a>
+    </div>
 
-    <form action="{{ route('mitra.pesanan.store') }}" method="POST" class="space-y-6">
+    {{-- Form utama --}}
+    <form action="{{ route('mitra.pesanan.store') }}" method="POST" class="space-y-6 bg-white rounded-xl shadow-lg p-6">
         @csrf
 
         {{-- TIPE PELANGGAN --}}
         <div>
-            <label class="block font-medium mb-1">Tipe Pelanggan</label>
-            <select name="pelanggan_tipe" id="pelanggan_tipe" class="border rounded w-full p-2">
+            <label class="block font-semibold mb-2">Tipe Pelanggan</label>
+            <select name="pelanggan_tipe" id="pelanggan_tipe" class="w-full border rounded-lg p-2">
+                <option value="">-- Pilih Tipe Pelanggan --</option>
                 <option value="online">Pelanggan Terdaftar</option>
-                <option value="walkin">Walk-in Baru</option>
+                <option value="walkin">Pelanggan Walk-in</option>
             </select>
         </div>
 
-        {{-- PELANGGAN ONLINE --}}
-        <div id="online_box">
-            <label class="block font-medium mb-1">Pilih Pelanggan</label>
-            <select name="user_id" class="border rounded w-full p-2">
+        {{-- PELANGGAN TERDAFTAR --}}
+        <div id="pelangganOnline" class="hidden">
+            <label class="block font-semibold mb-2">Pilih Pelanggan Terdaftar</label>
+            <select name="user_id" id="user_id" class="w-full border rounded-lg p-2">
                 <option value="">-- Pilih pelanggan --</option>
-                @foreach($pelanggans as $u)
-                    <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
+                @foreach($pelanggans as $p)
+                    <option value="{{ $p->id }}">
+                        {{ $p->profile->nama_lengkap ?? $p->name ?? explode('@',$p->email)[0] }} — {{ $p->email }}
+                    </option>
                 @endforeach
             </select>
+            <p class="text-xs text-gray-500 mt-1">Nama didapat dari relasi profile jika tersedia.</p>
         </div>
 
-        {{-- WALKIN --}}
-        <div id="walkin_box" class="hidden">
-            <label class="block font-medium mb-1">Data Pelanggan Walk-in</label>
-            <input type="text" name="nama" placeholder="Nama" class="border rounded w-full p-2 mb-2">
-            <input type="text" name="alamat" placeholder="Alamat" class="border rounded w-full p-2 mb-2">
-            <input type="text" name="no_tlp" placeholder="No Telepon" class="border rounded w-full p-2">
+        {{-- PELANGGAN WALK-IN (ambil dari master walkin_customers) --}}
+        <div id="pelangganWalkin" class="hidden">
+            <label class="block font-semibold mb-2">Pilih Pelanggan Walk-in</label>
+            <select name="walkin_customer_id" id="walkin_customer_id" class="w-full border rounded-lg p-2">
+                <option value="">-- Pilih pelanggan walk-in --</option>
+                @foreach($walkinCustomers as $w)
+                    <option value="{{ $w->id }}">{{ $w->nama }}{{ $w->no_tlp ? ' — '.$w->no_tlp : '' }}</option>
+                @endforeach
+            </select>
+            <p class="text-xs text-gray-500 mt-1">Tambah/edit walk-in lewat menu Walk-in Customers.</p>
         </div>
 
         {{-- JENIS PESANAN --}}
         <div>
-            <label class="block font-medium mb-1">Jenis Pesanan</label>
-            <select name="jenis_pesanan" id="jenis_pesanan" class="border rounded w-full p-2">
+            <label class="block font-semibold mb-2">Jenis Pesanan</label>
+            <select name="jenis_pesanan" id="jenis_pesanan" class="w-full border rounded-lg p-2" required>
+                <option value="">-- Pilih Jenis Pesanan --</option>
                 <option value="Kiloan">Kiloan</option>
                 <option value="Satuan">Satuan</option>
                 <option value="Kiloan + Satuan">Kiloan + Satuan</option>
             </select>
         </div>
 
-        {{-- DETAIL KILOAN --}}
-        <div id="kiloan_section">
-            <label class="block font-medium mb-1">Detail Kiloan</label>
-            <div id="kiloan_items" class="space-y-2">
-                <div class="flex gap-2">
-                    <select name="kiloan[0][layanan_id]" class="border rounded p-2 w-1/2">
-                        <option value="">-- Pilih paket --</option>
-                        @foreach($layananKiloan as $lk)
-                            <option value="{{ $lk->id }}">{{ $lk->layananKiloan->nama_paket }} — Rp{{ number_format($lk->harga_per_kg,0,',','.') }}/kg</option>
-                        @endforeach
-                    </select>
-                    <input type="number" step="0.1" name="kiloan[0][berat]" placeholder="Berat (kg)" class="border rounded p-2 w-1/4">
-                    <input type="number" name="kiloan[0][harga]" placeholder="Harga" class="border rounded p-2 w-1/4">
+        {{-- LAYANAN KILOAN (bisa tambah baris jika butuh, tapi default 1 row) --}}
+        <div id="layananKiloanWrapper" class="hidden rounded-lg border p-4 bg-gray-50">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold">Layanan Kiloan</h3>
+                <span class="text-xs text-gray-500">Pilih paket (Reguler / Ekspres) — tampil: nama, harga & durasi</span>
+            </div>
+
+            <div id="kiloanRows" class="space-y-3">
+                <div class="kiloan-row grid grid-cols-12 gap-3 items-end">
+                    <div class="col-span-7">
+                        <label class="block text-xs text-gray-700 mb-1">Paket</label>
+                        <select name="kiloan[0][layanan_id]" class="kiloan-paket w-full border rounded-lg p-2">
+                            <option value="">— Pilih paket kiloan —</option>
+                            @foreach($layananKiloan as $lk)
+                                @php
+                                    // nama paket dari relasi (bisa berbeda nama kolom di DB, coba beberapa kemungkinan)
+                                    $namaPaket = optional($lk->layananKiloan)->nama_paket
+                                                 ?? optional($lk->layananKiloan)->nama_layanan
+                                                 ?? ($lk->nama_layanan ?? 'Paket');
+                                    $durasi = optional($lk->layananKiloan)->durasi_pengerjaan
+                                              ?? optional($lk->layananKiloan)->estimasi_waktu_jam
+                                              ?? ($lk->durasi_pengerjaan ?? null);
+                                    $satuanDurasi = optional($lk->layananKiloan)->satuan_durasi ?? ($lk->satuan_durasi ?? 'jam');
+                                @endphp
+                                <option value="{{ $lk->id }}"
+                                        data-harga="{{ $lk->harga_per_kg ?? 0 }}"
+                                        data-nama="{{ $namaPaket }}"
+                                        data-durasi="{{ $durasi }}"
+                                        data-satuan="{{ $satuanDurasi }}">
+                                    {{ $namaPaket }} — Rp{{ number_format($lk->harga_per_kg ?? 0, 0, ',', '.') }}/kg
+                                    @if($durasi) — Durasi: {{ $durasi }} {{ $satuanDurasi }} @endif
+                                </option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="kiloan[0][harga]" class="kiloan-harga-hidden" value="">
+                    </div>
+
+                    <div class="col-span-3">
+                        <label class="block text-xs text-gray-700 mb-1">Berat (kg)</label>
+                        <input type="number" step="1" min="0" name="kiloan[0][berat]" class="kiloan-berat w-full border rounded-lg p-2" placeholder="0.0">
+                    </div>
+
+                    <div class="col-span-2 text-right">
+                        <label class="block text-xs text-gray-700 mb-1">Subtotal</label>
+                        <div class="rounded-lg border bg-white p-2 text-sm font-semibold" style="min-height:40px;">
+                            Rp<span class="kiloan-subtotal">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button type="button" id="add_kiloan" class="mt-2 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">+ Tambah Kiloan</button>
+
+            <div class="mt-3 text-xs text-gray-500">Harga dan durasi diambil dari relasi layanan mitra → master layanan.</div>
         </div>
 
-        {{-- DETAIL SATUAN --}}
-        <div id="satuan_section" class="hidden">
-            <label class="block font-medium mb-1">Detail Satuan</label>
-            <div id="satuan_items" class="space-y-2">
-                <div class="flex gap-2">
-                    <select name="satuan[0][layanan_id]" class="border rounded p-2 w-1/2">
-                        <option value="">-- Pilih layanan --</option>
-                        @foreach($layananSatuan as $ls)
-                            <option value="{{ $ls->id }}">{{ $ls->layananSatuan->nama_layanan }} — Rp{{ number_format($ls->harga_per_item,0,',','.') }}</option>
-                        @endforeach
-                    </select>
-                    <input type="number" name="satuan[0][jumlah]" placeholder="Jumlah" class="border rounded p-2 w-1/4">
-                    <input type="number" name="satuan[0][harga]" placeholder="Harga" class="border rounded p-2 w-1/4">
+        {{-- LAYANAN SATUAN (multi item) --}}
+        <div id="layananSatuanWrapper" class="hidden rounded-lg border p-4 bg-gray-50">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold">Layanan Satuan</h3>
+                <button type="button" id="btnAddSatuan" class="text-sm bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700">+ Tambah Item</button>
+            </div>
+
+            <div id="satuanRows" class="space-y-3">
+                {{-- default kosong; user bisa tambah baris --}}
+            </div>
+
+            <div class="mt-3 text-xs text-gray-500">Pilih layanan satuan — nama, harga & durasi ditampilkan.</div>
+        </div>
+
+        {{-- OPSI JEMPUT / ANTAR --}}
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block font-semibold mb-2">Opsi Jemput</label>
+                <select name="opsi_jemput" id="opsi_jemput" class="w-full border rounded-lg p-2">
+                    <option value="Tidak">Tidak</option>
+                    <option value="Ya">Ya</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-semibold mb-2">Opsi Antar</label>
+                <select name="opsi_antar" id="opsi_antar" class="w-full border rounded-lg p-2">
+                    <option value="Tidak">Tidak</option>
+                    <option value="Ya">Ya</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- JADWAL JIKA ADA ANTAR/JEMPUT --}}
+        <div id="jadwalWrapper" class="hidden rounded-lg border p-4 bg-gray-50">
+            <h3 class="font-semibold mb-3">Jadwal Jemput / Antar</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium">Tanggal</label>
+                    <input type="date" name="jadwal_tanggal" class="w-full border rounded-lg p-2">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium">Waktu</label>
+                    <input type="time" name="jadwal_waktu" class="w-full border rounded-lg p-2">
                 </div>
             </div>
-            <button type="button" id="add_satuan" class="mt-2 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">+ Tambah Satuan</button>
+            <p class="text-xs text-gray-500 mt-2">Isikan tanggal & waktu jika jemput/antar diperlukan.</p>
         </div>
 
-        {{-- OPSI JEMPUT --}}
-        <div>
-            <label class="block font-medium mb-1">Opsi Jemput</label>
-            <select name="opsi_jemput" class="border rounded w-full p-2 mb-2">
-                <option value="Tidak">Tidak</option>
-                <option value="Ya">Ya</option>
-            </select>
-            <input type="datetime-local" name="jadwal_jemput" class="border rounded w-full p-2">
-        </div>
-
-        {{-- OPSI ANTAR --}}
-        <div>
-            <label class="block font-medium mb-1">Opsi Antar</label>
-            <select name="opsi_antar" class="border rounded w-full p-2 mb-2">
-                <option value="Tidak">Tidak</option>
-                <option value="Ya">Ya</option>
-            </select>
-            <input type="datetime-local" name="jadwal_antar" class="border rounded w-full p-2">
-        </div>
-
-        {{-- PEMBAYARAN --}}
-        <div>
-            <label class="block font-medium mb-1">DP Dibayar</label>
-            <input type="number" name="dp_dibayar" placeholder="0" class="border rounded w-full p-2 mb-2">
-            <label class="block font-medium mb-1">Metode Bayar</label>
-            <select name="metode_bayar" class="border rounded w-full p-2">
-                <option value="transfer">Transfer</option>
-                <option value="tunai">Tunai</option>
-            </select>
-        </div>
-
-        {{-- CATATAN --}}
-        <div>
-            <label class="block font-medium mb-1">Catatan Pesanan</label>
-            <textarea name="catatan_pesanan" rows="3" class="border rounded w-full p-2"></textarea>
-        </div>
-
-        <div class="flex gap-2">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
-            <a href="{{ route('mitra.pesanan.index') }}" class="px-4 py-2 border rounded">Batal</a>
+        <div class="pt-4">
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow">
+                Simpan Pesanan
+            </button>
         </div>
     </form>
 </div>
 
+{{-- SCRIPT --}}
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // utility
+    const fmt = n => new Intl.NumberFormat('id-ID').format(Math.round(n||0));
+
+    // show/hide pelanggan terdaftar vs walkin
     const pelangganTipe = document.getElementById('pelanggan_tipe');
-    const onlineBox = document.getElementById('online_box');
-    const walkinBox = document.getElementById('walkin_box');
-    const jenisPesanan = document.getElementById('jenis_pesanan');
-    const kiloanSection = document.getElementById('kiloan_section');
-    const satuanSection = document.getElementById('satuan_section');
+    const pelangganOnline = document.getElementById('pelangganOnline');
+    const pelangganWalkin = document.getElementById('pelangganWalkin');
 
     pelangganTipe.addEventListener('change', () => {
-        walkinBox.classList.toggle('hidden', pelangganTipe.value !== 'walkin');
-        onlineBox.classList.toggle('hidden', pelangganTipe.value === 'walkin');
+        pelangganOnline.classList.toggle('hidden', pelangganTipe.value !== 'online');
+        pelangganWalkin.classList.toggle('hidden', pelangganTipe.value !== 'walkin');
     });
 
-    jenisPesanan.addEventListener('change', () => {
-        if (jenisPesanan.value === 'Kiloan') {
-            kiloanSection.classList.remove('hidden');
-            satuanSection.classList.add('hidden');
-        } else if (jenisPesanan.value === 'Satuan') {
-            kiloanSection.classList.add('hidden');
-            satuanSection.classList.remove('hidden');
-        } else {
-            kiloanSection.classList.remove('hidden');
-            satuanSection.classList.remove('hidden');
-        }
+    // jenis pesanan: toggle kiloan / satuan
+    const jenisPesanan = document.getElementById('jenis_pesanan');
+    const kiloanWrapper = document.getElementById('layananKiloanWrapper');
+    const satuanWrapper = document.getElementById('layananSatuanWrapper');
+
+    function applyJenis() {
+        const v = jenisPesanan.value;
+        kiloanWrapper.classList.toggle('hidden', !v.includes('Kiloan'));
+        satuanWrapper.classList.toggle('hidden', !v.includes('Satuan'));
+    }
+    jenisPesanan.addEventListener('change', applyJenis);
+    applyJenis();
+
+    // jadwal antar/jemput
+    const opsiJemput = document.getElementById('opsi_jemput');
+    const opsiAntar = document.getElementById('opsi_antar');
+    const jadwalWrapper = document.getElementById('jadwalWrapper');
+
+    function toggleJadwal() {
+        const show = (opsiJemput.value === 'Ya') || (opsiAntar.value === 'Ya');
+        jadwalWrapper.classList.toggle('hidden', !show);
+    }
+    opsiJemput.addEventListener('change', toggleJadwal);
+    opsiAntar.addEventListener('change', toggleJadwal);
+    toggleJadwal();
+
+    // KILOAN: live subtotal per row
+    function recalcKiloanRow(row) {
+        const sel = row.querySelector('.kiloan-paket');
+        const beratEl = row.querySelector('.kiloan-berat');
+        const subtotalEl = row.querySelector('.kiloan-subtotal');
+        const hargaHidden = row.querySelector('.kiloan-harga-hidden');
+
+        const harga = parseFloat(sel.selectedOptions[0]?.dataset.harga || 0);
+        const berat = parseFloat(beratEl.value || 0);
+        const sub = Math.max(0, harga * berat);
+        subtotalEl.textContent = fmt(sub);
+        if (hargaHidden) hargaHidden.value = harga || '';
+    }
+
+    document.querySelectorAll('#kiloanRows .kiloan-row').forEach(r => {
+        r.querySelector('.kiloan-paket').addEventListener('change', () => recalcKiloanRow(r));
+        r.querySelector('.kiloan-berat').addEventListener('input', () => recalcKiloanRow(r));
     });
 
-    let kiloanIndex = 1;
-    document.getElementById('add_kiloan').addEventListener('click', () => {
-        const container = document.getElementById('kiloan_items');
-        const html = `
-            <div class="flex gap-2">
-                <select name="kiloan[${kiloanIndex}][layanan_id]" class="border rounded p-2 w-1/2">
-                    @foreach($layananKiloan as $lk)
-                        <option value="{{ $lk->id }}">{{ $lk->layananKiloan->nama_paket }} — Rp{{ number_format($lk->harga_per_kg,0,',','.') }}/kg</option>
-                    @endforeach
-                </select>
-                <input type="number" step="0.1" name="kiloan[${kiloanIndex}][berat]" placeholder="Berat (kg)" class="border rounded p-2 w-1/4">
-                <input type="number" name="kiloan[${kiloanIndex}][harga]" placeholder="Harga" class="border rounded p-2 w-1/4">
-            </div>`;
-        container.insertAdjacentHTML('beforeend', html);
-        kiloanIndex++;
-    });
+    // SATUAN: add/remove rows
+    const btnAddSatuan = document.getElementById('btnAddSatuan');
+    const satuanRows = document.getElementById('satuanRows');
+    let satuanIndex = 0;
 
-    let satuanIndex = 1;
-    document.getElementById('add_satuan').addEventListener('click', () => {
-        const container = document.getElementById('satuan_items');
-        const html = `
-            <div class="flex gap-2">
-                <select name="satuan[${satuanIndex}][layanan_id]" class="border rounded p-2 w-1/2">
+    btnAddSatuan && btnAddSatuan.addEventListener('click', function () {
+        const tpl = document.createElement('div');
+        tpl.className = 'satuan-row grid grid-cols-12 gap-3 items-end';
+        tpl.innerHTML = `
+            <div class="col-span-6">
+                <label class="block text-xs text-gray-700 mb-1">Layanan</label>
+                <select name="satuan[${satuanIndex}][layanan_id]" class="satuan-paket w-full border rounded-lg p-2">
+                    <option value="">— Pilih layanan satuan —</option>
                     @foreach($layananSatuan as $ls)
-                        <option value="{{ $ls->id }}">{{ $ls->layananSatuan->nama_layanan }} — Rp{{ number_format($ls->harga_per_item,0,',','.') }}</option>
+                        @php
+                            $namaSatuan = optional($ls->layananSatuan)->nama_layanan
+                                         ?? ($ls->nama_layanan ?? 'Layanan');
+                            $durasiS = optional($ls->layananSatuan)->durasi_pengerjaan ?? ($ls->durasi_pengerjaan ?? null);
+                            $satuanDur = optional($ls->layananSatuan)->satuan_durasi ?? ($ls->satuan_durasi ?? 'hari');
+                        @endphp
+                        <option value="{{ $ls->id }}" data-harga="{{ $ls->harga_per_item ?? 0 }}" data-durasi="{{ $durasiS }}" data-satuan="{{ $satuanDur }}">
+                            {{ $namaSatuan }} — Rp{{ number_format($ls->harga_per_item ?? 0, 0, ',', '.') }}
+                            @if($durasiS) — Durasi: {{ $durasiS }} {{ $satuanDur }} @endif
+                        </option>
                     @endforeach
                 </select>
-                <input type="number" name="satuan[${satuanIndex}][jumlah]" placeholder="Jumlah" class="border rounded p-2 w-1/4">
-                <input type="number" name="satuan[${satuanIndex}][harga]" placeholder="Harga" class="border rounded p-2 w-1/4">
-            </div>`;
-        container.insertAdjacentHTML('beforeend', html);
+                <input type="hidden" name="satuan[${satuanIndex}][harga]" class="satuan-harga-hidden">
+            </div>
+            <div class="col-span-3">
+                <label class="block text-xs text-gray-700 mb-1">Jumlah</label>
+                <input type="number" min="0" name="satuan[${satuanIndex}][jumlah]" class="satuan-qty w-full border rounded-lg p-2" placeholder="0">
+            </div>
+            <div class="col-span-2 text-right">
+                <label class="block text-xs text-gray-700 mb-1">Subtotal</label>
+                <div class="rounded-lg border bg-white p-2 text-sm font-semibold">Rp<span class="satuan-sub">0</span></div>
+            </div>
+            <div class="col-span-1 text-right">
+                <button type="button" class="remove-satuan text-sm rounded-lg border px-3 py-1 hover:bg-gray-100">Hapus</button>
+            </div>
+        `;
+        satuanRows.appendChild(tpl);
+
+        const sel = tpl.querySelector('.satuan-paket');
+        const qty = tpl.querySelector('.satuan-qty');
+        const hargaHidden = tpl.querySelector('.satuan-harga-hidden');
+        const subEl = tpl.querySelector('.satuan-sub');
+        const rem = tpl.querySelector('.remove-satuan');
+
+        function recalcSatuan() {
+            const harga = parseFloat(sel.selectedOptions[0]?.dataset.harga || 0);
+            const jumlah = parseFloat(qty.value || 0);
+            const sub = Math.max(0, harga * jumlah);
+            subEl.textContent = fmt(sub);
+            hargaHidden.value = harga || '';
+        }
+
+        sel.addEventListener('change', recalcSatuan);
+        qty.addEventListener('input', recalcSatuan);
+        rem.addEventListener('click', () => {
+            tpl.remove();
+        });
+
         satuanIndex++;
     });
+
+    // initial compute for kiloan row(s)
+    document.querySelectorAll('#kiloanRows .kiloan-row').forEach(r => recalcKiloanRow(r));
+});
 </script>
 @endsection

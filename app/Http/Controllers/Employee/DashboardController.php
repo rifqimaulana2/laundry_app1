@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Employee;
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
 use App\Models\Tagihan;
-use App\Models\WalkinCustomer;
+use App\Models\Walkin_Customers;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -28,7 +28,7 @@ class DashboardController extends Controller
             ->whereIn('status_pembayaran', ['belum lunas', 'dp_terbayar'])
             ->count();
 
-        $walkinCount = WalkinCustomer::where('mitra_id', $mitraId)->count();
+        $walkinCount = Walkin_Customers::where('mitra_id', $mitraId)->count();
 
         return view('employee.dashboard', compact('pesananCount', 'tagihanPending', 'walkinCount'));
     }

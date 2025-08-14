@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
-use App\Models\WalkinCustomer;
+use App\Models\WalkinCustomers;
 use App\Models\Mitra;
 use App\Models\Tagihan;
 use App\Models\PesananDetailKiloan;

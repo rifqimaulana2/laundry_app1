@@ -3,51 +3,48 @@
 @section('title', 'Daftar Pesanan')
 
 @section('content')
-<div class="p-6">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">Daftar Pesanan</h2>
-        <a href="{{ route('mitra.pesanan.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
-            + Buat Pesanan
-        </a>
-    </div>
+<div class="p-4 max-w-7xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-4">Daftar Pesanan</h2>
 
-    <div class="overflow-x-auto bg-white rounded-lg shadow">
-        <table class="min-w-full text-sm border border-gray-200">
-            <thead class="bg-gray-100 text-gray-700">
+    <a href="{{ route('mitra.pesanan.create') }}" 
+       class="bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block">+ Tambah Pesanan</a>
+
+    <div class="bg-white shadow rounded p-4">
+        <table class="w-full border text-sm">
+            <thead class="bg-gray-100">
                 <tr>
-                    <th class="p-3 border">ID</th>
-                    <th class="p-3 border">Pelanggan</th>
-                    <th class="p-3 border">Jenis</th>
-                    <th class="p-3 border">Tanggal</th>
-                    <th class="p-3 border">Status</th>
-                    <th class="p-3 border">Tagihan</th>
-                    <th class="p-3 border">Aksi</th>
+                    <th class="p-2 border">#</th>
+                    <th class="p-2 border">Pelanggan</th>
+                    <th class="p-2 border">Jenis Pesanan</th>
+                    <th class="p-2 border">Total Tagihan</th>
+                    <th class="p-2 border">Status</th>
+                    <th class="p-2 border">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($pesanans as $pesanan)
-                    <tr class="hover:bg-gray-50">
-                        <td class="p-3 border">{{ $pesanan->id }}</td>
-                        <td class="p-3 border">
-                            {{ $pesanan->pelangganProfile->nama_lengkap ?? $pesanan->walkinCustomer->nama ?? '-' }}
+                @forelse($pesanans as $pesanan)
+                    <tr>
+                        <td class="p-2 border">{{ $pesanan->id }}</td>
+                        <td class="p-2 border">
+                            {{ $pesanan->user->profile->nama_lengkap
+                                ?? $pesanan->walkinCustomer->nama
+                                ?? '-' }}
                         </td>
-                        <td class="p-3 border">{{ $pesanan->jenis_pesanan }}</td>
-                        <td class="p-3 border">{{ $pesanan->tanggal_pesan }}</td>
-                        <td class="p-3 border">
-                            <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700">
-                                {{ $pesanan->trackingStatus->last()?->statusMaster?->nama_status ?? '-' }}
-                            </span>
+                        <td class="p-2 border">{{ $pesanan->jenis_pesanan }}</td>
+                        <td class="p-2 border">
+                            Rp{{ number_format($pesanan->tagihan->total_tagihan ?? 0,0,',','.') }}
                         </td>
-                        <td class="p-3 border font-semibold text-green-700">
-                            Rp{{ number_format($pesanan->tagihan->total_tagihan ?? 0, 0, ',', '.') }}
+                        <td class="p-2 border">
+                            {{ ucfirst(str_replace('_', ' ', $pesanan->tagihan->status_pembayaran ?? 'belum lunas')) }}
                         </td>
-                        <td class="p-3 border">
-                            <a href="{{ route('mitra.pesanan.show', $pesanan->id) }}" class="text-blue-500 hover:underline">Detail</a>
+                        <td class="p-2 border text-center">
+                            <a href="{{ route('mitra.pesanan.show', $pesanan->id) }}" 
+                               class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Detail</a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="p-3 border text-center text-gray-500">Belum ada pesanan</td>
+                        <td colspan="6" class="p-2 text-center text-gray-500">Belum ada pesanan</td>
                     </tr>
                 @endforelse
             </tbody>

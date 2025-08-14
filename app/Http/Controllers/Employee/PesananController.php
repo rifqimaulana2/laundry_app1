@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
-use App\Models\WalkinCustomer;
+use App\Models\Walkin_Customers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +20,7 @@ class PesananController extends Controller
         }
 
         $pesanans = Pesanan::where('mitra_id', $employee->mitra_id)
-            ->with(['user', 'walkinCustomer'])
+            ->with(['user', 'walkin_Customers'])
             ->latest()
             ->get();
 
@@ -41,7 +41,7 @@ class PesananController extends Controller
             'satuanDetails.layananMitraSatuan.layananSatuan',
             'tagihan',
             'user',
-            'walkinCustomer'
+            'walkin_Customers'
         ]);
 
         return view('employee.pesanan.show', compact('pesanan'));
@@ -56,9 +56,9 @@ class PesananController extends Controller
             abort(403, 'Akses tidak diizinkan.');
         }
 
-        $walkinCustomers = WalkinCustomer::where('mitra_id', $employee->mitra_id)->get();
+        $walkinCustomers = Walkin_Customers::where('mitra_id', $employee->mitra_id)->get();
 
-        return view('employee.pesanan.create', compact('walkinCustomers'));
+        return view('employee.pesanan.create', compact('walkin_Customers'));
     }
 
     // Menyimpan pesanan baru dari walk-in customer
