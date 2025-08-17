@@ -4,7 +4,7 @@
     <div class="max-w-xl mx-auto mt-10">
         <div class="bg-white rounded-3xl shadow-lg p-8">
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Pelanggan Walk-in</h1>
-            <form action="{{ route('mitra.walkin-customers.update', $walkinCustomer) }}" method="POST" class="space-y-6">
+            <form action="{{ route('mitra.walkin_customer.update', $walkinCustomer) }}" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
                 <div>

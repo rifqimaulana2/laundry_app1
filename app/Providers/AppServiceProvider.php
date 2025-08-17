@@ -22,10 +22,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // ✅ Konfigurasi Midtrans
-        \Config::set('midtrans.serverKey', env('MIDTRANS_SERVER_KEY'));
-        \Config::set('midtrans.isProduction', false); // ubah ke true untuk production
-        \Config::set('midtrans.sanitized', true);
-        \Config::set('midtrans.enable3ds', true);
+         \Midtrans\Config::$serverKey    = config('midtrans.server_key');
+    \Midtrans\Config::$isProduction = (bool) config('midtrans.is_production');
+    \Midtrans\Config::$isSanitized  = (bool) config('midtrans.is_sanitized', true);
+    \Midtrans\Config::$is3ds        = (bool) config('midtrans.is_3ds', true);
 
         // ✅ Manual Route Model Binding (supaya {tagihan} otomatis di-resolve)
         Route::bind('tagihan', function ($value) {

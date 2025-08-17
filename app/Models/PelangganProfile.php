@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// app/Models/PelangganProfile.php
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -21,6 +20,6 @@ class PelangganProfile extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

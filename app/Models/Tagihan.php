@@ -10,16 +10,15 @@ class Tagihan extends Model
     protected $table = 'tagihans';
 
     protected $fillable = [
-        'pesanan_id',
+        'order_id',
         'total_tagihan',
         'dp_dibayar',
-        'order_id', 
         'sisa_tagihan',
-        'metode_bayar',
         'status_pembayaran',
-        'jatuh_tempo_pelunasan',
         'waktu_bayar_dp',
         'waktu_pelunasan',
+        'metode_bayar',
+        'pesanan_id',
     ];
 
     /**
@@ -27,11 +26,12 @@ class Tagihan extends Model
      */
     public function pesanan(): BelongsTo
     {
-        return $this->belongsTo(Pesanan::class);
+        return $this->belongsTo(Pesanan::class, 'pesanan_id');
     }
 
     /**
-     * Hitung total_tagihan, sisa_tagihan, dan status otomatis dari detail pesanan
+     * Hitung ulang total_tagihan, sisa_tagihan, dan status otomatis
+     * berdasarkan detail kiloan & satuan yang ada di DB.
      */
     public function calculateTotalTagihan(): void
     {
@@ -39,19 +39,19 @@ class Tagihan extends Model
 
         $total = 0;
         if ($pesanan) {
-            $total += $pesanan->pesananDetailKiloan->sum('subtotal') ?? 0;
-            $total += $pesanan->pesananDetailSatuan->sum('subtotal') ?? 0;
+            // ✅ pakai query langsung agar data selalu fresh
+            $totalKiloan = $pesanan->kiloanDetails()->sum('subtotal') ?? 0;
+            $totalSatuan = $pesanan->satuanDetails()->sum('subtotal') ?? 0;
+            $total       = $totalKiloan + $totalSatuan;
         }
 
         $this->total_tagihan = $total;
-        $this->sisa_tagihan = $total - ($this->dp_dibayar ?? 0);
+        $this->sisa_tagihan  = max($total - ($this->dp_dibayar ?? 0), 0);
 
-        // Otomatis tentukan status pembayaran
-        if ($this->sisa_tagihan <= 0) {
-            $this->status_pembayaran = 'lunas';
-        } else {
-            $this->status_pembayaran = 'belum lunas';
-        }
+        // ✅ update status otomatis
+        $this->status_pembayaran = $this->sisa_tagihan <= 0
+            ? 'lunas'
+            : 'belum lunas';
 
         $this->save();
     }

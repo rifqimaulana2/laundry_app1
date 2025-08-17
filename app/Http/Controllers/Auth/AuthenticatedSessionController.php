@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Menampilkan form login
+     * Tampilkan form login
      */
     public function create(): View
     {
@@ -20,40 +20,31 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Proses autentikasi login
+     * Proses login
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Proses autentikasi
         $request->authenticate();
         $request->session()->regenerate();
 
-        $user = auth()->user();
+        $user = Auth::user();
 
-        // 🔒 Blokir login mitra jika belum disetujui (belum punya data di tabel `mitras`)
-        if ($user->role === 'mitra') {
-            if (!$user->mitra) {
-                Auth::logout();
-                return redirect()->route('login')->withErrors([
-                    'email' => 'Akun mitra Anda belum disetujui oleh admin.',
-                ]);
-            }
+        // 🔒 Blokir login mitra jika belum diverifikasi / belum punya data di tabel mitras
+        if ($user->role === 'mitra' && !$user->mitra) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun mitra Anda belum disetujui oleh admin.',
+            ]);
         }
 
-        // 🔀 Redirect sesuai role
-        return $this->authenticated($request, $user);
-    }
-
-    /**
-     * Redirect setelah berhasil login sesuai role pengguna
-     */
-    protected function authenticated(Request $request, $user): RedirectResponse
-    {
+        // 🔀 Redirect berdasarkan role
         return match ($user->role) {
             'superadmin' => redirect()->route('superadmin.dashboard'),
             'mitra'      => redirect()->route('mitra.dashboard'),
-            'employee'   => redirect()->route('employee.dashboard'), 
+            'employee'   => redirect()->route('employee.dashboard'),
             'pelanggan'  => redirect()->route('pelanggan.dashboard'),
-            default      => redirect('/home'),
+            default      => redirect()->route('home'),
         };
     }
 

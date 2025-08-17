@@ -40,6 +40,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'mitra' => [
+        'driver' => 'session',
+        'provider' => 'mitras',
+        ],
+
+        'employee' => [
+            'driver' => 'session',
+            'provider' => 'employees',
+        ],
     ],
 
     /*
@@ -69,6 +78,15 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+        'mitras' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Mitra::class,
+    ],
+
+    'employees' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Employee::class,
+    ],
     ],
 
     /*

@@ -13,9 +13,16 @@ class MidtransCallbackController extends Controller
 {
     public function handle(Request $request)
     {
-        Log::info('Midtrans Callback diterima', $request->all());
+        Log::info('📩 Midtrans Callback diterima', $request->all());
 
         try {
+            // Cek konfigurasi server key
+            $serverKey = config('services.midtrans.server_key');
+            if (!$serverKey) {
+                Log::warning('⚠️ ServerKey belum diatur di konfigurasi. Periksa file .env dan jalankan php artisan config:clear.');
+                return response()->json(['message' => 'ServerKey tidak ditemukan'], 500);
+            }
+
             $notif = new Notification();
             $orderId = $notif->order_id ?? null;
             $transactionStatus = strtolower($notif->transaction_status ?? '');
@@ -24,7 +31,7 @@ class MidtransCallbackController extends Controller
             $transactionTime = isset($notif->transaction_time) ? Carbon::parse($notif->transaction_time) : Carbon::now();
 
             if (!$orderId) {
-                Log::warning("Midtrans Callback: order_id kosong");
+                Log::warning("⚠️ Midtrans Callback: order_id kosong");
                 return response()->json(['message' => 'Order ID tidak ditemukan'], 400);
             }
 
@@ -46,7 +53,7 @@ class MidtransCallbackController extends Controller
             }
 
             if (!$tagihan) {
-                Log::warning("Midtrans Callback: Tagihan tidak ditemukan untuk order_id {$orderId}");
+                Log::warning("❌ Tagihan tidak ditemukan untuk order_id {$orderId}");
                 return response()->json(['message' => 'Tagihan tidak ditemukan'], 404);
             }
 
@@ -64,23 +71,30 @@ class MidtransCallbackController extends Controller
 
                 if (!$sudahAda) {
                     // Hitung pembayaran baru
-                    if ($jenisPembayaran === 'dp') {
-                        $totalBayar = $grossAmount; // DP awal
-                    } else {
-                        $totalBayar = $tagihan->dp_dibayar + $grossAmount; // Tambah pelunasan
-                    }
-
+                    $totalBayar = $jenisPembayaran === 'dp' ? $grossAmount : ($tagihan->dp_dibayar + $grossAmount);
                     $sisaBaru = max(0, $tagihan->total_tagihan - $totalBayar);
+                    $statusBaru = $sisaBaru <= 0 ? 'lunas' : ($jenisPembayaran === 'dp' ? 'dp_terbayar' : 'belum lunas');
+
+                    // Log sebelum pembaruan
+                    Log::debug('📋 Sebelum pembaruan tagihan:', $tagihan->toArray());
 
                     // Update tagihan
                     $tagihan->update([
                         'dp_dibayar' => $totalBayar,
                         'sisa_tagihan' => $sisaBaru,
-                        'status_pembayaran' => $sisaBaru <= 0 ? 'lunas' : ($jenisPembayaran === 'dp' ? 'dp_terbayar' : 'belum lunas'),
+                        'status_pembayaran' => $statusBaru,
                         'waktu_bayar_dp' => $jenisPembayaran === 'dp' ? $transactionTime : $tagihan->waktu_bayar_dp,
                         'waktu_pelunasan' => $sisaBaru <= 0 ? $transactionTime : $tagihan->waktu_pelunasan,
                         'metode_bayar' => $paymentType,
                     ]);
+
+                    // Log setelah pembaruan
+                    Log::debug('✅ Setelah pembaruan tagihan:', $tagihan->fresh()->toArray());
+
+                    // Sinkronisasi ke pesanan jika ada
+                    if ($tagihan->pesanan) {
+                        $tagihan->pesanan->update(['dp_bayar' => $totalBayar, 'status_pembayaran' => $statusBaru]);
+                    }
 
                     // Simpan riwayat transaksi
                     RiwayatTransaksi::create([
@@ -92,20 +106,20 @@ class MidtransCallbackController extends Controller
                         'waktu' => $transactionTime,
                     ]);
 
-                    Log::info("Pembayaran {$jenisPembayaran} untuk order_id {$orderId} berhasil dicatat.");
+                    Log::info("💰 Pembayaran {$jenisPembayaran} untuk order_id {$orderId} berhasil dicatat.");
                 } else {
-                    Log::info("Pembayaran untuk order_id {$orderId} sudah pernah dicatat, di-skip.");
+                    Log::info("ℹ️ Pembayaran untuk order_id {$orderId} sudah pernah dicatat, di-skip.");
                 }
             } elseif (in_array($transactionStatus, $statusGagal)) {
                 $tagihan->update(['status_pembayaran' => 'dibatalkan']);
-                Log::warning("Transaksi {$orderId} dibatalkan, status: {$transactionStatus}");
+                Log::warning("❌ Transaksi {$orderId} dibatalkan, status: {$transactionStatus}");
             } else {
-                Log::warning("Transaksi {$orderId} dalam status: {$transactionStatus}");
+                Log::warning("⏳ Transaksi {$orderId} dalam status: {$transactionStatus}");
             }
 
             return response()->json(['message' => 'Notifikasi diproses'], 200);
         } catch (\Exception $e) {
-            Log::error("Midtrans Callback Error: " . $e->getMessage(), [
+            Log::error("💥 Midtrans Callback Error: " . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
                 'request_data' => $request->all()
             ]);

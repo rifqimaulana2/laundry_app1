@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Mitra;
-use App\Models\Pesanan;
 
 class WalkinCustomer extends Model
 {
@@ -15,24 +13,21 @@ class WalkinCustomer extends Model
 
     public $timestamps = false;
 
+    /**
+     * Sesuai SQL terbaru: name, no_telepon, alamat, mitra_id
+     */
     protected $fillable = [
-        'nama',
-        'no_tlp',
+        'name',
+        'no_telepon',
         'alamat',
-        'mitra_id', // penting agar bisa mass-assigned saat create/update
+        'mitra_id',
     ];
 
-    /**
-     * Relasi: WalkinCustomer dimiliki oleh satu Mitra
-     */
     public function mitra()
     {
-        return $this->belongsTo(Mitra::class);
+        return $this->belongsTo(Mitra::class, 'mitra_id');
     }
 
-    /**
-     * Relasi: WalkinCustomer memiliki banyak Pesanan
-     */
     public function pesanans()
     {
         return $this->hasMany(Pesanan::class, 'walkin_customer_id');

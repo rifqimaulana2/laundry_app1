@@ -12,63 +12,47 @@
     </div>
 </nav>
 
-<div class="max-w-7xl mx-auto px-4 py-6 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Total Pesanan -->
-        <div class="bg-white rounded-3xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="flex items-center gap-5">
-                <div class="p-4 bg-cyan-600 text-white rounded-full shadow-md">
-                    <i data-lucide="shopping-bag" class="w-8 h-8"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Total Pesanan</h2>
-                    <p class="text-4xl font-bold text-cyan-600">{{ $totalPesanans }}</p>
-                    <p class="text-sm text-gray-500 mt-1">Jumlah pesanan masuk</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Tagihan Belum Lunas -->
-        <div class="bg-white rounded-3xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="flex items-center gap-5">
-                <div class="p-4 bg-red-600 text-white rounded-full shadow-md">
-                    <i data-lucide="alert-circle" class="w-8 h-8"></i>
+    <!-- Menu Cepat -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="{{ route('mitra.employee.index') }}" 
+           class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="flex items-center gap-4">
+                <div class="p-4 bg-yellow-500 text-white rounded-full">
+                    <i data-lucide="user-plus" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Tagihan Belum Lunas</h2>
-                    <p class="text-4xl font-bold text-red-600">{{ $totalTagihans }}</p>
-                    <p class="text-sm text-gray-500 mt-1">Jumlah tagihan tertunda</p>
+                    <h3 class="text-lg font-semibold text-gray-800">Kelola Karyawan</h3>
+                    <p class="text-gray-500 text-sm">Tambah & kelola employee laundry</p>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <!-- Total Karyawan -->
-        <div class="bg-white rounded-3xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="flex items-center gap-5">
-                <div class="p-4 bg-yellow-500 text-white rounded-full shadow-md">
-                    <i data-lucide="users" class="w-8 h-8"></i>
+        <a href="{{ route('mitra.pesanan.index') }}" 
+           class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="flex items-center gap-4">
+                <div class="p-4 bg-cyan-600 text-white rounded-full">
+                    <i data-lucide="shopping-bag" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Total Karyawan</h2>
-                    <p class="text-4xl font-bold text-yellow-500">{{ $totalEmployees }}</p>
-                    <p class="text-sm text-gray-500 mt-1">Jumlah karyawan terdaftar</p>
+                    <h3 class="text-lg font-semibold text-gray-800">Kelola Pesanan</h3>
+                    <p class="text-gray-500 text-sm">Lihat & atur pesanan pelanggan</p>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <!-- Pelanggan Walk-in -->
-        <div class="bg-white rounded-3xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="flex items-center gap-5">
-                <div class="p-4 bg-green-600 text-white rounded-full shadow-md">
-                    <i data-lucide="user" class="w-8 h-8"></i>
+        <a href="{{ route('mitra.walkin_customer.index') }}" 
+           class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="flex items-center gap-4">
+                <div class="p-4 bg-green-600 text-white rounded-full">
+                    <i data-lucide="user" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Pelanggan Walk-in</h2>
-                    <p class="text-4xl font-bold text-green-600">{{ $totalWalkinCustomers }}</p>
-                    <p class="text-sm text-gray-500 mt-1">Jumlah pelanggan walk-in</p>
+                    <h3 class="text-lg font-semibold text-gray-800">Walk-in Customer</h3>
+                    <p class="text-gray-500 text-sm">Input pelanggan langsung</p>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 @endsection

@@ -4,7 +4,7 @@
     <div class="max-w-4xl mx-auto mt-10">
         <div class="bg-white rounded-3xl shadow-lg p-8">
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Daftar Pelanggan Walk-in</h1>
-            <a href="{{ route('mitra.walkin-customers.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium mb-4 inline-block">Tambah Pelanggan Walk-in</a>
+            <a href="{{ route('mitra.walkin_customer.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium mb-4 inline-block">Tambah Pelanggan Walk-in</a>
             <div class="mb-6 flex gap-2">
                 <input type="text" id="searchInput" name="q" value="{{ request('q') }}" placeholder="Cari nama pelanggan..." class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-800 py-2 px-3">
             </div>
@@ -25,9 +25,9 @@
                                 <td class="p-4 text-sm text-gray-800">{{ $customer->no_tlp }}</td>
                                 <td class="p-4 text-sm text-gray-800">{{ $customer->alamat }}</td>
                                 <td class="p-4 flex gap-2">
-                                    <a href="{{ route('mitra.walkin-customers.show', $customer) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium">Detail</a>
-                                    <a href="{{ route('mitra.walkin-customers.edit', $customer) }}" class="px-3 py-1 bg-yellow-400 text-white rounded-lg hover:bg-yellow-500 font-medium">Edit</a>
-                                    <form action="{{ route('mitra.walkin-customers.destroy', $customer) }}" method="POST" onsubmit="return confirm('Hapus pelanggan walk-in?')" class="inline">
+                                    <a href="{{ route('mitra.walkin_customer.show', $customer) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium">Detail</a>
+                                    <a href="{{ route('mitra.walkin_customer.edit', $customer) }}" class="px-3 py-1 bg-yellow-400 text-white rounded-lg hover:bg-yellow-500 font-medium">Edit</a>
+                                    <form action="{{ route('mitra.walkin_customer.destroy', $customer) }}" method="POST" onsubmit="return confirm('Hapus pelanggan walk-in?')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium">Hapus</button>

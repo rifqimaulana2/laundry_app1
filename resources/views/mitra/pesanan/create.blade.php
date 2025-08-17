@@ -3,305 +3,223 @@
 @section('title', 'Tambah Pesanan')
 
 @section('content')
-<div class="p-6 max-w-6xl mx-auto space-y-6">
-    {{-- Header --}}
-    <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold">Tambah Pesanan</h1>
-        <a href="{{ route('mitra.pesanan.index') }}"
-           class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium">
-            Kembali
-        </a>
-    </div>
-
-    {{-- Form utama --}}
-    <form action="{{ route('mitra.pesanan.store') }}" method="POST" class="space-y-6 bg-white rounded-xl shadow-lg p-6">
-        @csrf
-
-        {{-- TIPE PELANGGAN --}}
-        <div>
-            <label class="block font-semibold mb-2">Tipe Pelanggan</label>
-            <select name="pelanggan_tipe" id="pelanggan_tipe" class="w-full border rounded-lg p-2">
-                <option value="">-- Pilih Tipe Pelanggan --</option>
-                <option value="online">Pelanggan Terdaftar</option>
-                <option value="walkin">Pelanggan Walk-in</option>
-            </select>
+<div class="max-w-5xl mx-auto px-4 py-10">
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+        {{-- Header --}}
+        <div class="px-6 py-5 bg-gradient-to-r from-blue-600 to-indigo-600">
+            <h1 class="text-white text-2xl font-bold">Tambah Pesanan Baru</h1>
+            <p class="text-white/80 text-sm mt-1">Buat pesanan untuk pelanggan online atau walk-in</p>
         </div>
 
-        {{-- PELANGGAN TERDAFTAR --}}
-        <div id="pelangganOnline" class="hidden">
-            <label class="block font-semibold mb-2">Pilih Pelanggan Terdaftar</label>
-            <select name="user_id" id="user_id" class="w-full border rounded-lg p-2">
-                <option value="">-- Pilih pelanggan --</option>
-                @foreach($pelanggans as $p)
-                    <option value="{{ $p->id }}">
-                        {{ $p->profile->nama_lengkap ?? $p->name ?? explode('@',$p->email)[0] }} — {{ $p->email }}
-                    </option>
-                @endforeach
-            </select>
-            <p class="text-xs text-gray-500 mt-1">Nama didapat dari relasi profile jika tersedia.</p>
-        </div>
+        <form action="{{ route('mitra.pesanan.store') }}" method="POST" class="p-6 space-y-8">
+            @csrf
 
-        {{-- PELANGGAN WALK-IN (ambil dari master walkin_customers) --}}
-        <div id="pelangganWalkin" class="hidden">
-            <label class="block font-semibold mb-2">Pilih Pelanggan Walk-in</label>
-            <select name="walkin_customer_id" id="walkin_customer_id" class="w-full border rounded-lg p-2">
-                <option value="">-- Pilih pelanggan walk-in --</option>
-                @foreach($walkinCustomers as $w)
-                    <option value="{{ $w->id }}">{{ $w->nama }}{{ $w->no_tlp ? ' — '.$w->no_tlp : '' }}</option>
-                @endforeach
-            </select>
-            <p class="text-xs text-gray-500 mt-1">Tambah/edit walk-in lewat menu Walk-in Customers.</p>
-        </div>
+            {{-- Error block --}}
+            @if ($errors->any())
+                <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+                    <div class="font-semibold mb-1">Periksa kembali isian Anda:</div>
+                    <ul class="list-disc pl-5 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        {{-- JENIS PESANAN --}}
-        <div>
-            <label class="block font-semibold mb-2">Jenis Pesanan</label>
-            <select name="jenis_pesanan" id="jenis_pesanan" class="w-full border rounded-lg p-2" required>
-                <option value="">-- Pilih Jenis Pesanan --</option>
-                <option value="Kiloan">Kiloan</option>
-                <option value="Satuan">Satuan</option>
-                <option value="Kiloan + Satuan">Kiloan + Satuan</option>
-            </select>
-        </div>
+            {{-- Tipe Pelanggan --}}
+            <section class="space-y-4">
+                <h2 class="text-lg font-semibold text-gray-800">Data Pelanggan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {{-- Pilih tipe pelanggan --}}
+                    <div class="md:col-span-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipe Pelanggan</label>
+                        <select name="pelanggan_tipe" id="pelanggan_tipe" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">-- Pilih --</option>
+                            <option value="online" {{ old('pelanggan_tipe')==='online'?'selected':'' }}>Pelanggan Online</option>
+                            <option value="walkin" {{ old('pelanggan_tipe')==='walkin'?'selected':'' }}>Pelanggan Walk-In Baru</option>
+                            <option value="walkin_existing" {{ old('pelanggan_tipe')==='walkin_existing'?'selected':'' }}>Pelanggan Walk-In Terdaftar</option>
+                        </select>
+                    </div>
 
-        {{-- LAYANAN KILOAN (bisa tambah baris jika butuh, tapi default 1 row) --}}
-        <div id="layananKiloanWrapper" class="hidden rounded-lg border p-4 bg-gray-50">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="font-semibold">Layanan Kiloan</h3>
-                <span class="text-xs text-gray-500">Pilih paket (Reguler / Ekspres) — tampil: nama, harga & durasi</span>
-            </div>
-
-            <div id="kiloanRows" class="space-y-3">
-                <div class="kiloan-row grid grid-cols-12 gap-3 items-end">
-                    <div class="col-span-7">
-                        <label class="block text-xs text-gray-700 mb-1">Paket</label>
-                        <select name="kiloan[0][layanan_id]" class="kiloan-paket w-full border rounded-lg p-2">
-                            <option value="">— Pilih paket kiloan —</option>
-                            @foreach($layananKiloan as $lk)
-                                @php
-                                    // nama paket dari relasi (bisa berbeda nama kolom di DB, coba beberapa kemungkinan)
-                                    $namaPaket = optional($lk->layananKiloan)->nama_paket
-                                                 ?? optional($lk->layananKiloan)->nama_layanan
-                                                 ?? ($lk->nama_layanan ?? 'Paket');
-                                    $durasi = optional($lk->layananKiloan)->durasi_pengerjaan
-                                              ?? optional($lk->layananKiloan)->estimasi_waktu_jam
-                                              ?? ($lk->durasi_pengerjaan ?? null);
-                                    $satuanDurasi = optional($lk->layananKiloan)->satuan_durasi ?? ($lk->satuan_durasi ?? 'jam');
-                                @endphp
-                                <option value="{{ $lk->id }}"
-                                        data-harga="{{ $lk->harga_per_kg ?? 0 }}"
-                                        data-nama="{{ $namaPaket }}"
-                                        data-durasi="{{ $durasi }}"
-                                        data-satuan="{{ $satuanDurasi }}">
-                                    {{ $namaPaket }} — Rp{{ number_format($lk->harga_per_kg ?? 0, 0, ',', '.') }}/kg
-                                    @if($durasi) — Durasi: {{ $durasi }} {{ $satuanDurasi }} @endif
+                    {{-- Pelanggan Online --}}
+                    <div id="pelanggan_online" class="hidden md:col-span-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Pelanggan Online</label>
+                        <select name="user_id" id="select_online" class="w-full rounded-xl border-gray-300">
+                            <option value="">-- Pilih Pelanggan --</option>
+                            @foreach($pelanggans as $pel)
+                                <option value="{{ $pel->id }}" {{ old('user_id')==$pel->id?'selected':'' }}>
+                                    {{ $pel->profile->nama ?? $pel->name }} — {{ $pel->profile->no_telepon ?? $pel->email }}
                                 </option>
                             @endforeach
                         </select>
-                        <input type="hidden" name="kiloan[0][harga]" class="kiloan-harga-hidden" value="">
                     </div>
 
-                    <div class="col-span-3">
-                        <label class="block text-xs text-gray-700 mb-1">Berat (kg)</label>
-                        <input type="number" step="1" min="0" name="kiloan[0][berat]" class="kiloan-berat w-full border rounded-lg p-2" placeholder="0.0">
-                    </div>
-
-                    <div class="col-span-2 text-right">
-                        <label class="block text-xs text-gray-700 mb-1">Subtotal</label>
-                        <div class="rounded-lg border bg-white p-2 text-sm font-semibold" style="min-height:40px;">
-                            Rp<span class="kiloan-subtotal">0</span>
+                    {{-- Walk-in baru --}}
+                    <div id="pelanggan_walkin" class="hidden md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                            <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                            <input type="text" name="alamat" value="{{ old('alamat') }}" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
+                            <input type="text" name="no_telepon" value="{{ old('no_telepon') }}" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                         </div>
                     </div>
+
+                    {{-- Walk-in existing --}}
+                    <div id="pelanggan_walkin_existing" class="hidden md:col-span-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Pelanggan Walk-In</label>
+                        <select name="walkin_customer_id" id="select_walkin" class="w-full rounded-xl border-gray-300">
+                            <option value="">-- Pilih --</option>
+                            @foreach($walkinCustomers as $wc)
+                                <option value="{{ $wc->id }}" {{ old('walkin_customer_id')==$wc->id?'selected':'' }}>
+                                    {{ $wc->name }} — {{ $wc->no_telepon }} — {{ $wc->alamat }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="mt-3 text-xs text-gray-500">Harga dan durasi diambil dari relasi layanan mitra → master layanan.</div>
-        </div>
+            {{-- Jenis & Pengiriman --}}
+            <section class="space-y-4">
+                <h2 class="text-lg font-semibold text-gray-800">Jenis Pesanan & Pengiriman</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Pesanan</label>
+                        <select name="jenis_pesanan" id="jenis_pesanan" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <option value="Kiloan" {{ old('jenis_pesanan')==='Kiloan'?'selected':'' }}>Kiloan</option>
+                            <option value="Satuan" {{ old('jenis_pesanan')==='Satuan'?'selected':'' }}>Satuan</option>
+                            <option value="Kiloan + Satuan" {{ old('jenis_pesanan')==='Kiloan + Satuan'?'selected':'' }}>Kiloan + Satuan</option>
+                        </select>
+                    </div>
 
-        {{-- LAYANAN SATUAN (multi item) --}}
-        <div id="layananSatuanWrapper" class="hidden rounded-lg border p-4 bg-gray-50">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="font-semibold">Layanan Satuan</h3>
-                <button type="button" id="btnAddSatuan" class="text-sm bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700">+ Tambah Item</button>
-            </div>
+                    @if($layananJemputAktif)
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Opsi Jemput</label>
+                            <select name="opsi_jemput" id="opsi_jemput" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                <option value="Tidak" {{ old('opsi_jemput','Tidak')==='Tidak'?'selected':'' }}>Tidak</option>
+                                <option value="Ya" {{ old('opsi_jemput')==='Ya'?'selected':'' }}>Ya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Jadwal Jemput</label>
+                            <input type="datetime-local" name="jadwal_jemput" value="{{ old('jadwal_jemput') }}" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    @endif
 
-            <div id="satuanRows" class="space-y-3">
-                {{-- default kosong; user bisa tambah baris --}}
-            </div>
+                    @if($layananAntarAktif)
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Opsi Antar</label>
+                            <select name="opsi_antar" id="opsi_antar" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                <option value="Tidak" {{ old('opsi_antar','Tidak')==='Tidak'?'selected':'' }}>Tidak</option>
+                                <option value="Ya" {{ old('opsi_antar')==='Ya'?'selected':'' }}>Ya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Jadwal Antar</label>
+                            <input type="datetime-local" name="jadwal_antar" value="{{ old('jadwal_antar') }}" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    @endif
+                </div>
 
-            <div class="mt-3 text-xs text-gray-500">Pilih layanan satuan — nama, harga & durasi ditampilkan.</div>
-        </div>
-
-        {{-- OPSI JEMPUT / ANTAR --}}
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block font-semibold mb-2">Opsi Jemput</label>
-                <select name="opsi_jemput" id="opsi_jemput" class="w-full border rounded-lg p-2">
-                    <option value="Tidak">Tidak</option>
-                    <option value="Ya">Ya</option>
-                </select>
-            </div>
-            <div>
-                <label class="block font-semibold mb-2">Opsi Antar</label>
-                <select name="opsi_antar" id="opsi_antar" class="w-full border rounded-lg p-2">
-                    <option value="Tidak">Tidak</option>
-                    <option value="Ya">Ya</option>
-                </select>
-            </div>
-        </div>
-
-        {{-- JADWAL JIKA ADA ANTAR/JEMPUT --}}
-        <div id="jadwalWrapper" class="hidden rounded-lg border p-4 bg-gray-50">
-            <h3 class="font-semibold mb-3">Jadwal Jemput / Antar</h3>
-            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-medium">Tanggal</label>
-                    <input type="date" name="jadwal_tanggal" class="w-full border rounded-lg p-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Catatan Pesanan</label>
+                    <textarea name="catatan_pesanan" rows="3" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">{{ old('catatan_pesanan') }}</textarea>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium">Waktu</label>
-                    <input type="time" name="jadwal_waktu" class="w-full border rounded-lg p-2">
-                </div>
-            </div>
-            <p class="text-xs text-gray-500 mt-2">Isikan tanggal & waktu jika jemput/antar diperlukan.</p>
-        </div>
+            </section>
 
-        <div class="pt-4">
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow">
-                Simpan Pesanan
-            </button>
-        </div>
-    </form>
+            {{-- Layanan Kiloan --}}
+            <section id="kiloan_section" class="space-y-3">
+                <h2 class="text-lg font-semibold text-gray-800">Pilih Layanan Kiloan</h2>
+                @forelse($layananKiloan as $lk)
+                    @php
+                        $namaPaket = $lk->layananKiloan->nama_paket ?? ($lk->layananKiloan->nama_layanan ?? 'Paket Kiloan');
+                        $tipe      = $lk->layananKiloan->tipe ?? (stripos($namaPaket,'ekspres')!==false?'Ekspres':'Reguler');
+                        $checked   = old('kiloan_selected') == $lk->id ? 'checked' : '';
+                    @endphp
+                    <label class="flex items-center justify-between p-4 border rounded-2xl hover:bg-blue-50 transition">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="kiloan_selected" value="{{ $lk->id }}" data-tipe="{{ $tipe }}" class="h-5 w-5 text-blue-600" {{ $checked }}>
+                            <div>
+                                <div class="font-semibold">{{ $namaPaket }} <span class="ml-2 text-xs border px-2 rounded">{{ $tipe }}</span></div>
+                                <div class="text-sm text-gray-500">Rp {{ number_format($lk->harga_per_kg,0,',','.') }}/kg • {{ $lk->durasi_hari }} hari</div>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="number" name="kiloan[{{ $lk->id }}][berat]" value="{{ old('kiloan.'.$lk->id.'.berat') }}" min="1" step="0.1" placeholder="Kg" class="w-24 rounded-xl border-gray-300 text-center">
+                            <input type="hidden" name="kiloan[{{ $lk->id }}][harga]" value="{{ $lk->harga_per_kg }}">
+                        </div>
+                    </label>
+                @empty
+                    <div class="text-sm text-gray-500">Belum ada layanan kiloan pada mitra ini.</div>
+                @endforelse
+            </section>
+
+            {{-- Layanan Satuan --}}
+            <section id="satuan_section" class="space-y-3">
+                <h2 class="text-lg font-semibold text-gray-800">Pilih Layanan Satuan</h2>
+                @forelse($layananSatuan as $ls)
+                    @php
+                        $namaSatuan = $ls->layananSatuan->nama_layanan ?? 'Item Satuan';
+                    @endphp
+                    <label class="flex items-center justify-between p-4 border rounded-2xl hover:bg-blue-50 transition">
+                        <div>
+                            <div class="font-semibold">{{ $namaSatuan }}</div>
+                            <div class="text-sm text-gray-500">Rp {{ number_format($ls->harga_per_item,0,',','.') }} • {{ $ls->durasi_hari }} hari</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" name="satuan[{{ $ls->id }}][layanan_id]" value="{{ $ls->id }}" {{ old('satuan.'.$ls->id.'.layanan_id') ? 'checked' : '' }}>
+                            <input type="number" name="satuan[{{ $ls->id }}][jumlah]" value="{{ old('satuan.'.$ls->id.'.jumlah') }}" min="1" class="w-24 rounded-xl border-gray-300 text-center" placeholder="Jumlah">
+                            <input type="hidden" name="satuan[{{ $ls->id }}][harga]" value="{{ $ls->harga_per_item }}">
+                        </div>
+                    </label>
+                @empty
+                    <div class="text-sm text-gray-500">Belum ada layanan satuan pada mitra ini.</div>
+                @endforelse
+            </section>
+
+            {{-- Submit --}}
+            <div class="flex items-center justify-end gap-3 pt-4 border-t">
+                <a href="{{ route('mitra.pesanan.index') }}" class="px-5 py-2 rounded-xl border hover:bg-gray-50">Batal</a>
+                <button type="submit" class="px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow">
+                    Simpan Pesanan
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
-{{-- SCRIPT --}}
+{{-- Tom Select --}}
+<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // utility
-    const fmt = n => new Intl.NumberFormat('id-ID').format(Math.round(n||0));
+(function() {
+    const tipeSelect = document.getElementById('pelanggan_tipe');
+    const onlineWrap = document.getElementById('pelanggan_online');
+    const walkinWrap = document.getElementById('pelanggan_walkin');
+    const walkinExist = document.getElementById('pelanggan_walkin_existing');
 
-    // show/hide pelanggan terdaftar vs walkin
-    const pelangganTipe = document.getElementById('pelanggan_tipe');
-    const pelangganOnline = document.getElementById('pelangganOnline');
-    const pelangganWalkin = document.getElementById('pelangganWalkin');
-
-    pelangganTipe.addEventListener('change', () => {
-        pelangganOnline.classList.toggle('hidden', pelangganTipe.value !== 'online');
-        pelangganWalkin.classList.toggle('hidden', pelangganTipe.value !== 'walkin');
-    });
-
-    // jenis pesanan: toggle kiloan / satuan
-    const jenisPesanan = document.getElementById('jenis_pesanan');
-    const kiloanWrapper = document.getElementById('layananKiloanWrapper');
-    const satuanWrapper = document.getElementById('layananSatuanWrapper');
-
-    function applyJenis() {
-        const v = jenisPesanan.value;
-        kiloanWrapper.classList.toggle('hidden', !v.includes('Kiloan'));
-        satuanWrapper.classList.toggle('hidden', !v.includes('Satuan'));
-    }
-    jenisPesanan.addEventListener('change', applyJenis);
-    applyJenis();
-
-    // jadwal antar/jemput
-    const opsiJemput = document.getElementById('opsi_jemput');
-    const opsiAntar = document.getElementById('opsi_antar');
-    const jadwalWrapper = document.getElementById('jadwalWrapper');
-
-    function toggleJadwal() {
-        const show = (opsiJemput.value === 'Ya') || (opsiAntar.value === 'Ya');
-        jadwalWrapper.classList.toggle('hidden', !show);
-    }
-    opsiJemput.addEventListener('change', toggleJadwal);
-    opsiAntar.addEventListener('change', toggleJadwal);
-    toggleJadwal();
-
-    // KILOAN: live subtotal per row
-    function recalcKiloanRow(row) {
-        const sel = row.querySelector('.kiloan-paket');
-        const beratEl = row.querySelector('.kiloan-berat');
-        const subtotalEl = row.querySelector('.kiloan-subtotal');
-        const hargaHidden = row.querySelector('.kiloan-harga-hidden');
-
-        const harga = parseFloat(sel.selectedOptions[0]?.dataset.harga || 0);
-        const berat = parseFloat(beratEl.value || 0);
-        const sub = Math.max(0, harga * berat);
-        subtotalEl.textContent = fmt(sub);
-        if (hargaHidden) hargaHidden.value = harga || '';
+    function togglePelanggan() {
+        onlineWrap.classList.add('hidden');
+        walkinWrap.classList.add('hidden');
+        walkinExist.classList.add('hidden');
+        if (tipeSelect.value === 'online') onlineWrap.classList.remove('hidden');
+        if (tipeSelect.value === 'walkin') walkinWrap.classList.remove('hidden');
+        if (tipeSelect.value === 'walkin_existing') walkinExist.classList.remove('hidden');
     }
 
-    document.querySelectorAll('#kiloanRows .kiloan-row').forEach(r => {
-        r.querySelector('.kiloan-paket').addEventListener('change', () => recalcKiloanRow(r));
-        r.querySelector('.kiloan-berat').addEventListener('input', () => recalcKiloanRow(r));
-    });
+    togglePelanggan();
+    tipeSelect.addEventListener('change', togglePelanggan);
 
-    // SATUAN: add/remove rows
-    const btnAddSatuan = document.getElementById('btnAddSatuan');
-    const satuanRows = document.getElementById('satuanRows');
-    let satuanIndex = 0;
-
-    btnAddSatuan && btnAddSatuan.addEventListener('click', function () {
-        const tpl = document.createElement('div');
-        tpl.className = 'satuan-row grid grid-cols-12 gap-3 items-end';
-        tpl.innerHTML = `
-            <div class="col-span-6">
-                <label class="block text-xs text-gray-700 mb-1">Layanan</label>
-                <select name="satuan[${satuanIndex}][layanan_id]" class="satuan-paket w-full border rounded-lg p-2">
-                    <option value="">— Pilih layanan satuan —</option>
-                    @foreach($layananSatuan as $ls)
-                        @php
-                            $namaSatuan = optional($ls->layananSatuan)->nama_layanan
-                                         ?? ($ls->nama_layanan ?? 'Layanan');
-                            $durasiS = optional($ls->layananSatuan)->durasi_pengerjaan ?? ($ls->durasi_pengerjaan ?? null);
-                            $satuanDur = optional($ls->layananSatuan)->satuan_durasi ?? ($ls->satuan_durasi ?? 'hari');
-                        @endphp
-                        <option value="{{ $ls->id }}" data-harga="{{ $ls->harga_per_item ?? 0 }}" data-durasi="{{ $durasiS }}" data-satuan="{{ $satuanDur }}">
-                            {{ $namaSatuan }} — Rp{{ number_format($ls->harga_per_item ?? 0, 0, ',', '.') }}
-                            @if($durasiS) — Durasi: {{ $durasiS }} {{ $satuanDur }} @endif
-                        </option>
-                    @endforeach
-                </select>
-                <input type="hidden" name="satuan[${satuanIndex}][harga]" class="satuan-harga-hidden">
-            </div>
-            <div class="col-span-3">
-                <label class="block text-xs text-gray-700 mb-1">Jumlah</label>
-                <input type="number" min="0" name="satuan[${satuanIndex}][jumlah]" class="satuan-qty w-full border rounded-lg p-2" placeholder="0">
-            </div>
-            <div class="col-span-2 text-right">
-                <label class="block text-xs text-gray-700 mb-1">Subtotal</label>
-                <div class="rounded-lg border bg-white p-2 text-sm font-semibold">Rp<span class="satuan-sub">0</span></div>
-            </div>
-            <div class="col-span-1 text-right">
-                <button type="button" class="remove-satuan text-sm rounded-lg border px-3 py-1 hover:bg-gray-100">Hapus</button>
-            </div>
-        `;
-        satuanRows.appendChild(tpl);
-
-        const sel = tpl.querySelector('.satuan-paket');
-        const qty = tpl.querySelector('.satuan-qty');
-        const hargaHidden = tpl.querySelector('.satuan-harga-hidden');
-        const subEl = tpl.querySelector('.satuan-sub');
-        const rem = tpl.querySelector('.remove-satuan');
-
-        function recalcSatuan() {
-            const harga = parseFloat(sel.selectedOptions[0]?.dataset.harga || 0);
-            const jumlah = parseFloat(qty.value || 0);
-            const sub = Math.max(0, harga * jumlah);
-            subEl.textContent = fmt(sub);
-            hargaHidden.value = harga || '';
-        }
-
-        sel.addEventListener('change', recalcSatuan);
-        qty.addEventListener('input', recalcSatuan);
-        rem.addEventListener('click', () => {
-            tpl.remove();
-        });
-
-        satuanIndex++;
-    });
-
-    // initial compute for kiloan row(s)
-    document.querySelectorAll('#kiloanRows .kiloan-row').forEach(r => recalcKiloanRow(r));
-});
+    // Searchable select
+    new TomSelect("#select_online", { create: false, sortField: { field: "text", direction: "asc" } });
+    new TomSelect("#select_walkin", { create: false, sortField: { field: "text", direction: "asc" } });
+})();
 </script>
 @endsection

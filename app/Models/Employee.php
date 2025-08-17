@@ -23,7 +23,13 @@ class Employee extends Model
     }
 
     public function mitra()
-    {
-        return $this->belongsTo(Mitra::class);
-    }
+{
+    return $this->belongsTo(Mitra::class, 'mitra_id');
+}
+
+    public function employeeMitra()
+{
+    return $this->belongsTo(Mitra::class, 'mitra_id'); // atau sesuai struktur tabel
+}
+
 }

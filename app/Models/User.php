@@ -23,35 +23,44 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // Relasi untuk pelanggan
+    /**
+     * Profil pelanggan (alamat, no_telepon, dsb) – tabel: pelanggan_profiles
+     */
     public function pelangganProfile()
     {
         return $this->hasOne(PelangganProfile::class, 'user_id');
     }
 
-    // Relasi untuk mitra
+    /**
+     * Relasi mitra (jika user adalah mitra)
+     */
     public function mitra()
     {
         return $this->hasOne(Mitra::class, 'user_id');
     }
 
-    // Relasi untuk employee
+    /**
+     * Relasi employee (jika user adalah employee)
+     */
     public function employee()
     {
         return $this->hasOne(Employee::class, 'user_id');
     }
 
-    // Semua pesanan yang dimiliki user
+    /**
+     * Semua pesanan milik user (sebagai pelanggan terdaftar)
+     */
     public function pesanans()
     {
+        // NB: nama tabel di DB = 'pesanan' (singular), tapi kunci asing tetap 'user_id'
         return $this->hasMany(Pesanan::class, 'user_id');
     }
 
     /**
-     * Relasi profile universal untuk semua role
-     * - pelanggan → pelangganProfile
-     * - mitra → mitra
-     * - employee → employee
+     * Getter "profile" yang compatible dengan Blade kamu:
+     * - pelanggan  → PelangganProfile
+     * - mitra      → Mitra
+     * - employee   → Employee
      */
     public function profile()
     {
@@ -63,7 +72,7 @@ class User extends Authenticatable
             return $this->hasOne(Employee::class, 'user_id');
         }
 
-        // Default kembalikan null kalau rolenya tidak dikenali
+        // default: kembalikan relasi kosong agar tidak error saat dipanggil di Blade
         return $this->hasOne(PelangganProfile::class, 'user_id')->whereRaw('1=0');
     }
 }

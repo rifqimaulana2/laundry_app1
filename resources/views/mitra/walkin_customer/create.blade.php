@@ -4,7 +4,7 @@
     <div class="max-w-xl mx-auto mt-10">
         <div class="bg-white rounded-3xl shadow-lg p-8">
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah Pelanggan Walk-in</h1>
-            <form action="{{ route('mitra.walkin-customers.store') }}" method="POST" class="space-y-6">
+            <form action="{{ route('mitra.walkin_customer.store') }}" method="POST" class="space-y-6">
                 @csrf
                 <div>
                     <label class="block text-gray-700 mb-1">Nama</label>
