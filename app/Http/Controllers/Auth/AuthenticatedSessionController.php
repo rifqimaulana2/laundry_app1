@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
         return match ($user->role) {
             'superadmin' => redirect()->route('superadmin.dashboard'),
             'mitra'      => redirect()->route('mitra.dashboard'),
-            'employee'   => redirect()->route('employee.dashboard'),
+            'employee'   => redirect()->route('mitra.pesanan.index'), // ✅ diarahkan ke pesanan mitra
             'pelanggan'  => redirect()->route('pelanggan.dashboard'),
             default      => redirect()->route('home'),
         };

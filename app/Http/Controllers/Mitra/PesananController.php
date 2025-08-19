@@ -19,7 +19,7 @@ use App\Models\PesananDetailSatuan;
 use App\Models\JamOperasional;
 use App\Models\StatusMaster;
 use App\Models\TrackingStatus;
-use App\Models\Tagihan; // ⬅️ tambahkan import Tagihan
+use App\Models\Tagihan;
 
 class PesananController extends Controller
 {
@@ -265,7 +265,7 @@ class PesananController extends Controller
                 }
             }
 
-            // ===== Buat/Sync Tagihan awal (berdasar subtotal sementara)
+            // ===== Buat Tagihan awal
             $totalKiloan = PesananDetailKiloan::where('pesanan_id', $pesanan->id)->sum('subtotal');
             $totalSatuan = PesananDetailSatuan::where('pesanan_id', $pesanan->id)->sum('subtotal');
             $totalAwal   = $totalKiloan + $totalSatuan;
@@ -273,9 +273,10 @@ class PesananController extends Controller
             Tagihan::firstOrCreate(
                 ['pesanan_id' => $pesanan->id],
                 [
-                    'total_tagihan' => $totalAwal,
-                    'dp_dibayar'    => 0,
-                    'sisa_tagihan'  => $totalAwal, // belum ada DP
+                    'total_tagihan'     => $totalAwal,
+                    'dp_dibayar'        => 0,
+                    'sisa_tagihan'      => $totalAwal,
+                    'status_pembayaran' => 'belum lunas',
                 ]
             );
 
@@ -292,7 +293,6 @@ class PesananController extends Controller
      * ================================ */
     public function show($id)
     {
-        // ⬅️ Samakan logika ambil mitra_id seperti di index(), agar employee juga aman
         $user = Auth::user();
         if ($user->role === 'mitra') {
             $mitraId = $user->mitra->id;
@@ -320,49 +320,49 @@ class PesananController extends Controller
     /** ================================
      * UPDATE TIMBANGAN KILOAN
      * ================================ */
-   public function updateTimbangan(Request $request, $detailId)
-{
-    $request->validate([
-        'berat_final' => 'required|numeric|min:1'
-    ]);
+    public function updateTimbangan(Request $request, $detailId)
+    {
+        $request->validate([
+            'berat_final' => 'required|numeric|min:0.1'
+        ]);
 
-    return DB::transaction(function () use ($request, $detailId) {
-        $detail  = PesananDetailKiloan::lockForUpdate()->findOrFail($detailId);
-        $pesanan = Pesanan::with('tagihan')->lockForUpdate()->findOrFail($detail->pesanan_id);
+        return DB::transaction(function () use ($request, $detailId) {
+            $detail  = PesananDetailKiloan::lockForUpdate()->findOrFail($detailId);
+            $pesanan = Pesanan::with('tagihan')->lockForUpdate()->findOrFail($detail->pesanan_id);
 
-        // Jika tagihan belum ada → buat tapi tetap larang konfirmasi sebelum DP
-        if (!$pesanan->tagihan) {
-            $totalKiloan0 = PesananDetailKiloan::where('pesanan_id', $pesanan->id)->sum('subtotal');
-            $totalSatuan0 = PesananDetailSatuan::where('pesanan_id', $pesanan->id)->sum('subtotal');
-            $total0       = $totalKiloan0 + $totalSatuan0;
+            // Pastikan ada tagihan
+            if (!$pesanan->tagihan) {
+                $totalKiloan0 = PesananDetailKiloan::where('pesanan_id', $pesanan->id)->sum('subtotal');
+                $totalSatuan0 = PesananDetailSatuan::where('pesanan_id', $pesanan->id)->sum('subtotal');
+                $total0       = $totalKiloan0 + $totalSatuan0;
 
-            $pesanan->tagihan = Tagihan::create([
-                'pesanan_id'    => $pesanan->id,
-                'total_tagihan' => $total0,
-                'dp_dibayar'    => 0,
-                'sisa_tagihan'  => $total0,
-                'status_pembayaran' => 'belum lunas',
-            ]);
+                $pesanan->tagihan = Tagihan::create([
+                    'pesanan_id'         => $pesanan->id,
+                    'total_tagihan'      => $total0,
+                    'dp_dibayar'         => 0,
+                    'sisa_tagihan'       => $total0,
+                    'status_pembayaran'  => 'belum lunas',
+                ]);
 
-            return back()->with('error', 'Tagihan dibuat otomatis. Mohon minta pelanggan bayar DP terlebih dahulu.');
-        }
+                return back()->with('error', 'Tagihan dibuat otomatis. Mohon minta pelanggan bayar DP terlebih dahulu.');
+            }
 
-        // Validasi DP sudah dibayar
-        if ($pesanan->tagihan->dp_dibayar <= 0) {
-            return back()->with('error', 'Tidak bisa konfirmasi timbangan sebelum DP dibayar.');
-        }
+            // Wajib DP dulu
+            if ($pesanan->tagihan->dp_dibayar <= 0) {
+                return back()->with('error', 'Tidak bisa konfirmasi timbangan sebelum DP dibayar.');
+            }
 
-        // ✅ Update berat final & subtotal kiloan
-        $detail->berat_final = $request->berat_final;
-        $detail->subtotal    = $detail->berat_final * $detail->harga_per_kg;
-        $detail->save();
+            // Update berat final & subtotal kiloan
+            $detail->berat_final = (float) $request->berat_final;
+            $detail->subtotal    = $detail->berat_final * (float) $detail->harga_per_kg;
+            $detail->save();
 
-        // ✅ Hitung ulang tagihan pakai method di model
-        $pesanan->tagihan->calculateTotalTagihan();
+            // Recalculate tagihan (total_tagihan, sisa_tagihan, status)
+            $pesanan->tagihan->recalculateFromDetails();
 
-        return back()->with('success', 'Berat final berhasil diperbarui dan total tagihan dihitung ulang.');
-    });
-}
+            return back()->with('success', 'Berat final disimpan dan tagihan diperbarui.');
+        });
+    }
 
     /** ================================
      * UPDATE STATUS

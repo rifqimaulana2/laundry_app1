@@ -81,7 +81,7 @@
                                         @if($pesanan->tagihan && $pesanan->tagihan->dp_dibayar > 0)
                                             <form action="{{ route('mitra.pesanan.updateTimbangan', $detail->id) }}" method="POST" class="flex items-center justify-center gap-2">
                                                 @csrf
-                                                <input type="number" name="berat_final" min="1" step="1" class="border border-gray-300 rounded-lg p-1 w-20 text-center" required>
+                                                <input type="number" name="berat_final" min="0.1" step="0.1" class="border border-gray-300 rounded-lg p-1 w-20 text-center" required>
                                                 <button type="submit" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs">Simpan</button>
                                             </form>
                                         @else
@@ -136,8 +136,8 @@
                 <p><span class="font-semibold">Total Tagihan:</span> Rp{{ number_format($pesanan->tagihan->total_tagihan,0,',','.') }}</p>
                 <p><span class="font-semibold">DP Dibayar:</span> Rp{{ number_format($pesanan->tagihan->dp_dibayar,0,',','.') }}</p>
                 <p><span class="font-semibold">Sisa Tagihan:</span> Rp{{ number_format($pesanan->tagihan->sisa_tagihan,0,',','.') }}</p>
-                <p><span class="font-semibold">Status Lunas:</span> 
-                    @if($pesanan->tagihan->status_lunas == 'Ya')
+                <p><span class="font-semibold">Status:</span> 
+                    @if($pesanan->tagihan->status_pembayaran === 'lunas')
                         <span class="text-green-600 font-semibold">Sudah Lunas</span>
                     @else
                         <span class="text-red-600 font-semibold">Belum Lunas</span>

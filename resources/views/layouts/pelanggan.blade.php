@@ -21,25 +21,40 @@
 
             <!-- Desktop Menu -->
             <nav class="hidden md:flex items-center gap-6 font-medium text-sm">
-                @auth
-                    <a href="{{ route('pelanggan.dashboard') }}" class="hover:text-yellow-300 transition">Dashboard</a>
-                    <a href="{{ route('pelanggan.mitra.index') }}" class="hover:text-yellow-300 transition">Mitra</a>
-                    <a href="{{ route('pelanggan.tagihan.index') }}" class="hover:text-yellow-300 transition">Tagihan</a>
-                    <a href="{{ route('pelanggan.profil.edit') }}" class="hover:text-yellow-300 transition">Profil</a>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="hover:text-yellow-300 transition">Logout</button>
-                    </form>
-                @endauth
-                @guest
-                    <a href="{{ url('/') }}" class="hover:text-yellow-300 transition">Home</a>
-                    <a href="{{ url('/pelacakan') }}" class="hover:text-yellow-300 transition">Pelacakan</a>
-                    <a href="{{ url('/jadimitra') }}" class="hover:text-yellow-300 transition">Jadi Mitra</a>
-                    <a href="{{ route('login') }}" class="bg-yellow-400 text-indigo-800 px-4 py-2 rounded hover:bg-yellow-500 transition font-semibold">Login</a>
-                    <a href="{{ route('register') }}" class="bg-white text-indigo-800 px-4 py-2 rounded border hover:bg-gray-100 transition font-semibold">Daftar</a>
-                @endguest
-            </nav>
+    @auth
+        <a href="{{ route('pelanggan.dashboard') }}" class="hover:text-yellow-300 transition">Dashboard</a>
+        <a href="{{ route('pelanggan.mitra.index') }}" class="hover:text-yellow-300 transition">Mitra</a>
+        <a href="{{ route('pelanggan.pesanan.index') }}" class="hover:text-yellow-300 transition">Pesanan</a>
 
+        {{-- Tambahan: Detail Pesanan terakhir --}}
+        @php
+            $lastPesanan = \App\Models\Pesanan::where('user_id', Auth::id())->latest()->first();
+        @endphp
+        @if ($lastPesanan)
+            <a href="{{ route('pelanggan.pesanan.show', $lastPesanan->id) }}" 
+               class="hover:text-yellow-300 transition">
+                Detail Pesanan
+            </a>
+        @endif
+
+        <a href="{{ route('pelanggan.tagihan.index') }}" class="hover:text-yellow-300 transition">Tagihan</a>
+        <a href="{{ route('pelanggan.profil.edit') }}" class="hover:text-yellow-300 transition">Profil</a>
+        <form method="POST" action="{{ route('logout') }}" class="inline">
+            @csrf
+            <button type="submit" class="hover:text-yellow-300 transition">Logout</button>
+        </form>
+    @endauth
+
+    @guest
+        <a href="{{ url('/') }}" class="hover:text-yellow-300 transition">Home</a>
+        <a href="{{ url('/pelacakan') }}" class="hover:text-yellow-300 transition">Pelacakan</a>
+        <a href="{{ url('/jadimitra') }}" class="hover:text-yellow-300 transition">Jadi Mitra</a>
+        <a href="{{ route('login') }}" class="bg-yellow-400 text-indigo-800 px-4 py-2 rounded hover:bg-yellow-500 transition font-semibold">Login</a>
+        <a href="{{ route('register') }}" class="bg-white text-indigo-800 px-4 py-2 rounded border hover:bg-gray-100 transition font-semibold">Daftar</a>
+    @endguest
+</nav>
+
+            
             <!-- Mobile Menu Button -->
             <div class="md:hidden">
                 <button @click="open = !open" class="focus:outline-none">

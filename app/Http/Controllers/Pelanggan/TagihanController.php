@@ -6,10 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Tagihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Midtrans\Snap;
-use Midtrans\Config;
-use Midtrans\Transaction;
 
 class TagihanController extends Controller
 {
@@ -26,22 +22,8 @@ class TagihanController extends Controller
     {
         $this->authorizeUserOrFail($tagihan);
         $tagihan->load(['pesanan.mitra', 'pesanan.riwayatTransaksi']);
-        return view('pelanggan.tagihan.show', compact('tagihan'));
-    }
 
-    private function cancelPreviousTransaction(string $orderId): void
-    {
-        try {
-            $status = Transaction::status($orderId);
-            if (in_array(strtolower($status->transaction_status), ['pending', 'capture', 'challenge'])) {
-                Transaction::cancel($orderId);
-                Log::info("Transaksi lama {$orderId} dibatalkan.");
-            } else {
-                Log::info("Transaksi {$orderId} tidak dapat dibatalkan karena status: {$status->transaction_status}");
-            }
-        } catch (\Exception $e) {
-            Log::warning("Gagal membatalkan transaksi {$orderId}: " . $e->getMessage());
-        }
+        return view('pelanggan.tagihan.show', compact('tagihan'));
     }
 
     public function bayar(Tagihan $tagihan)
@@ -53,56 +35,49 @@ class TagihanController extends Controller
                 ->with('error', 'Tagihan ini sudah lunas.');
         }
 
-        $grossAmount = $tagihan->dp_dibayar > 0
-            ? $tagihan->sisa_tagihan
-            : ceil($tagihan->total_tagihan * 0.5);
+        $isDpWajib = $tagihan->pesanan->tipe_dp_wajib === 'Ya';
+        $sudahBayarDp = $tagihan->dp_dibayar > 0;
 
-        if ($grossAmount <= 0) {
+        if (! $sudahBayarDp && $isDpWajib) {
+            $jenisPembayaran = 'DP (50%)';
+            $totalBayar = ceil($tagihan->total_tagihan * 0.5);
+        } else {
+            $jenisPembayaran = 'Pelunasan';
+            $totalBayar = $tagihan->sisa_tagihan;
+        }
+
+        return view('pelanggan.tagihan.bayar', compact('tagihan', 'jenisPembayaran', 'totalBayar'));
+    }
+
+    public function prosesBayar(Request $request, Tagihan $tagihan)
+    {
+        $this->authorizeUserOrFail($tagihan);
+
+        if ($tagihan->status_pembayaran === 'lunas') {
             return redirect()->route('pelanggan.tagihan.show', $tagihan->id)
-                ->with('error', 'Jumlah tagihan tidak valid.');
+                ->with('error', 'Tagihan ini sudah lunas.');
         }
 
-        $orderIdPrefix = $tagihan->dp_dibayar > 0 ? 'PELUNASAN' : 'DP';
-        if (!empty($tagihan->order_id) && strpos($tagihan->order_id, 'TEMP-') !== 0) {
-            $this->cancelPreviousTransaction($tagihan->order_id);
+        $isDpWajib = $tagihan->pesanan->tipe_dp_wajib === 'Ya';
+        $sudahBayarDp = $tagihan->dp_dibayar > 0;
+
+        if (! $sudahBayarDp && $isDpWajib) {
+            // Bayar DP (50%)
+            $bayar = ceil($tagihan->total_tagihan * 0.5);
+            $tagihan->dp_dibayar = $bayar;
+            $tagihan->sisa_tagihan = $tagihan->total_tagihan - $bayar;
+            $tagihan->status_pembayaran = 'belum lunas';
+        } else {
+            // Bayar pelunasan
+            $bayar = $tagihan->sisa_tagihan;
+            $tagihan->sisa_tagihan = 0;
+            $tagihan->status_pembayaran = 'lunas';
         }
 
-        $orderId = "{$orderIdPrefix}-{$tagihan->pesanan_id}-{$tagihan->id}-" . time() . '-' . uniqid();
+        $tagihan->save();
 
-        $tagihan->update([
-            'order_id' => $orderId,
-            'metode_bayar' => 'midtrans'
-        ]);
-
-        Config::$serverKey = config('services.midtrans.server_key');
-        Config::$isProduction = config('services.midtrans.is_production', false);
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
-
-        $params = [
-            'transaction_details' => [
-                'order_id' => $orderId,
-                'gross_amount' => $grossAmount,
-            ],
-            'customer_details' => [
-                'first_name' => Auth::user()->name,
-                'email' => Auth::user()->email,
-                'phone' => Auth::user()->phone ?? '',
-            ],
-            'callbacks' => [
-                'finish' => route('pelanggan.tagihan.show', $tagihan->id),
-            ],
-        ];
-
-        try {
-            $snapToken = Snap::getSnapToken($params);
-            Log::info("Snap token berhasil dibuat untuk order_id {$orderId}");
-            return view('pelanggan.tagihan.bayar', compact('snapToken', 'tagihan'));
-        } catch (\Exception $e) {
-            Log::error("Gagal membuat Snap Token untuk order_id {$orderId}: " . $e->getMessage());
-            return redirect()->route('pelanggan.tagihan.show', $tagihan->id)
-                ->with('error', 'Gagal membuat token pembayaran. Silakan coba lagi.');
-        }
+        return redirect()->route('pelanggan.tagihan.show', $tagihan->id)
+            ->with('success', "Pembayaran Rp " . number_format($bayar, 0, ',', '.') . " berhasil diproses.");
     }
 
     private function authorizeUserOrFail(Tagihan $tagihan): void
