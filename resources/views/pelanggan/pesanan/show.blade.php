@@ -47,7 +47,7 @@
                             💳 Bayar DP
                         </a>
                     @elseif ($pesanan->tagihan->sisa_tagihan > 0 && $pesanan->tagihan->dp_dibayar > 0)
-                        <a href="{{ route('pelanggan.pesanan.pelunasan', $pesanan) }}"
+                        <a href="{{ route('pelanggan.tagihan.bayar', $pesanan->tagihan->id) }}"
                            class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
                             💳 Lunasi Tagihan
                         </a>

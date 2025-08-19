@@ -32,9 +32,8 @@
 
     {{-- Riwayat Pembayaran --}}
     <div class="mt-8">
-        <h2 class="text-lg font-bold mb-3">Riwayat Pembayaran</h2>
+        <h2 class="text-lg font-bold mb-3"></h2>
         @if($tagihan->pesanan->riwayatTransaksi->isEmpty())
-            <p class="text-gray-500">Belum ada pembayaran yang tercatat.</p>
         @else
             <table class="w-full text-sm border">
                 <thead class="bg-gray-100">

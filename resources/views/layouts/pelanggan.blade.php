@@ -31,13 +31,8 @@
             $lastPesanan = \App\Models\Pesanan::where('user_id', Auth::id())->latest()->first();
         @endphp
         @if ($lastPesanan)
-            <a href="{{ route('pelanggan.pesanan.show', $lastPesanan->id) }}" 
-               class="hover:text-yellow-300 transition">
-                Detail Pesanan
-            </a>
         @endif
 
-        <a href="{{ route('pelanggan.tagihan.index') }}" class="hover:text-yellow-300 transition">Tagihan</a>
         <a href="{{ route('pelanggan.profil.edit') }}" class="hover:text-yellow-300 transition">Profil</a>
         <form method="POST" action="{{ route('logout') }}" class="inline">
             @csrf

@@ -1,25 +1,39 @@
-@extends('layouts.mitra')
+@extends('layouts.app')
 
 @section('content')
-    <div class="max-w-xl mx-auto mt-10">
-        <div class="bg-white rounded-3xl shadow-lg p-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah Pelanggan Walk-in</h1>
-            <form action="{{ route('mitra.walkin_customer.store') }}" method="POST" class="space-y-6">
-                @csrf
-                <div>
-                    <label class="block text-gray-700 mb-1">Nama</label>
-                    <input type="text" name="nama" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1">No Telepon</label>
-                    <input type="text" name="no_tlp" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1">Alamat</label>
-                    <textarea name="alamat" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500" required></textarea>
-                </div>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium">Simpan</button>
-            </form>
+<div class="container">
+    <h2>Tambah Pelanggan Walk-in</h2>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
-    </div>
+    @endif
+
+    <form action="{{ route('mitra.walkin_customer.store') }}" method="POST">
+        @csrf
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nama Pelanggan</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="no_telepon" class="form-label">No. Telepon</label>
+            <input type="text" class="form-control" id="no_telepon" name="no_telepon" value="{{ old('no_telepon') }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="alamat" class="form-label">Alamat</label>
+            <textarea class="form-control" id="alamat" name="alamat" required>{{ old('alamat') }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{{ route('mitra.walkin_customer.index') }}" class="btn btn-secondary">Batal</a>
+    </form>
+</div>
 @endsection

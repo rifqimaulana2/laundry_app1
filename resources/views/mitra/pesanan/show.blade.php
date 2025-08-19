@@ -81,7 +81,7 @@
                                         @if($pesanan->tagihan && $pesanan->tagihan->dp_dibayar > 0)
                                             <form action="{{ route('mitra.pesanan.updateTimbangan', $detail->id) }}" method="POST" class="flex items-center justify-center gap-2">
                                                 @csrf
-                                                <input type="number" name="berat_final" min="0.1" step="0.1" class="border border-gray-300 rounded-lg p-1 w-20 text-center" required>
+                                                <input type="number" name="berat_final" min="1" step="1" class="border border-gray-300 rounded-lg p-1 w-20 text-center" required>
                                                 <button type="submit" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs">Simpan</button>
                                             </form>
                                         @else

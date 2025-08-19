@@ -7,7 +7,7 @@
 
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h1 class="text-3xl font-bold text-gray-800">📋 Daftar Pesanan</h1>
+        <h1 class="text-3xl font-bold text-gray-800">📋 Daftar Pesana</h1>
         <a href="{{ route('mitra.pesanan.create') }}"
            class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm font-medium transition">
             ➕ Tambah Pesanan

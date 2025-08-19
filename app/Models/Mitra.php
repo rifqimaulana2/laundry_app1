@@ -21,9 +21,9 @@ class Mitra extends Model
     ];
 
     // Relasi ke tabel users
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Relasi ke layanan kiloan
@@ -66,5 +66,10 @@ class Mitra extends Model
     public function scopeDitolak($query)
     {
         return $query->where('status_approve', 'ditolak');
+    }
+
+     public function walkinCustomers()
+    {
+        return $this->hasMany(WalkinCustomer::class, 'mitra_id');
     }
 }
