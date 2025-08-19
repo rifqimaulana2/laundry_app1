@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pelanggan;
 
 use App\Http\Controllers\Controller;
+use App\Models\PelangganProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +16,8 @@ class ProfilController extends Controller
      */
     public function edit()
     {
-        return view('pelanggan.profile.edit');
+        $profile = PelangganProfile::where('user_id', Auth::id())->firstOrFail();
+        return view('pelanggan.profil.edit', compact('profile'));
     }
 
     /**
@@ -27,17 +29,22 @@ class ProfilController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
-            'phone' => 'nullable|string|max:20',
+            'alamat' => 'required|string|max:255',
+            'no_telepon' => 'nullable|string|max:20',
+            'foto_profil' => 'nullable|image|max:2048', // Maksimal 2MB untuk foto
         ]);
 
-        $user = Auth::user();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->save();
+        $profile = PelangganProfile::where('user_id', Auth::id())->firstOrFail();
+        $profile->alamat = $request->alamat;
+        $profile->no_telepon = $request->no_telepon;
 
-        return redirect()->route('pelanggan.profile.edit')->with('success', 'Profil berhasil diperbarui.');
+        if ($request->hasFile('foto_profil')) {
+            $fotoPath = $request->file('foto_profil')->store('profiles', 'public');
+            $profile->foto_profil = $fotoPath;
+        }
+
+        $profile->save();
+
+        return redirect()->route('pelanggan.profil.edit')->with('success', 'Profil berhasil diperbarui.');
     }
 }

@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             {{-- Logo --}}
             <div class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-8 h-8 rounded-full">
+                <img src="{{ asset('images/laundrykuy.png') }}" alt="Logo" class="w-8 h-8 rounded-full">
                 <span class="text-xl font-bold">LaundryKuy</span>
             </div>
 

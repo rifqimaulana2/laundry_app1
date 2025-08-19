@@ -1,4 +1,3 @@
-```blade
 @extends('layouts.pelanggan')
 
 @section('title', 'Edit Profil - LaundryKuy')
@@ -19,35 +18,38 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('pelanggan.profile.update') }}" class="space-y-6">
+    <form method="POST" action="{{ route('pelanggan.profil.update') }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
 
-        <!-- Nama -->
+        <!-- Alamat -->
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Nama</label>
-            <input type="text" name="name" id="name" value="{{ old('name', Auth::user()->name) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('name') border-red-500 @enderror" required>
-            @error('name')
-                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <!-- Email -->
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" name="email" id="email" value="{{ old('email', Auth::user()->email) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('email') border-red-500 @enderror" required>
-            @error('email')
+            <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+            <input type="text" name="alamat" id="alamat" value="{{ old('alamat', $profile->alamat) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('alamat') border-red-500 @enderror" required>
+            @error('alamat')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
         <!-- Nomor Telepon -->
         <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Telepon</label>
-            <input type="text" name="phone" id="phone" value="{{ old('phone', Auth::user()->phone ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('phone') border-red-500 @enderror">
-            @error('phone')
+            <label for="no_telepon" class="block text-sm font-medium text-gray-700">Nomor Telepon</label>
+            <input type="text" name="no_telepon" id="no_telepon" value="{{ old('no_telepon', $profile->no_telepon ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('no_telepon') border-red-500 @enderror">
+            @error('no_telepon')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
             @enderror
+        </div>
+
+        <!-- Foto Profil -->
+        <div>
+            <label for="foto_profil" class="block text-sm font-medium text-gray-700">Foto Profil</label>
+            <input type="file" name="foto_profil" id="foto_profil" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 @error('foto_profil') border-red-500 @enderror">
+            @if ($profile->foto_profil)
+                <img src="{{ asset('storage/' . $profile->foto_profil) }}" alt="Foto Profil" class="mt-2 w-24 h-24 object-cover rounded-full">
+            @endif
+            @error('foto_profil')
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+            @endif
         </div>
 
         <!-- Tombol Submit -->
@@ -57,4 +59,3 @@
     </form>
 </div>
 @endsection
-```

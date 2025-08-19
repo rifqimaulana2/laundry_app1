@@ -108,10 +108,11 @@
             <div class="mt-2 text-sm text-gray-600">Sudah punya akun? <a href="/login" class="text-blue-600 font-semibold hover:underline">Login di sini</a></div>
         </div>
         <div class="lg:w-1/2 flex justify-center">
-            <img src="{{ asset('images/laundry1.jpg') }}" alt="Ilustrasi pakaian bersih dengan layanan LaundryKuy"
-                class="max-w-xl h-auto rounded-xl shadow-2xl object-contain border-4 border-cyan-200">
-        </div>
-    </div>
+    <img src="{{ asset('images/laundrykuy1.jpg') }}"
+        alt="Ilustrasi pakaian bersih dengan layanan LaundryKuy"
+        class="max-w-md w-full h-auto rounded-xl shadow-2xl object-contain border-4 border-cyan-200">
+</div>
+
 </section>
 
 <!-- Layanan Kami -->
@@ -119,22 +120,47 @@
     <div class="max-w-6xl mx-auto px-6">
         <h2 class="text-3xl font-bold text-center text-blue-700 mb-10">Layanan Kami</h2>
         <div class="grid md:grid-cols-2 gap-8">
-            <div class="card-shadow text-center">
-                <img src="{{ asset('images/laundry_satuan.png') }}" alt="Ikon layanan laundry satuan" class="h-20 mb-4 mx-auto" />
-                <h3 class="text-lg font-semibold text-blue-800 mb-2">Laundry Satuan</h3>
-                <ul class="text-sm text-gray-600 list-disc list-inside mb-4 text-left">
-                    <li>Sepatu</li><li>Boneka</li><li>Sweater</li><li>Bed Cover</li><li>Jaket</li><li>Tas</li>
+            
+            <!-- Card Laundry Satuan -->
+            <div class="card-shadow flex flex-col justify-between p-6 rounded-lg border border-gray-100 hover:shadow-lg transition">
+                <!-- Icon Laundry Satuan -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1 14.93V7.07a8 8 0 010 13.86zM13 7.07v9.86a8 8 0 010-9.86z"/>
+                </svg>
+                <h3 class="text-lg font-semibold text-blue-800 mb-2 text-center">Laundry Satuan</h3>
+                <ul class="text-sm text-gray-600 list-disc list-inside mb-6 text-left">
+                    <li>Sepatu</li>
+                    <li>Boneka</li>
+                    <li>Sweater</li>
+                    <li>Bed Cover</li>
+                    <li>Jaket</li>
+                    <li>Tas</li>
                 </ul>
-                <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition cta-button">Pesan Sekarang</a>
+                <div class="mt-auto text-center">
+                    <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition inline-block">
+                        Pesan Sekarang
+                    </a>
+                </div>
             </div>
-            <div class="card-shadow text-center">
-                <img src="{{ asset('images/laundry_kiloan.png') }}" alt="Ikon layanan laundry kiloan" class="h-20 mb-4 mx-auto" />
-                <h3 class="text-lg font-semibold text-blue-800 mb-2">Laundry Kiloan</h3>
-                <ul class="text-sm text-gray-600 list-disc list-inside mb-4 text-left">
-                    <li>Cuci Express</li><li>Cuci Reguler</li>
+
+            <!-- Card Laundry Kiloan -->
+            <div class="card-shadow flex flex-col justify-between p-6 rounded-lg border border-gray-100 hover:shadow-lg transition">
+                <!-- Icon Laundry Kiloan -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 4a1 1 0 011-1h3.586a1 1 0 01.707.293l1.414 1.414A1 1 0 0010.414 5H20a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"/>
+                </svg>
+                <h3 class="text-lg font-semibold text-blue-800 mb-2 text-center">Laundry Kiloan</h3>
+                <ul class="text-sm text-gray-600 list-disc list-inside mb-6 text-left">
+                    <li>Cuci Express</li>
+                    <li>Cuci Reguler</li>
                 </ul>
-                <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition cta-button">Pesan Sekarang</a>
+                <div class="mt-auto text-center">
+                    <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition inline-block">
+                        Pesan Sekarang
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
 </section>
@@ -154,9 +180,30 @@
         <h2 class="text-3xl font-bold text-center text-blue-700 mb-10">Apa Kata Pelanggan Kami</h2>
         <div class="grid md:grid-cols-3 gap-8">
             @foreach ([1 => 'Rina, Indramayu', 2 => 'Dimas, Lohbener', 3 => 'Sari, Sindang'] as $i => $name)
-            <div class="card-shadow text-center">
-                <img src="{{ asset("images/testi$i.jpg") }}" alt="Foto profil pelanggan {{ $name }}" class="w-16 h-16 rounded-full object-cover mx-auto mb-3">
-                <p class="text-gray-600 text-sm italic mb-2">"{{ ['Pelayanan cepat, hasil cucian bersih dan wangi. Kurirnya ramah!', 'LaundryKuy bikin hidup lebih mudah, cucian selalu rapi!', 'Cuci express beneran cepat, cocok buat yang buru-buru!'][$i-1] }}"</p>
+            <div class="card-shadow text-center p-6 rounded-lg border border-gray-100 hover:shadow-lg transition relative">
+                
+                <!-- Icon Avatar -->
+                <div class="flex justify-center mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         class="h-16 w-16 text-blue-500" 
+                         fill="currentColor" 
+                         viewBox="0 0 24 24">
+                        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8V22h19.2v-2.8c0-3.2-6.4-4.8-9.6-4.8z"/>
+                    </svg>
+                </div>
+
+                <!-- Icon Quote -->
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                     class="h-5 w-5 text-blue-400 mx-auto mb-2" 
+                     fill="currentColor" 
+                     viewBox="0 0 24 24">
+                    <path d="M7.17 6A5.992 5.992 0 002 12c0 3.31 2.69 6 6 6 1.66 0 3-1.34 3-3V6H7.17zM17.17 6A5.992 5.992 0 0012 12c0 3.31 2.69 6 6 6 1.66 0 3-1.34 3-3V6h-3.83z"/>
+                </svg>
+
+                <!-- Testimoni -->
+                <p class="text-gray-600 text-sm italic mb-2">
+                    "{{ ['Pelayanan cepat, hasil cucian bersih dan wangi. Kurirnya ramah!', 'LaundryKuy bikin hidup lebih mudah, cucian selalu rapi!', 'Cuci express beneran cepat, cocok buat yang buru-buru!'][$i-1] }}"
+                </p>
                 <span class="text-blue-600 text-xs font-semibold">{{ $name }}</span>
             </div>
             @endforeach

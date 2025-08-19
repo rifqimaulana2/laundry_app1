@@ -24,7 +24,6 @@
                 @auth
                     <a href="{{ route('pelanggan.dashboard') }}" class="hover:text-yellow-300 transition">Dashboard</a>
                     <a href="{{ route('pelanggan.mitra.index') }}" class="hover:text-yellow-300 transition">Mitra</a>
-                    <a href="{{ route('pelanggan.pesanan.index') }}" class="hover:text-yellow-300 transition">Pesanan</a>
                     <a href="{{ route('pelanggan.tagihan.index') }}" class="hover:text-yellow-300 transition">Tagihan</a>
                     <a href="{{ route('pelanggan.profil.edit') }}" class="hover:text-yellow-300 transition">Profil</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -89,11 +88,6 @@
     <footer class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-700 text-white py-6 text-center mt-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p>© {{ date('Y') }} <span class="font-semibold">LaundryKuy</span>. All rights reserved.</p>
-            <div class="mt-3 flex justify-center gap-5">
-                <a href="/tentang" class="hover:text-yellow-300 transition">Tentang Kami</a>
-                <a href="/kontak" class="hover:text-yellow-300 transition">Kontak</a>
-                <a href="/kebijakan" class="hover:text-yellow-300 transition">Privasi</a>
-            </div>
             <p class="mt-3 text-sm text-white/80">Kontak: <a href="mailto:support@laundrykuy.com" class="hover:text-yellow-300">support@laundrykuy.com</a> | <a href="tel:+6281234567890" class="hover:text-yellow-300">0812-3456-7890</a></p>
         </div>
     </footer>

@@ -25,7 +25,6 @@ use App\Http\Controllers\Mitra\ProfilController as MitraProfilController;
 use App\Http\Controllers\Mitra\EmployeeController as MitraEmployeeController;
 use App\Http\Controllers\Mitra\DashboardController as MitraDashboardController;
 use App\Http\Controllers\Pelanggan\MitraController as PelangganMitraController;
-use App\Http\Controllers\Pelanggan\ProfilController as PelangganProfilController;
 
 // Pelanggan
 use App\Http\Controllers\Pelanggan\PesananController as PelangganPesananController;
@@ -33,8 +32,9 @@ use App\Http\Controllers\Pelanggan\TagihanController as PelangganTagihanControll
 use App\Http\Controllers\Mitra\LayananKiloanController as MitraLayananKiloanController;
 use App\Http\Controllers\Mitra\LayananSatuanController as MitraLayananSatuanController;
 use App\Http\Controllers\Pelanggan\DashboardController as PelangganDashboardController;
-use App\Http\Controllers\Mitra\WalkinCustomerController as MitraWalkinCustomerController;
 use App\Http\Controllers\Superadmin\DashboardController as SuperadminDashboardController;
+use App\Http\Controllers\Pelanggan\ProfilController;
+
 
 // ==========================
 // Halaman Umum
@@ -173,8 +173,8 @@ Route::prefix('pelanggan')->middleware(['auth', 'role:pelanggan'])->name('pelang
     Route::get('/tagihan/{tagihan}', [PelangganTagihanController::class, 'show'])->name('tagihan.show');
     Route::get('/tagihan/{tagihan}/bayar', [PelangganTagihanController::class, 'bayar'])->name('tagihan.bayar');
 
-    Route::get('/profil/edit', [PelangganProfilController::class, 'edit'])->name('profil.edit');
-    Route::put('/profil', [PelangganProfilController::class, 'update'])->name('profil.update');
+    Route::get('/profil/edit', [ProfilController::class, 'edit'])->name('profil.edit'); // Perbaikan nama controller dan route
+    Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update'); // Perbaikan nama controller dan method
 });
 
 Route::get('/test-midtrans-config', function () {

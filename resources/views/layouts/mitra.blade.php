@@ -116,29 +116,28 @@
 <nav class="mt-4">
     @if(auth()->user()->role === 'mitra')
         <a href="{{ route('mitra.dashboard') }}"><i data-lucide="home"></i> <span class="sidebar-text">Dashboard</span></a>
+        <a href="{{ route('mitra.profil.edit') }}"><i data-lucide="user"></i> <span class="sidebar-text">Edit Profil</span></a>
         <a href="{{ route('mitra.layanan-kiloan.index') }}"><i data-lucide="package"></i> <span class="sidebar-text">Layanan Kiloan</span></a>
         <a href="{{ route('mitra.layanan-satuan.index') }}"><i data-lucide="shopping-bag"></i> <span class="sidebar-text">Layanan Satuan</span></a>
         <a href="{{ route('mitra.employee.index') }}"><i data-lucide="users"></i> <span class="sidebar-text">Employee</span></a>
         <a href="{{ route('mitra.walkin_customer.index') }}"><i data-lucide="user-plus"></i> <span class="sidebar-text">Walk-in Customer</span></a>
         <a href="{{ route('mitra.pesanan.index') }}"><i data-lucide="file-text"></i> <span class="sidebar-text">Pesanan</span></a>
-        <a href="{{ route('mitra.tagihan.index') }}"><i data-lucide="credit-card"></i> <span class="sidebar-text">Tagihan</span></a>
-        <a href="{{ route('mitra.riwayat.index') }}"><i data-lucide="history"></i> <span class="sidebar-text">Riwayat</span></a>
         <form action="{{ route('logout') }}" method="POST" class="mt-2">
             @csrf
             <button type="submit" class="logout-btn"><i data-lucide="log-out"></i> <span class="sidebar-text">Keluar</span></button>
         </form>
     
     @elseif(auth()->user()->role === 'employee')
+        <a href="{{ route('mitra.profil.edit') }}"><i data-lucide="user"></i> <span class="sidebar-text">Edit Profil</span></a>
         <a href="{{ route('mitra.walkin_customer.index') }}"><i data-lucide="users"></i> <span class="sidebar-text">Walk-in Customer</span></a>
         <a href="{{ route('mitra.pesanan.index') }}"><i data-lucide="file-text"></i> <span class="sidebar-text">Pesanan</span></a>
-        <a href="{{ route('mitra.tagihan.index') }}"><i data-lucide="credit-card"></i> <span class="sidebar-text">Tagihan</span></a>
-        <a href="{{ route('mitra.riwayat.index') }}"><i data-lucide="history"></i> <span class="sidebar-text">Riwayat</span></a>
         <form action="{{ route('logout') }}" method="POST" class="mt-2">
             @csrf
             <button type="submit" class="logout-btn"><i data-lucide="log-out"></i> <span class="sidebar-text">Keluar</span></button>
         </form>
     @endif
 </nav>
+
 
     </div>
 
