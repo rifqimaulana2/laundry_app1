@@ -39,24 +39,31 @@
         </div>
 
         {{-- Feature Section --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
-            <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
-                <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600 mb-4 text-2xl">⚡</div>
-                <h3 class="text-lg font-semibold text-gray-800">Cepat & Tepat Waktu</h3>
-                <p class="mt-2 text-gray-500 text-sm">Pesananmu selalu diproses dengan cepat tanpa mengurangi kualitas.</p>
-            </div>
-            <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
-                <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-purple-100 text-purple-600 mb-4 text-2xl">🌿</div>
-                <h3 class="text-lg font-semibold text-gray-800">Bersih & Wangi</h3>
-                <p class="mt-2 text-gray-500 text-sm">Gunakan deterjen ramah lingkungan, hasil cucian wangi segar.</p>
-            </div>
-            <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
-                <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-pink-100 text-pink-600 mb-4 text-2xl">🤝</div>
-                <h3 class="text-lg font-semibold text-gray-800">Mitra Terpercaya</h3>
-                <p class="mt-2 text-gray-500 text-sm">Semua mitra sudah melalui verifikasi agar kamu lebih tenang.</p>
-            </div>
-        </div>
-
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+    <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600 mb-4 text-2xl">⚡</div>
+        <h3 class="text-lg font-semibold text-gray-800">Cepat & Tepat Waktu</h3>
+        <p class="mt-2 text-gray-500 text-sm">Pesananmu selalu diproses dengan cepat tanpa mengurangi kualitas.</p>
     </div>
+    <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-purple-100 text-purple-600 mb-4 text-2xl">🌿</div>
+        <h3 class="text-lg font-semibold text-gray-800">Bersih & Wangi</h3>
+        <p class="mt-2 text-gray-500 text-sm">Gunakan deterjen ramah lingkungan, hasil cucian wangi segar.</p>
+    </div>
+    <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-pink-100 text-pink-600 mb-4 text-2xl">🤝</div>
+        <h3 class="text-lg font-semibold text-gray-800">Mitra Terpercaya</h3>
+        <p class="mt-2 text-gray-500 text-sm">Semua mitra sudah melalui verifikasi agar kamu lebih tenang.</p>
+    </div>
+
+    {{-- Report Feature (Floating) --}}
+<div class="fixed bottom-6 right-6 z-50 group">
+    <a href="{{ route('pelanggan.laporan.create') }}"
+       class="bg-gradient-to-r from-red-500 to-pink-600 text-white p-4 rounded-full shadow-lg hover:shadow-2xl transform hover:scale-110 transition duration-300 flex items-center justify-center text-2xl">
+       🚨
+    </a>
+    <span class="absolute right-16 bottom-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
+        Laporkan Mitra
+    </span>
 </div>
 @endsection

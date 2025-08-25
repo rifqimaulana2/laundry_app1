@@ -46,6 +46,15 @@
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
+                <!-- Lupa Password -->
+                @if (Route::has('password.request'))
+                    <div class="text-right">
+                        <a class="text-sm text-indigo-600 hover:underline" href="{{ route('password.request') }}">
+                            Lupa password?
+                        </a>
+                    </div>
+                @endif
+
                 <!-- Remember Me -->
                 <div class="flex items-center justify-between">
                     <label for="remember_me" class="flex items-center text-sm text-gray-600">

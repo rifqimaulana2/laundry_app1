@@ -44,50 +44,50 @@ Route::prefix('superadmin')
     ->name('superadmin.')
     ->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('dashboard');
+        // Dashboard
+        Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('dashboard');
 
-    // Mitra
-    Route::get('/mitras', [MitraController::class, 'index'])->name('mitras.index');
-    Route::post('/mitras/approve/{id}', [MitraController::class, 'approve'])->name('mitras.approve');
-    Route::post('/mitras/reject/{id}', [MitraController::class, 'reject'])->name('mitras.reject');
-    Route::delete('/mitras/{mitra}', [MitraController::class, 'destroy'])->name('mitras.destroy');
+        // Mitra
+        Route::get('/mitras', [MitraController::class, 'index'])->name('mitras.index');
+        Route::post('/mitras/approve/{id}', [MitraController::class, 'approve'])->name('mitras.approve');
+        Route::post('/mitras/reject/{id}', [MitraController::class, 'reject'])->name('mitras.reject');
+        Route::delete('/mitras/{mitra}', [MitraController::class, 'destroy'])->name('mitras.destroy');
 
-    // Employee
-    Route::resource('employees', EmployeeController::class)->only(['index', 'destroy']);
+        // Employee
+        Route::resource('employees', EmployeeController::class)->only(['index', 'destroy']);
 
-    // Users
-    Route::resource('users', UserController::class);
+        // Users
+        Route::resource('users', UserController::class);
 
-    // Layanan Master
-    Route::prefix('layanan-master')->group(function () {
-        Route::get('/', [LayananMasterController::class, 'index'])->name('layanan-master.index');
+        // Layanan Master
+        Route::prefix('layanan-master')->group(function () {
+            Route::get('/', [LayananMasterController::class, 'index'])->name('layanan-master.index');
 
-        // Status Master
-        Route::resource('status-master', StatusMasterController::class)->except(['show']);
+            // Status Master
+            Route::resource('status-master', StatusMasterController::class)->except(['show']);
 
-        // Jenis Layanan
-        Route::get('jenis/create', [LayananMasterController::class, 'createJenis'])->name('layanan-master.jenis.create');
-        Route::post('jenis', [LayananMasterController::class, 'storeJenis'])->name('layanan-master.jenis.store');
-        Route::get('jenis/{jenisLayanan}/edit', [LayananMasterController::class, 'editJenis'])->name('layanan-master.jenis.edit');
-        Route::put('jenis/{jenisLayanan}', [LayananMasterController::class, 'updateJenis'])->name('layanan-master.jenis.update');
-        Route::delete('jenis/{jenisLayanan}', [LayananMasterController::class, 'destroyJenis'])->name('layanan-master.jenis.destroy');
+            // Jenis Layanan
+            Route::get('jenis/create', [LayananMasterController::class, 'createJenis'])->name('layanan-master.jenis.create');
+            Route::post('jenis', [LayananMasterController::class, 'storeJenis'])->name('layanan-master.jenis.store');
+            Route::get('jenis/{jenisLayanan}/edit', [LayananMasterController::class, 'editJenis'])->name('layanan-master.jenis.edit');
+            Route::put('jenis/{jenisLayanan}', [LayananMasterController::class, 'updateJenis'])->name('layanan-master.jenis.update');
+            Route::delete('jenis/{jenisLayanan}', [LayananMasterController::class, 'destroyJenis'])->name('layanan-master.jenis.destroy');
 
-        // Layanan Kiloan
-        Route::get('kiloan/create', [LayananMasterController::class, 'createKiloan'])->name('layanan-master.kiloan.create');
-        Route::post('kiloan', [LayananMasterController::class, 'storeKiloan'])->name('layanan-master.kiloan.store');
-        Route::get('kiloan/{layananKiloan}/edit', [LayananMasterController::class, 'editKiloan'])->name('layanan-master.kiloan.edit');
-        Route::put('kiloan/{layananKiloan}', [LayananMasterController::class, 'updateKiloan'])->name('layanan-master.kiloan.update');
-        Route::delete('kiloan/{layananKiloan}', [LayananMasterController::class, 'destroyKiloan'])->name('layanan-master.kiloan.destroy');
+            // Layanan Kiloan
+            Route::get('kiloan/create', [LayananMasterController::class, 'createKiloan'])->name('layanan-master.kiloan.create');
+            Route::post('kiloan', [LayananMasterController::class, 'storeKiloan'])->name('layanan-master.kiloan.store');
+            Route::get('kiloan/{layananKiloan}/edit', [LayananMasterController::class, 'editKiloan'])->name('layanan-master.kiloan.edit');
+            Route::put('kiloan/{layananKiloan}', [LayananMasterController::class, 'updateKiloan'])->name('layanan-master.kiloan.update');
+            Route::delete('kiloan/{layananKiloan}', [LayananMasterController::class, 'destroyKiloan'])->name('layanan-master.kiloan.destroy');
 
-        // Layanan Satuan
-        Route::get('satuan/create', [LayananMasterController::class, 'createSatuan'])->name('layanan-master.satuan.create');
-        Route::post('satuan', [LayananMasterController::class, 'storeSatuan'])->name('layanan-master.satuan.store');
-        Route::get('satuan/{layananSatuan}/edit', [LayananMasterController::class, 'editSatuan'])->name('layanan-master.satuan.edit');
-        Route::put('satuan/{layananSatuan}', [LayananMasterController::class, 'updateSatuan'])->name('layanan-master.satuan.update');
-        Route::delete('satuan/{layananSatuan}', [LayananMasterController::class, 'destroySatuan'])->name('layanan-master.satuan.destroy');
+            // Layanan Satuan
+            Route::get('satuan/create', [LayananMasterController::class, 'createSatuan'])->name('layanan-master.satuan.create');
+            Route::post('satuan', [LayananMasterController::class, 'storeSatuan'])->name('layanan-master.satuan.store');
+            Route::get('satuan/{layananSatuan}/edit', [LayananMasterController::class, 'editSatuan'])->name('layanan-master.satuan.edit');
+            Route::put('satuan/{layananSatuan}', [LayananMasterController::class, 'updateSatuan'])->name('layanan-master.satuan.update');
+            Route::delete('satuan/{layananSatuan}', [LayananMasterController::class, 'destroySatuan'])->name('layanan-master.satuan.destroy');
+        });
     });
-});
 
 
 // ==========================
@@ -109,36 +109,36 @@ Route::prefix('mitra')
     ->name('mitra.')
     ->group(function () {
 
-    // Dashboard (khusus mitra)
-    Route::middleware('role:mitra')->group(function () {
-        Route::get('/dashboard', [MitraDashboardController::class, 'index'])->name('dashboard');
-        Route::resource('jam-operasional', JamOperasionalController::class);
-        Route::resource('layanan-kiloan', MitraLayananKiloanController::class);
-        Route::resource('layanan-satuan', MitraLayananSatuanController::class);
-        Route::resource('employee', MitraEmployeeController::class);
+        // Dashboard (khusus mitra)
+        Route::middleware('role:mitra')->group(function () {
+            Route::get('/dashboard', [MitraDashboardController::class, 'index'])->name('dashboard');
+            Route::resource('jam-operasional', JamOperasionalController::class);
+            Route::resource('layanan-kiloan', MitraLayananKiloanController::class);
+            Route::resource('layanan-satuan', MitraLayananSatuanController::class);
+            Route::resource('employee', MitraEmployeeController::class);
 
-        // Tagihan
-        Route::get('tagihan', [TagihanController::class, 'index'])->name('tagihan.index');
-        Route::get('tagihan/{id}', [TagihanController::class, 'show'])->name('tagihan.show');
-        Route::put('tagihan/{id}/verifikasi-lunas', [TagihanController::class, 'verifikasiLunas'])->name('tagihan.verifikasiLunas');
+            // Tagihan
+            Route::get('tagihan', [TagihanController::class, 'index'])->name('tagihan.index');
+            Route::get('tagihan/{id}', [TagihanController::class, 'show'])->name('tagihan.show');
+            Route::put('tagihan/{id}/verifikasi-lunas', [TagihanController::class, 'verifikasiLunas'])->name('tagihan.verifikasiLunas');
 
-        // Riwayat Transaksi
-        Route::get('riwayat', [RiwayatTransaksiController::class, 'index'])->name('riwayat.index');
-        Route::get('riwayat/{id}', [RiwayatTransaksiController::class, 'show'])->name('riwayat.show');
+            // Riwayat Transaksi
+            Route::get('riwayat', [RiwayatTransaksiController::class, 'index'])->name('riwayat.index');
+            Route::get('riwayat/{id}', [RiwayatTransaksiController::class, 'show'])->name('riwayat.show');
+        });
+
+        // Walk-in Customer (akses mitra & employee)
+        Route::resource('walkin_customer', WalkinCustomerController::class);
+
+        // Pesanan (akses mitra & employee)
+        Route::resource('pesanan', PesananController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+        Route::post('pesanan/{pesanan}/update-status', [PesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
+        Route::post('pesanan/{detailId}/timbangan', [PesananController::class, 'updateTimbangan'])->name('pesanan.updateTimbangan');
+
+        // Profil (akses keduanya)
+        Route::get('/profil', [MitraProfilController::class, 'edit'])->name('profil.edit');
+        Route::put('/profil', [MitraProfilController::class, 'update'])->name('profil.update');
     });
-
-    // Walk-in Customer (akses mitra & employee)
-    Route::resource('walkin_customer', WalkinCustomerController::class);
-
-    // Pesanan (akses mitra & employee)
-    Route::resource('pesanan', PesananController::class)->only(['index','create','store','show','destroy']);
-    Route::post('pesanan/{pesanan}/update-status', [PesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
-    Route::post('pesanan/{detailId}/timbangan', [PesananController::class, 'updateTimbangan'])->name('pesanan.updateTimbangan');
-
-    // Profil (akses keduanya)
-    Route::get('/profil', [MitraProfilController::class, 'edit'])->name('profil.edit');
-    Route::put('/profil', [MitraProfilController::class, 'update'])->name('profil.update');
-});
 
 
 // ==========================
@@ -155,30 +155,101 @@ Route::prefix('pelanggan')
     ->name('pelanggan.')
     ->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', [PelangganDashboardController::class, 'index'])->name('dashboard');
+        // Dashboard
+        Route::get('/dashboard', [PelangganDashboardController::class, 'index'])->name('dashboard');
 
-    // Mitra
-    Route::get('/mitra', [PelangganMitraController::class, 'index'])->name('mitra.index');
-    Route::get('/mitra/{id}', [PelangganMitraController::class, 'show'])->name('mitra.show');
+        // Mitra
+        Route::get('/mitra', [PelangganMitraController::class, 'index'])->name('mitra.index');
+        Route::get('/mitra/{id}', [PelangganMitraController::class, 'show'])->name('mitra.show');
 
-    // Pesanan
-    Route::get('/pesanan', [PelangganPesananController::class, 'index'])->name('pesanan.index');
-    Route::get('/pesanan/create/{mitra}', [PelangganPesananController::class, 'create'])->name('pesanan.create');
-    Route::post('/pesanan/{mitra}', [PelangganPesananController::class, 'store'])->name('pesanan.store');
-    Route::get('/pesanan/{pesanan}', [PelangganPesananController::class, 'show'])->whereNumber('pesanan')->name('pesanan.show');
-    Route::get('/pesanan/{pesanan}/pelunasan', [PelangganPesananController::class, 'pelunasan'])->whereNumber('pesanan')->name('pesanan.pelunasan');
+        // Pesanan
+        Route::get('/pesanan', [PelangganPesananController::class, 'index'])->name('pesanan.index');
+        Route::get('/pesanan/create/{mitra}', [PelangganPesananController::class, 'create'])->name('pesanan.create');
+        Route::post('/pesanan/{mitra}', [PelangganPesananController::class, 'store'])->name('pesanan.store');
+        Route::get('/pesanan/{pesanan}', [PelangganPesananController::class, 'show'])->whereNumber('pesanan')->name('pesanan.show');
+        Route::get('/pesanan/{pesanan}/pelunasan', [PelangganPesananController::class, 'pelunasan'])->whereNumber('pesanan')->name('pesanan.pelunasan');
 
-    // Tagihan
-    Route::get('/tagihan', [PelangganTagihanController::class, 'index'])->name('tagihan.index');
-    Route::get('/tagihan/{tagihan}', [PelangganTagihanController::class, 'show'])->name('tagihan.show');
-    Route::get('/tagihan/{tagihan}/bayar', [PelangganTagihanController::class, 'bayar'])->name('tagihan.bayar');
-    Route::post('/tagihan/{tagihan}/bayar', [PelangganTagihanController::class, 'prosesBayar'])->name('tagihan.prosesBayar');
+        // Tagihan
+        Route::get('/tagihan', [PelangganTagihanController::class, 'index'])->name('tagihan.index');
+        Route::get('/tagihan/{tagihan}', [PelangganTagihanController::class, 'show'])->name('tagihan.show');
+        Route::get('/tagihan/{tagihan}/bayar', [PelangganTagihanController::class, 'bayar'])->name('tagihan.bayar');
+        Route::post('/tagihan/{tagihan}/bayar', [PelangganTagihanController::class, 'prosesBayar'])->name('tagihan.prosesBayar');
 
-    // Profil
-    Route::get('/profil/edit', [PelangganProfilController::class, 'edit'])->name('profil.edit');
-    Route::put('/profil', [PelangganProfilController::class, 'update'])->name('profil.update');
+        // Profil
+        Route::get('/profil/edit', [PelangganProfilController::class, 'edit'])->name('profil.edit');
+        Route::put('/profil', [PelangganProfilController::class, 'update'])->name('profil.update');
+    });
+
+use App\Http\Controllers\Pelanggan\LaporanController;
+
+// SUPERADMIN LAPORAN
+Route::prefix('superadmin')->middleware(['auth', 'role:superadmin'])->group(function () {
+    Route::get('laporan', [App\Http\Controllers\Superadmin\LaporanController::class, 'index'])
+        ->name('superadmin.laporan.index');
+
+    Route::get('laporan/rekap', [App\Http\Controllers\Superadmin\LaporanController::class, 'rekap'])
+        ->name('superadmin.laporan.rekap');
+
+    // TERIMA KEDUA METODE: POST & PUT (menghindari 405 Method Not Supported)
+    Route::match(['post', 'put'], 'laporan/{id}/status', [App\Http\Controllers\Superadmin\LaporanController::class, 'updateStatus'])
+        ->name('superadmin.laporan.update-status');
 });
+
+// Pelanggan Laporan
+Route::prefix('pelanggan')
+    ->middleware(['auth', 'role:pelanggan'])
+    ->name('pelanggan.')   // ✅ tambahkan ini
+    ->group(function () {
+        Route::get('laporan/create', [App\Http\Controllers\Pelanggan\LaporanController::class, 'create'])->name('laporan.create');
+        Route::post('laporan/store', [App\Http\Controllers\Pelanggan\LaporanController::class, 'store'])->name('laporan.store');
+        Route::get('laporan/riwayat', [App\Http\Controllers\Pelanggan\LaporanController::class, 'riwayat'])->name('laporan.riwayat');
+    });
+
+// Middleware tambahan untuk mitra approved
+Route::middleware(['auth', 'mitra.approved'])
+    ->prefix('mitra')
+    ->name('mitra.')
+    ->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Mitra\DashboardController::class, 'index'])->name('dashboard');
+    });
+
+
+
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
+
+// Form Lupa Password
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.request');
+
+// Proses Kirim Link Reset
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.email');
+
+// Form Reset Password
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+// Proses Reset Password Baru
+Route::post('/reset-password', [NewPasswordController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.store');
+
+
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-mail', function () {
+    Mail::raw('Halo ini test email dari Laravel!', function ($message) {
+        $message->to('test@example.com')
+                ->subject('Test Mailtrap');
+    });
+    return 'Email terkirim!';
+});
+
+
 
 
 // ==========================
@@ -186,8 +257,8 @@ Route::prefix('pelanggan')
 // ==========================
 Route::get('/test-midtrans-config', function () {
     dd([
-        'env_server_key'   => env('MIDTRANS_SERVER_KEY'),
-        'env_client_key'   => env('MIDTRANS_CLIENT_KEY'),
-        'config_midtrans'  => config('services.midtrans'),
+        'env_server_key'  => env('MIDTRANS_SERVER_KEY'),
+        'env_client_key'  => env('MIDTRANS_CLIENT_KEY'),
+        'config_midtrans' => config('services.midtrans'),
     ]);
 });

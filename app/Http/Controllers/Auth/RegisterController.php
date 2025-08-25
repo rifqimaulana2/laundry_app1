@@ -63,7 +63,9 @@ class RegisterController extends Controller
             ]);
 
             auth()->login($user);
-            return redirect()->route('pelanggan.lengkapi-profil');
+return redirect()->route('pelanggan.dashboard'); 
+// atau kalau mau langsung ke pesanan
+// return redirect()->route('pelanggan.pesanan.index
         }
 
         // Jika role mitra, proses upload foto toko

@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
+    /**
+     * Global HTTP middleware stack.
+     */
     protected $middleware = [
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\TrustProxies::class,
@@ -14,6 +17,9 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
+    /**
+     * Middleware groups.
+     */
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -26,25 +32,27 @@ class Kernel extends HttpKernel
 
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
 
+    /**
+     * Route middleware.
+     */
     protected $routeMiddleware = [
-    'auth' => \App\Http\Middleware\Authenticate::class,
-    'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-    'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-    'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-    'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-    // Middleware Role Custom
-    'role' => \App\Http\Middleware\RoleMiddleware::class,
+        // 🔑 Middleware role custom
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
 
-    // Middleware untuk mencegah mitra belum disetujui
-    'cek.status.mitra' => \App\Http\Middleware\CekStatusMitra::class,
-];
-
+        // 🔒 Middleware untuk memastikan mitra sudah disetujui
+        'mitra.approved' => \App\Http\Middleware\EnsureMitraApproved::class,
+    ];
 }

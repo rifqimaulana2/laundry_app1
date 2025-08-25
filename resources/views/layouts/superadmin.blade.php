@@ -153,6 +153,11 @@
                 Status Master
             </a>
 
+            <a href="{{ route('superadmin.laporan.index') }}">
+    <i class="bi bi-flag"></i><span class="sidebar-text">Laporan</span>
+</a>
+
+
             <form id="logout-form" action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">
